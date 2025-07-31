@@ -1,4 +1,4 @@
-# 🏢 Nome do Projeto XYZ
+# Nome do Projeto XYZ
 
 [![Badge Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow.svg)](https://github.com/nome-empresa/projeto-xyz)
 [![Badge Versão](https://img.shields.io/badge/versão-1.0.0-informational.svg)](https://github.com/nome-empresa/projeto-xyz/releases)
