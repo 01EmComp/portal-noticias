@@ -50,11 +50,11 @@
 ### Colaboradores
 - Developers:
   * Vinícius Reis (https://github.com/ViniPlugner)
-  * Andrei Gomes (github.com/AndreiGTeixeira)
+  * Andrei Gomes (https://github.com/AndreiGTeixeira)
   * João Matheus (@github-username)
 - Designers:
   * Luan Rodrigues (https://github.com/lgrodriguess)
-  * Andrei Gomes (github.com/AndreiGTeixeira)
+  * Andrei Gomes (https://github.com/AndreiGTeixeira)
   * João Matheus (@github-username)
   * Vinícius Reis (https://github.com/ViniPlugner)
 
