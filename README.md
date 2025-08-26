@@ -16,10 +16,10 @@
 
 ## 📋 Descrição do Projeto
 
-Objetivo Principal: Criar um portal de notícias online funcional e responsivo.
-Área de atuação: Jornalismo local e regional.
-Benefícios esperados: Centralizar informações da cidade em um único espaço digital, com navegação intuitiva e rápida.
-Público-alvo: Moradores de Rio Pomba, estudantes, comerciantes e comunidade em geral.
+- Objetivo Principal: Criar um portal de notícias online funcional e responsivo.
+- Área de atuação: Jornalismo local e regional.
+- Benefícios esperados: Centralizar informações da cidade em um único espaço digital, com navegação intuitiva e rápida.
+- Público-alvo: Moradores de Rio Pomba, estudantes, comerciantes e comunidade em geral.
 
 ---
 
