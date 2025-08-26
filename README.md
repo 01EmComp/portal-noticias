@@ -50,11 +50,11 @@
 ### Colaboradores
 - Developers:
   * Vinícius Reis (https://github.com/ViniPlugner)
-  * Andrei Gomes (@github-username)
+  * Andrei Gomes (github.com/AndreiGTeixeira)
   * João Matheus (@github-username)
 - Designers:
   * Luan Rodrigues (https://github.com/lgrodriguess)
-  * Andrei Gomes (@github-username)
+  * Andrei Gomes (github.com/AndreiGTeixeira)
   * João Matheus (@github-username)
   * Vinícius Reis (https://github.com/ViniPlugner)
 
@@ -63,9 +63,18 @@
 ## 🚀 Começando
 
 ### Pré-requisitos
-- Lista de dependências necessárias
-- Versões mínimas requeridas
-- Ambiente necessário
+- Dependências globais:
+  * Node.js (necessário para rodar React e Vite)
+  * NPM ou Yarn (vem junto com o Node)
+  * Git (para clonar e versionar)
+  * VS Code (opcional, mas recomendado)
+- Versões mínimas requeridas:
+  * Node.js: v22.16.0 ou superior
+  * NPM/Yarn: A que vier instalada com o Node
+  * React/Vite: Latest
+- Ambiente necessário:
+  * Sistema operacional (Windows, Linux, MacOS)
+  * Navegador moderno (Chrome, Firefox, Edge)
 
 ### Instalação
 ```bash
