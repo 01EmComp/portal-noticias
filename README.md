@@ -51,11 +51,11 @@
 - Developers:
   * Vinícius Reis (https://github.com/ViniPlugner)
   * Andrei Gomes (https://github.com/AndreiGTeixeira)
-  * João Matheus (@github-username)
+  * João Matheus Filgueira (http://github.com/JoaoMFSerafim)
 - Designers:
   * Luan Rodrigues (https://github.com/lgrodriguess)
   * Andrei Gomes (https://github.com/AndreiGTeixeira)
-  * João Matheus (@github-username)
+  * João Matheus Filgueira (http://github.com/JoaoMFSerafim)
   * Vinícius Reis (https://github.com/ViniPlugner)
 
 ---
