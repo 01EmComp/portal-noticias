@@ -47,16 +47,18 @@
 - **Development Lead:** [Vinícius Reis](https://github.com/ViniPlugner)
 - **Design Lead:** [Luan Rodrigues](https://github.com/lgrodriguess)
 
-### Colaboradores
-- Developers:
-  * Vinícius Reis (https://github.com/ViniPlugner)
-  * Andrei Gomes (https://github.com/AndreiGTeixeira)
-  * João Matheus Filgueira (http://github.com/JoaoMFSerafim)
-- Designers:
-  * Luan Rodrigues (https://github.com/lgrodriguess)
-  * Andrei Gomes (https://github.com/AndreiGTeixeira)
-  * João Matheus Filgueira (http://github.com/JoaoMFSerafim)
-  * Vinícius Reis (https://github.com/ViniPlugner)
+### 👥 Colaboradores
+
+#### 💻 Desenvolvedores
+- [Vinícius Reis](https://github.com/ViniPlugner)
+- [Andrei Gomes](https://github.com/AndreiGTeixeira)
+- [João Matheus Filgueira](https://github.com/JoaoMFSerafim)
+
+#### 🎨 Designers
+- [Luan Rodrigues](https://github.com/lgrodriguess)
+- [Andrei Gomes](https://github.com/AndreiGTeixeira)
+- [João Matheus Filgueira](https://github.com/JoaoMFSerafim)
+- [Vinícius Reis](https://github.com/ViniPlugner)
 
 ---
 
