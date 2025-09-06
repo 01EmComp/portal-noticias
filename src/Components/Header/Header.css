@@ -1,0 +1,88 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 4rem;
+  background-color: var(--secundary-background-color);
+}
+
+header .logo {
+  color: #fff;
+  font-family: "Jacques Francois", sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+/* Hamburger menu */
+.hamburger-container {
+  position: relative;
+}
+
+.hamburger-menu ul {
+  display: none; /* só esconde o menu do hamburger */
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 20; /* para ficar acima do menu */
+}
+
+/* menu inicialmente escondido */
+.hamburger-menu {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  width: 180px;
+  flex-direction: column;
+  z-index: 15;
+}
+
+.hamburger-menu.show {
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+}
+
+.hamburger-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hamburger-menu ul li {
+  border-bottom: 1px solid #444;
+  color: #fff;
+  padding: 10px;
+}
+
+.hamburger-menu ul li:last-child {
+  border-bottom: none;
+}
+
+.hamburger-menu ul li a {
+  display: block;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.hamburger-menu ul li a:hover {
+  background-color: #555;
+}
