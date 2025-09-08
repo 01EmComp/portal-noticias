@@ -1,0 +1,24 @@
+/* Reset */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+main,
+body {
+  background-color: var(--primary-background-color);
+}
+
+/* Variables */
+
+:root {
+  --primary-color: #fddd0d;
+  --secundary-color: #ff4000;
+  --primary-background-color: #f8f8f8;
+  --secundary-background-color: #111827;
+  --text-color: #0a0a0a;
+  --shadow-color: rgba(0, 0, 0, 0.25);
+}
