@@ -1,0 +1,37 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Agbalumo', sans-serif;
+}
+
+.cadastro-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+
+.cadastro-container {
+
+  margin-top: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cadastro-container p {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.cadastro-container a {
+  color: #FF4000;
+  text-decoration: none;
+}
+.cadastro-container .checkbox-container {
+  align-self: flex-start;
+  margin-left: 10px;
+}
