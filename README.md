@@ -288,8 +288,6 @@ git push origin dev_[seu-nome]
 - Ferramentas utilizadas
 - Frequência de medição
 
-(A definir futuramente)
-
 ---
 
 ## 📝 Documentação Adicional
