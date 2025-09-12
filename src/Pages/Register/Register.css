@@ -1,0 +1,29 @@
+.cadastro-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--primary-background-color);
+}
+
+.cadastro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cadastro-container p {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.cadastro-container a {
+  color: var(--secundary-color);
+  text-decoration: none;
+}
+.cadastro-container .checkbox-container {
+  align-self: flex-start;
+  margin-left: 10px;
+}

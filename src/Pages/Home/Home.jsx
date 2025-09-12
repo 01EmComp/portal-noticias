@@ -62,25 +62,42 @@ const Home = () => {
             <div className="icon">
               <FontAwesomeIcon
                 icon={faCloud}
-                style={{ color: "var(--primary-color)", fontSize: "14px" }}
+                style={{ color: "var(--primary-color)", fontSize: "18px" }}
               />
             </div>
           </div>
         </div>
-        <div className="bottom">
-          <img src={img1} alt="Notícia" />
-          <div className="informations">
-            <p>Produtores rurais em Rio Pomba Minas Gerais</p>
-            <div className="icons">
-              <FontAwesomeIcon
-                icon={faCalendar}
-                style={{ color: "#fff", fontSize: "13px" }}
-              />
-              <div className="hr"></div>
-              <div className="perfil-box"></div>
+        <div className="bottoms">
+          <div className="bottom">
+            <img src={img1} alt="Notícia" />
+            <div className="informations">
+              <p>Produtores rurais em Rio Pomba Minas Gerais</p>
+              <div className="icons">
+                <FontAwesomeIcon
+                  icon={faCalendar}
+                  style={{ color: "#fff", fontSize: "18px" }}
+                />
+                <div className="hr"></div>
+                <div className="perfil-box"></div>
+              </div>
             </div>
+            <div className="deg"></div>
           </div>
-          <div className="deg"></div>
+          <div className="bottom secondDiv">
+            <img src={img1} alt="Notícia" />
+            <div className="informations">
+              <p>Produtores rurais em Rio Pomba Minas Gerais</p>
+              <div className="icons">
+                <FontAwesomeIcon
+                  icon={faCalendar}
+                  style={{ color: "#fff", fontSize: "18px" }}
+                />
+                <div className="hr"></div>
+                <div className="perfil-box"></div>
+              </div>
+            </div>
+            <div className="deg"></div>
+          </div>
         </div>
       </section>
       <section className="h-news">
@@ -96,6 +113,9 @@ const Home = () => {
           />
         </div>
         <div className="bottom">
+          <NewItem />
+          <NewItem />
+          <NewItem />
           <NewItem />
           <NewItem />
           <NewItem />
@@ -119,7 +139,7 @@ const Home = () => {
           <FontAwesomeIcon
             icon={faArrowRight}
             style={{
-              fontSize: "16px",
+              fontSize: "24px",
               color: "var(--secundary-color)",
               marginTop: "4px",
             }}
@@ -162,7 +182,7 @@ const Home = () => {
         <div className="lines">
           <div className="left-side">
             <p>Quer ser um</p>
-            <span>colaborador</span>?
+            <span>colaborador</span>
           </div>
           <div className="right-side">
             <div className="button-link">Clique aqui</div>
