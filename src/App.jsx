@@ -1,8 +1,11 @@
 // React
 // import { useState, useEffect } from "react";
 
+// React Router DOM
+import { BrowserRouter } from "react-router-dom";
+
 // Components
-import AppRoutes from "./Components/AppRoutes";
+import AppRoutes from "./AppRoutes";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 
@@ -12,11 +15,13 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <Header />
-      <main>
-        <AppRoutes />
-      </main>
-      <Footer />
+      <BrowserRouter>
+        <Header />
+        <main>
+          <AppRoutes />
+        </main>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 }
