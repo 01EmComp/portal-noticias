@@ -27,4 +27,8 @@ coverage/
 
 # Ferramentas de build
 /.gradle/
+<<<<<<< HEAD
 /.gradle-cache/
+=======
+/.gradle-cache/
+>>>>>>> origin/develop

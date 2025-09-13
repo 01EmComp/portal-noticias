@@ -37,6 +37,40 @@ const Header = () => {
     <header>
       {isMobile ? (
         <>
+          <div className="hamburger-container--mobile" ref={menuRef}>
+            <button
+              onClick={toggleMenu}
+              className="hamburger-btn--mobile"
+              style={{ fontWeight: "550" }}
+            >
+              ☰
+            </button>
+            <div className={`hamburger-menu ${menuOpen ? "show--mobile" : ""}`}>
+              <ul>
+                <Link to="/login">
+                  <li>Login</li>
+                </Link>
+                <Link to="/">
+                  <li>Contate-nos</li>
+                </Link>
+                <Link to="/">
+                  <li>Sobre nós</li>
+                </Link>
+              </ul>
+            </div>
+          </div>
+          <Link to="/">
+            <h1 className="logo--mobile">Notícias RP</h1>
+          </Link>
+          <div className="search-icon--mobile">
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              style={{ fontSize: "16px", color: "#fff" }}
+            />
+          </div>
+        </>
+      ) : (
+        <>
           <div className="hamburger-container" ref={menuRef}>
             <button
               onClick={toggleMenu}
@@ -47,22 +81,28 @@ const Header = () => {
             </button>
             <div className={`hamburger-menu ${menuOpen ? "show" : ""}`}>
               <ul>
-                <li>Login / Registrar</li>
-                <li>Contate-nos</li>
-                <li>Sobre nós</li>
+                <Link to="/login">
+                  <li>Login</li>
+                </Link>
+                <Link to="/">
+                  <li>Contate-nos</li>
+                </Link>
+                <Link to="/">
+                  <li>Sobre nós</li>
+                </Link>
               </ul>
             </div>
           </div>
-          <h1 className="logo">Notícias RP</h1>
+          <Link to="/">
+            <h1 className="logo">Notícias RP</h1>
+          </Link>
           <div className="search-icon">
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
-              style={{ fontSize: "16px", color: "#fff" }}
+              style={{ fontSize: "22px", color: "#fff", cursor: "pointer" }}
             />
           </div>
         </>
-      ) : (
-        <></>
       )}
     </header>
   );
