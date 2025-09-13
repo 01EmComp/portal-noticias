@@ -1,21 +1,91 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
+// Auth
+import { register } from "/src/Services/auth";
+import { sendVerificationEmail } from "/src/Services/auth";
+// import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
+
+// Components
 import InputText from "/src/Components/InputText/index.jsx";
 import Button from "/src/Components/Button/index.jsx";
 import Checkbox from "/src/Components/Checkbox/index.jsx";
 
+// Css
 import "./Register.css";
 
 function LoginScreen() {
+  const [errorMsg, setErrorMsg] = useState("");
   const [formData, setFormData] = useState({
-    nome: "",
+    name: "",
     email: "",
-    senha: "",
-    confsenha: "",
-    telefone: "",
-    aceitar: false,
+    password: "",
+    confpassword: "",
+    phone: "",
+    acept: false,
   });
+
+  const navigate = useNavigate();
+
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     await loginWithGoogle();
+  //     // Redireciona após login
+  //     navigate("/");
+  //   } catch (err) {
+  //     setErrorMsg(err);
+  //   }
+  // };
+
+  // const handleFacebookLogin = async () => {
+  //   try {
+  //     await loginWithFacebook();
+  //     // Redireciona após login
+  //     navigate("/");
+  //   } catch (err) {
+  //     setErrorMsg(err);
+  //   }
+  // };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+
+    // Verifica se senhas coincidem
+    if (formData.password !== formData.confpassword) {
+      setErrorMsg("As senhas não coincidem. ");
+      return;
+    }
+
+    try {
+      const user = await register(
+        formData.name,
+        formData.email,
+        formData.phone,
+        formData.password
+      );
+      sendVerificationEmail(user);
+      // Redireciona após login
+      navigate("/");
+    } catch (err) {
+      // console.log(err);       --> Mostra erro no console
+      let msg = "";
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          msg = "Email já cadastrado.";
+          break;
+        case "auth/invalid-email":
+          msg = "Email inválido. Verifique e tente novamente.";
+          break;
+        case "auth/weak-password":
+          msg = "Senha muito fraca. Use ao menos 6 caracteres.";
+          break;
+        default:
+          msg = "Ocorreu um erro. Tente novamente mais tarde.";
+      }
+      setErrorMsg(msg); // exibe na tela
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,8 +98,8 @@ function LoginScreen() {
         <h2>Crie sua conta</h2>
         <InputText
           label="Nome"
-          name="nome"
-          value={formData.nome}
+          name="name"
+          value={formData.name}
           onChange={handleChange}
           placeholder="Digite seu nome"
         />
@@ -42,45 +112,49 @@ function LoginScreen() {
         />
         <InputText
           label="Senha"
-          name="senha"
+          name="password"
           type="password"
-          value={formData.senha}
+          value={formData.password}
           onChange={handleChange}
           placeholder="Digite sua senha"
         />
         <InputText
           label="Confirmar senha"
-          name="confsenha"
+          name="confpassword"
           type="password"
-          value={formData.confsenha}
+          value={formData.confpassword}
           onChange={handleChange}
           placeholder="Repita a senha"
         />
         <InputText
           label="Telefone(Opcional)"
-          name="telefone"
+          name="phone"
           type="text"
-          value={formData.telefone}
+          value={formData.phone}
           onChange={handleChange}
           placeholder="(99) 99999-9999"
         />
         <Checkbox
           label="Aceito os termos de uso"
-          checked={formData.lembrar}
+          checked={formData.remember}
           onChange={() =>
-            setFormData((prev) => ({ ...prev, lembrar: !prev.lembrar }))
+            setFormData((prev) => ({ ...prev, remember: !prev.remember }))
           }
         />
 
         <Button
           text="Criar conta"
-          onClick={() => {}}
+          onClick={handleRegister}
           style={{ marginTop: "5px", width: "100%", height: "58px" }}
         />
 
         <p>
           Já tem conta? | <Link to="/login"> Entre</Link>
         </p>
+
+        {errorMsg && (
+          <p style={{ color: "red", marginTop: "10px" }}>{errorMsg}</p>
+        )}
       </div>
     </div>
   );

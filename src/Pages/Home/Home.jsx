@@ -1,4 +1,8 @@
-import "./Home.css";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+
+// Instagram lib
+import Stories from "react-insta-stories";
 
 // Images
 import img1 from "/src/Assets/Images/art-1.jpg";
@@ -22,37 +26,133 @@ import "swiper/css/effect-coverflow";
 
 // Components
 import NewItem from "/src/Components/HomeComponents/NewItem";
+import StoriesItem from "/src/Components/HomeComponents/Stories";
 
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { faCloud } from "@fortawesome/free-regular-svg-icons";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
+import { faCloud, faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+
+// Css
+import "./Home.css";
 
 const Home = () => {
   const images = [img1, img2, img3, img4];
+  const [storyOpen, setStoryOpen] = useState(false);
+
+  // Stories List
+  const storyList = [
+    {
+      content: ({ action, story }) => (
+        <img
+          src={img1}
+          alt="Story 1"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      ),
+      duration: 5000,
+    },
+  ];
 
   return (
     <div className="h-container">
       <section className="h-social">
         <div className="top">
           <h2 className="sub-title">Siga-nos</h2>
-          <p>
-            Mais{" "}
-            <FontAwesomeIcon
-              icon={faArrowRight}
-              style={{ fontSize: "12px", color: "rgba(0, 0, 0, 0.5)" }}
+        </div>
+        <div className="bottom--scroolX">
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+          <div onClick={() => setStoryOpen(true)}>
+            <StoriesItem />
+          </div>
+        </div>
+        {storyOpen && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.9)",
+              zIndex: 5,
+            }}
+          >
+            <button
+              onClick={() => setStoryOpen(false)}
+              style={{
+                position: "absolute",
+                top: "2rem",
+                right: "1.5rem",
+                fontSize: "1.5rem",
+                color: "#fff",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                zIndex: 100000,
+              }}
+            >
+              X
+            </button>
+            <Stories
+              stories={storyList}
+              defaultInterval={4000}
+              width="100%"
+              height="100%"
             />
-          </p>
-        </div>
-        <div className="bottom">
-          <div className="social-story"></div>
-          <div className="social-story"></div>
-          <div className="social-story"></div>
-          <div className="social-story"></div>
-          <div className="social-story"></div>
-        </div>
+          </div>
+        )}
       </section>
       <section className="h-main-new">
         <div className="top">
@@ -102,7 +202,9 @@ const Home = () => {
       </section>
       <section className="h-news">
         <div className="top">
-          <h2 className="sub-title">Notícias</h2>
+          <Link to="/">
+            <h2 className="sub-title">Notícias</h2>
+          </Link>
           <FontAwesomeIcon
             icon={faArrowRight}
             style={{
@@ -135,7 +237,9 @@ const Home = () => {
       </section>
       <section className="h-slider">
         <div className="top">
-          <h2 className="sub-title">Descubra</h2>
+          <Link to="/">
+            <h2 className="sub-title">Descubra</h2>
+          </Link>
           <FontAwesomeIcon
             icon={faArrowRight}
             style={{
@@ -152,7 +256,6 @@ const Home = () => {
             slidesPerView="auto"
             centeredSlides
             loop
-            loopedSlides={images.length}
             navigation
             pagination={{ clickable: true }}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
@@ -185,7 +288,9 @@ const Home = () => {
             <span>colaborador</span>
           </div>
           <div className="right-side">
-            <div className="button-link">Clique aqui</div>
+            <Link to="/">
+              <div className="button-link">Clique aqui</div>
+            </Link>
           </div>
         </div>
       </section>
