@@ -3,6 +3,14 @@
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 15px;
+  transition: 0.2s ease;
+}
+
+.newItem:hover {
+  background-color: #e9e8e8;
 }
 
 .newItem:last-child {
@@ -73,6 +81,12 @@
 @media (min-width: 1024px) {
   .newItem .right-side {
     gap: 2rem;
+  }
+
+  .newItem .left-side {
+    width: 8.1rem;
+    height: 8.1rem;
+    box-shadow: 0 2px 2px var(--shadow-color);
   }
 
   .newItem .left-side img {

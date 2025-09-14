@@ -15,8 +15,10 @@
     "@fortawesome/free-regular-svg-icons": "^7.0.1",
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
+    "firebase": "^12.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-insta-stories": "^2.8.0",
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.9.0",
     "swiper": "^11.2.10"
