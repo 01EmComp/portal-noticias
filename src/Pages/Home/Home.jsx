@@ -288,7 +288,7 @@ const Home = () => {
             <span>colaborador</span>
           </div>
           <div className="right-side">
-            <Link to="/">
+            <Link to="/contact">
               <div className="button-link">Clique aqui</div>
             </Link>
           </div>
