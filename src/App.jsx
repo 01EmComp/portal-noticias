@@ -8,21 +8,24 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
+import { CaptchaProvider } from "./Context/Captcha/CaptchaContext.jsx";
 
 // Css
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Header />
-        <main>
-          <AppRoutes />
-        </main>
-        <Footer />
-      </BrowserRouter>
-    </div>
+    <CaptchaProvider>
+      <div className="App">
+        <BrowserRouter>
+          <Header />
+          <main>
+            <AppRoutes />
+          </main>
+          <Footer />
+        </BrowserRouter>
+      </div>
+    </CaptchaProvider>
   );
 }
 

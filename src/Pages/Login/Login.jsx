@@ -10,6 +10,9 @@ import InputText from "/src/Components/InputText/index.jsx";
 import Button from "/src/Components/Button/index.jsx";
 import Checkbox from "/src/Components/Checkbox/index.jsx";
 
+// Contexts
+import { useCaptcha } from "/src/Context/Captcha/CaptchaContext.jsx";
+
 // Css
 import "./Login.css";
 
@@ -22,37 +25,35 @@ function LoginScreen() {
   });
 
   const navigate = useNavigate();
+  const { token, resetCaptcha, CaptchaWidget } = useCaptcha();
 
-  // Login methods
-
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     await loginWithGoogle();
-  //     // Redireciona após login
-  //   } catch (err) {
-  //     setErrorMsg(err);
-  //   }
-  // };
-
-  // const handleFacebookLogin = async () => {
-  //   try {
-  //     await loginWithFacebook();
-  //     // Redireciona após login
-  //   } catch (err) {
-  //     setErrorMsg(err);
-  //   }
-  // };
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg(""); // limpa erros anteriores
 
+    if (!formData.email || !formData.password) {
+      setErrorMsg("Preencha todos os campos!");
+      return;
+    }
+
+    if (!token) {
+      setErrorMsg("Por favor, complete o CAPTCHA!");
+      return;
+    }
+
     try {
       await login(formData.email, formData.password);
-      // Redireciona após login
+      resetCaptcha();
       navigate("/");
     } catch (err) {
-      // console.log(err);       --> Mostra erro no console
       let msg = "";
       switch (err.code) {
         case "auth/invalid-credential":
@@ -70,23 +71,21 @@ function LoginScreen() {
         default:
           msg = "Ocorreu um erro. Tente novamente mais tarde.";
       }
-      setErrorMsg(msg); // exibe na tela
+      setErrorMsg(msg);
+      resetCaptcha();
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
-    <>
-      <div className="login-screen">
-        <div className="login-container">
-          <h2>Entrar</h2>
+    <div className="login-screen">
+      <div className="login-container">
+        <h2>Entrar</h2>
+
+        <form onSubmit={handleLogin} className="login-form">
           <InputText
             label="E-mail"
             name="email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Digite seu e-mail"
@@ -102,28 +101,31 @@ function LoginScreen() {
 
           <Checkbox
             label="Lembre-me"
+            name="remember"
             checked={formData.remember}
-            onChange={() =>
-              setFormData((prev) => ({ ...prev, remember: !prev.remember }))
-            }
+            onChange={handleChange}
           />
+
+          <div className="captcha-container">
+            <CaptchaWidget />
+          </div>
 
           <Button
             text="Entrar"
-            onClick={handleLogin}
+            type="submit"
             style={{ marginTop: "5px", width: "100%", height: "58px" }}
           />
+        </form>
 
-          <p>
-            <Link to="/register">Cadastrar</Link> | Esqueceu a senha?
-          </p>
+        <p>
+          <Link to="/register">Cadastrar</Link> | Esqueceu a senha?
+        </p>
 
-          {errorMsg && (
-            <p style={{ color: "red", marginTop: "10px" }}>{errorMsg}</p>
-          )}
-        </div>
+        {errorMsg && (
+          <p style={{ color: "red", marginTop: "10px" }}>{errorMsg}</p>
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

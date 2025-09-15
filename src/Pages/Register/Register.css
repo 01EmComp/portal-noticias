@@ -27,3 +27,10 @@
   align-self: flex-start;
   margin-left: 10px;
 }
+
+.cadastro-container .captcha-container {
+  margin: 15px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
