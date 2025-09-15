@@ -84,7 +84,7 @@ const Footer = () => {
         <Link to="/">
           <p>Aviso legal e Política de Privacidade</p>
         </Link>
-        <Link to="/">
+        <Link to="/contact">
           <p>Fale com o Notícias RP</p>
         </Link>
       </div>
