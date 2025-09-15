@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 
 import InputText from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/InputText/index.jsx";
 import Button from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/Button/index.jsx";
@@ -20,11 +20,32 @@ function LoginScreen() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const navigate = useNavigate();
+
+  const abrirNoticia = async () => {
+    try {
+      const response = await fetch("/textos/noticia.txt");
+      const texto = await response.text();
+
+      navigate("/noticia", {
+        state: {
+          titulo: "Lançamento do novo produto",
+          autor: "Equipe de Marketing",
+          data: "14/09/2025",
+          hora: "22:30",
+          imagem: "",
+          texto: texto
+        }
+      });
+    } catch (error) {
+      console.error("Erro ao carregar o texto:", error);
+    }
+  };
+
   return (
     <>
       <Header />
       <div className="login-screen">
-
         <div className="login-container">
           <h2>Entrar</h2>
           <InputText
@@ -53,7 +74,7 @@ function LoginScreen() {
 
           <Button
             text="Entrar"
-            onClick={() => {}}
+            onClick={abrirNoticia}
             style={{ marginTop: "5px", width: "100%", height: "58px" }}
           />
 
