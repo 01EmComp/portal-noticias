@@ -85,6 +85,7 @@ git clone https://github.com/nome-empresa/projeto-xyz.git
 cd projeto-xyz
 
 npm install
+npm install @hcaptcha/react-hcaptcha
 npm i --save @fortawesome/react-fontawesome@latest
 npm i --save @fortawesome/fontawesome-svg-core
 npm i --save @fortawesome/free-solid-svg-icons

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import InputText from "/src/Components/InputText/index.jsx";
 import Button from "/src/Components/Button/index.jsx";
+import { useCaptcha } from "/src/Context/Captcha/CaptchaContext.jsx";
 
 import "./Contact.css";
 
@@ -15,6 +16,7 @@ function Contact() {
   });
 
   const [feedback, setFeedback] = useState(null);
+ const { token, resetCaptcha, CaptchaWidget } = useCaptcha();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +31,11 @@ function Contact() {
       return;
     }
 
+    if (!token) {
+      setFeedback({ type: "error", message: "Por favor, complete o CAPTCHA!" });
+      return;
+    }
+
     setFeedback({ type: "success", message: "Mensagem enviada com sucesso!" });
 
     setFormData({
@@ -39,6 +46,7 @@ function Contact() {
       assunto: "",
     });
 
+    resetCaptcha();
   };
 
   return (
@@ -90,6 +98,10 @@ function Contact() {
               onChange={handleChange}
               placeholder="Por favor, insira o assunto a ser tratado..."
             />
+          </div>
+
+          <div className="captcha-container">
+            <CaptchaWidget />
           </div>
 
           <Button
