@@ -52,7 +52,7 @@ function LoginScreen() {
     try {
       await login(formData.email, formData.password);
       resetCaptcha();
-      navigate("/");
+      navigate("/profile");
     } catch (err) {
       let msg = "";
       switch (err.code) {
