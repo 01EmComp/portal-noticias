@@ -379,4 +379,4 @@ Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE)
 ## 📞 Contato
 Para dúvidas ou sugestões, entre em contato com:
 - Email:  emcomprp@gmail.com
-- Slack: http://www.emcomp.com.br
+- Site: http://www.emcomp.com.br
