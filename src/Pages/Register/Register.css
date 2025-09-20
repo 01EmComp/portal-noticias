@@ -5,6 +5,7 @@
   justify-content: center;
   min-height: 100vh;
   background-color: var(--primary-background-color);
+  padding: 2rem 0;
 }
 
 .cadastro-container {
@@ -17,6 +18,12 @@
 .cadastro-container p {
   text-align: center;
   margin-top: 10px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .cadastro-container a {

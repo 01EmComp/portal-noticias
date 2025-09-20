@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Social Login Button's
+import { FacebookLoginButton } from "react-social-login-buttons";
+import { GoogleLoginButton } from "react-social-login-buttons";
+
 // Auth
 import { login } from "/src/Services/auth";
-// import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
+import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
 
 // Components
 import InputText from "/src/Components/InputText/index.jsx";
@@ -76,6 +80,26 @@ function LoginScreen() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      // Redireciona após login
+      navigate("/profile");
+    } catch (err) {
+      setErrorMsg(err);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await loginWithFacebook();
+      // Redireciona após login
+      navigate("/perfil");
+    } catch (err) {
+      setErrorMsg(err);
+    }
+  };
+
   return (
     <div className="login-screen">
       <div className="login-container">
@@ -110,6 +134,15 @@ function LoginScreen() {
             <CaptchaWidget />
           </div>
 
+          <div className="login-with-socials">
+            <GoogleLoginButton onClick={handleGoogleLogin}>
+              <span>Fazer login com o Google</span>
+            </GoogleLoginButton>
+            <FacebookLoginButton onClick={handleFacebookLogin}>
+              <span>Fazer login com o Facebook</span>
+            </FacebookLoginButton>
+          </div>
+
           <Button
             text="Entrar"
             type="submit"
@@ -117,9 +150,9 @@ function LoginScreen() {
           />
         </form>
 
-        <p>
+        <div>
           <Link to="/register">Cadastrar</Link> | Esqueceu a senha?
-        </p>
+        </div>
 
         {errorMsg && (
           <p style={{ color: "red", marginTop: "10px" }}>{errorMsg}</p>
