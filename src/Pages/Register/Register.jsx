@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Social Login Button's
+import { FacebookLoginButton } from "react-social-login-buttons";
+import { GoogleLoginButton } from "react-social-login-buttons";
+
 // Auth
 import { register, sendVerificationEmail } from "/src/Services/auth";
+import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
 
 // Components
 import InputText from "/src/Components/InputText/index.jsx";
@@ -34,7 +39,12 @@ function RegisterScreen() {
     setErrorMsg("");
 
     // Valida campos obrigatórios
-    if (!formData.name || !formData.email || !formData.password || !formData.confpassword) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confpassword
+    ) {
       setErrorMsg("Preencha todos os campos obrigatórios!");
       return;
     }
@@ -93,6 +103,26 @@ function RegisterScreen() {
     }));
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      // Redireciona após login
+      navigate("/profile");
+    } catch (err) {
+      setErrorMsg(err);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await loginWithFacebook();
+      // Redireciona após login
+      navigate("/profile");
+    } catch (err) {
+      setErrorMsg(err);
+    }
+  };
+
   return (
     <div className="cadastro-screen">
       <div className="cadastro-container">
@@ -138,7 +168,7 @@ function RegisterScreen() {
             placeholder="(99) 99999-9999"
           />
           <Checkbox
-           label="Aceitar os termos de uso"
+            label="Aceitar os termos de uso"
             name="acept"
             checked={formData.acept}
             onChange={handleChange}
@@ -146,6 +176,15 @@ function RegisterScreen() {
 
           <div className="captcha-container">
             <CaptchaWidget />
+          </div>
+
+          <div className="login-with-socials">
+            <GoogleLoginButton onClick={handleGoogleLogin}>
+              <span>Registrar com o Google</span>
+            </GoogleLoginButton>
+            <FacebookLoginButton onClick={handleFacebookLogin}>
+              <span>Registrar com o Facebook</span>
+            </FacebookLoginButton>
           </div>
 
           <Button
