@@ -86,6 +86,7 @@ cd projeto-xyz
 
 npm install
 npm install @hcaptcha/react-hcaptcha
+npm install react-social-login-buttons
 npm i --save @fortawesome/react-fontawesome@latest
 npm i --save @fortawesome/fontawesome-svg-core
 npm i --save @fortawesome/free-solid-svg-icons
