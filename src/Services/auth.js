@@ -30,6 +30,9 @@ export async function register(name, email, phone, password) {
     phone,
   });
 
+  // Envia email de verificação
+  await sendVerificationEmail(user);
+
   return user;
 }
 
@@ -38,10 +41,15 @@ export async function login(email, password) {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
-
     password
   );
-  return userCredential.user;
+  const user = userCredential.user;
+
+  if (!user.emailVerified) {
+    throw new Error("Email não verificado. Verifique sua caixa de entrada.");
+  }
+
+  return user;
 }
 
 // Login with Google function
@@ -111,6 +119,12 @@ export const sendVerificationEmail = async (user) => {
   }
 };
 
+// email has already been verified fuction
+export const isEmailVerified = () => {
+  const user = auth.currentUser;
+  return user ? user.emailVerified : false;
+};
+
 // Delete account function
 export const deleteAccount = async () => {
   try {
@@ -124,11 +138,11 @@ export const deleteAccount = async () => {
     // Excluir conta no Firebase Auth
     await deleteUser(user);
   } catch (err) {
+
     alert("Erro ao excluir conta:", err);
+
     if (err.code === "auth/requires-recent-login") {
-      alert(
-        "Para excluir a conta, você precisa entrar novamente antes de tentar."
-      );
+      alert("Para excluir a conta, você precisa entrar novamente antes de tentar.");
     }
   }
 };
