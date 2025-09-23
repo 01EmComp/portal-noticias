@@ -28,6 +28,7 @@ export async function register(name, email, phone, password) {
     name,
     email,
     phone,
+    photoURL: user.photoURL || "https://via.placeholder.com/150",
   });
 
   // Envia email de verificação
@@ -64,11 +65,16 @@ export const loginWithGoogle = async () => {
     const docSnap = await getDoc(userRef);
 
     if (!docSnap.exists()) {
-      await setDoc(userRef, {
-        name: user.displayName || "",
-        email: user.email || "",
-        phone: "",
-      });
+      await setDoc(
+        userRef,
+        {
+          name: user.displayName || "",
+          email: user.email || "",
+          phone: "",
+          photoURL: user.photoURL || "https://via.placeholder.com/150",
+        },
+        { merge: true }
+      );
     }
 
     return user;
@@ -90,11 +96,16 @@ export const loginWithFacebook = async () => {
     const docSnap = await getDoc(userRef);
 
     if (!docSnap.exists()) {
-      await setDoc(userRef, {
-        name: user.displayName || "",
-        email: user.email || "",
-        phone: "",
-      });
+      await setDoc(
+        userRef,
+        {
+          name: user.displayName || "",
+          email: user.email || "",
+          phone: "",
+          photoURL: user.photoURL || "https://via.placeholder.com/150",
+        },
+        { merge: true }
+      );
     }
 
     return user;
