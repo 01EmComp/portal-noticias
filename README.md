@@ -85,8 +85,6 @@ git clone https://github.com/nome-empresa/projeto-xyz.git
 cd projeto-xyz
 
 npm install
-npm install @hcaptcha/react-hcaptcha
-npm install react-social-login-buttons
 npm i --save @fortawesome/react-fontawesome@latest
 npm i --save @fortawesome/fontawesome-svg-core
 npm i --save @fortawesome/free-solid-svg-icons
@@ -127,14 +125,14 @@ npm run build
 
 ### Exemplos de commits
 | Tipo      | Exemplo de Commit                                      | Descrição                                     |
-|----------|--------------------------------------------------------|-----------------------------------------------|
-| feat     | `[feat] Criação da página de login`         | Nova funcionalidade adicionada               |
-| fix      | `[fix] Correção no layout responsivo do Header` | Correção de bug                              |
-| style    | `[style] Padronização de espaçamentos no Footer` | Alterações de formatação ou aparência       |
-| docs     | `[docs] Atualização do README com instruções de instalação` | Alterações apenas na documentação           |
-| refactor | `[refactor] Reestruturação da lógica de rotas` | Refatoração de código sem alterar comportamento |
-| test     | `[test] Adição de testes unitários para o Header` | Inclusão ou ajuste de testes                 |
-| chore    | `[chore] Configuração inicial do ESLint e Prettier` | Tarefas de manutenção do projeto            |
+|----------|--------------------------------------------------------|----------------------------------------------- |
+| feat     | `[feat] Criação da página de login`         | Nova funcionalidade adicionada                            |
+| fix      | `[fix] Correção no layout responsivo do Header` | Correção de bug                                       |
+| style    | `[style] Padronização de espaçamentos no Footer` | Alterações de formatação ou aparência                |
+| docs     | `[docs] Atualização do README com instruções de instalação` | Alterações apenas na documentação         |
+| refactor | `[refactor] Reestruturação da lógica de rotas` | Refatoração de código sem alterar comportamento        |
+| test     | `[test] Adição de testes unitários para o Header` | Inclusão ou ajuste de testes                        |
+| chore    | `[chore] Configuração inicial do ESLint e Prettier` | Tarefas de manutenção do projeto                  |
 
 ### Code Reviews:
 - Pull Requests obrigatórios
