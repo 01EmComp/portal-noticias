@@ -102,7 +102,7 @@ npm i --save @fortawesome/free-brands-svg-icons
 | React                 | Latest | Framework frontend            |
 | Vite                  | Latest | Build tool para React         |
 | Firebase              | —      | Autenticação e banco de dados |
-| PHP                   | Latest | Backend futuro                |
+| Java                   | Latest | Backend futuro                |
 | Figma                 | —      | Ferramenta de Prototipação    |
 
 ---
