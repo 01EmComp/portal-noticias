@@ -1,0 +1,107 @@
+.header-tablet {
+  width: 550px;
+  height: 110px;
+  background-color: #111827;
+  color: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px;
+}
+
+.left-buttons {
+  margin-left: 31px;
+}
+
+.container-header-tablet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+}
+
+.title-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.title-header-tablet {
+  font-family: "Jacques Francois", serif;
+  font-size: 20px;
+  margin: 0;
+}
+
+.buttons-header-tablet {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-img {
+  width: 16px;
+  height: 12px;
+}
+.search-img {
+  width: 16.19px;
+  height: 15.73px;
+}
+.user-img {
+  width: 40px;
+  height: 45px;
+}
+
+.category-nav-tablet {
+  width: 437px;
+  height: 30px;
+  margin: 0 auto;
+  background-color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.category-list-tablet {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.category-item-tablet {
+  margin: 0;
+  padding: 0;
+}
+
+.category-item-tablet a {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 86px;
+  height: 28px;
+  text-decoration: none;
+  color: white;
+  background-color: #111827;
+  border: 1px solid white;
+  font-weight: bold;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.category-item-tablet a:hover {
+  background-color: #142648;
+}
