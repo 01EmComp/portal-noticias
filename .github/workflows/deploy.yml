@@ -1,0 +1,30 @@
+name: Deploy to Netlify
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      # Configuração do Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.19'
+      
+      # Instala dependências e constrói
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+      
+      # Deploy para o Netlify
+      - name: Deploy
+        uses: netlify/deploy-action@v1
+        with:
+          token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          prod-branch: main
+          deploy-dir: './dist'
