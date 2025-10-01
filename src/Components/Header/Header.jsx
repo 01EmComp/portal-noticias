@@ -56,6 +56,9 @@ const Header = () => {
                 <Link to="/profile">
                   <li>Perfil</li>
                 </Link>
+                <Link to="/author-page">
+                  <li>Autor</li>
+                </Link>
                 <Link to="/">
                   <li>Sobre nós</li>
                 </Link>
@@ -92,6 +95,9 @@ const Header = () => {
                 </Link>
                 <Link to="/profile">
                   <li>Perfil</li>
+                </Link>
+                <Link to="/author-page">
+                  <li>Autor</li>
                 </Link>
                 <Link to="/">
                   <li>Sobre nós</li>
