@@ -90,6 +90,16 @@ npm i --save @fortawesome/fontawesome-svg-core
 npm i --save @fortawesome/free-solid-svg-icons
 npm i --save @fortawesome/free-regular-svg-icons
 npm i --save @fortawesome/free-brands-svg-icons
+
+# Rodar em modo de desenvolvimento
+npm run dev
+
+# O projeto estará disponível em:
+# http://localhost:5173 (ou a porta que o Vite indicar)
+
+# Rodar em produção
+npm run build
+# O conteúdo gerado ficará na pasta 'dist/'
 ```
 
 ---
@@ -102,16 +112,28 @@ npm i --save @fortawesome/free-brands-svg-icons
 | React                 | Latest | Framework frontend            |
 | Vite                  | Latest | Build tool para React         |
 | Firebase              | —      | Autenticação e banco de dados |
-| Java                   | Latest | Backend futuro                |
+| Java Spring           | Latest | Backend futuro (em avaliação) |
+
 | Figma                 | —      | Ferramenta de Prototipação    |
 
 ---
 
-## 📊 Padrões e Boas Práticas
+### 📊 Padrões e Boas Práticas
 
-### Commit Messages:
-- Formato padronizado: [tipo] Descrição da alteração
-- Exemplo: [fix] Correção de bug no layout
+### Commit Messages
+- **Formato padronizado:** `[tipo] Descrição da alteração [PROJ-XXX]`
+- **Objetivo:** Garantir histórico claro, rastreável e organizado.
+
+### Exemplos de commits
+| Tipo      | Exemplo de Commit                                      | Descrição                                     |
+|----------|--------------------------------------------------------|----------------------------------------------- |
+| feat     | `[feat] Criação da página de login`         | Nova funcionalidade adicionada                            |
+| fix      | `[fix] Correção no layout responsivo do Header` | Correção de bug                                       |
+| style    | `[style] Padronização de espaçamentos no Footer` | Alterações de formatação ou aparência                |
+| docs     | `[docs] Atualização do README com instruções de instalação` | Alterações apenas na documentação         |
+| refactor | `[refactor] Reestruturação da lógica de rotas` | Refatoração de código sem alterar comportamento        |
+| test     | `[test] Adição de testes unitários para o Header` | Inclusão ou ajuste de testes                        |
+| chore    | `[chore] Configuração inicial do ESLint e Prettier` | Tarefas de manutenção do projeto                  |
 
 ### Code Reviews:
 - Pull Requests obrigatórios
