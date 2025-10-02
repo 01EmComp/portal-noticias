@@ -17,11 +17,11 @@
   function Header() {
     return (
       <>
-        <header className="header-desktop">
-          <div className="container-header-desktop">
+        <header className="header">
+          <div className="container-header">
             <div className="left-buttons">{<img src={menuIcon} alt="Menu" />}</div>
             <div className="title-wrapper">
-              <h1 className="title-header-desktop">Notícias RP</h1>
+              <h1 className="title-header">Notícias RP</h1>
             </div>
             <div className="right-buttons">
               <img src={searchIcon} alt="Buscar" />
@@ -30,10 +30,10 @@
           </div>
         </header>
 
-        <nav className="category-nav-desktop">
-          <ul className="category-list-desktop">
+        <nav className="category-nav">
+          <ul className="category-list">
             {categories.map((category) => (
-              <li key={category} className="category-item-desktop">
+              <li key={category} className="category-item">
                 <a href="">{category}</a>
               </li>
             ))}

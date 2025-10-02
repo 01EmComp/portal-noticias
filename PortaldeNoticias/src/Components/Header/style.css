@@ -1,0 +1,328 @@
+.header {
+  width: 1024px;
+  height: 100px;
+  background-color: #111827;
+  color: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px;
+}
+
+.left-buttons {
+  margin-left: 31px;
+}
+
+.container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+}
+
+.title-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.title-header {
+  font-family: "Jacques Francois", serif;
+  font-size: 20px;
+  margin: 0;
+}
+
+.buttons-header {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-img {
+  width: 16px;
+  height: 12px;
+}
+.search-img {
+  width: 16.19px;
+  height: 15.73px;
+}
+.user-img {
+  width: 40px;
+  height: 45px;
+}
+
+.category-nav {
+  width: 783px;
+  height: 30px;
+  margin: 0 auto;
+  background-color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.category-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.category-item {
+  margin: 0;
+  padding: 0;
+}
+
+.category-item a {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 28px;
+  text-decoration: none;
+  color: white;
+  background-color: #111827;
+  border: 1px solid white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.category-item a:hover {
+  background-color: #142648;
+}
+
+@media(max-width: 780px){
+  .header {
+  width: 780px;
+  height: 110px;
+  background-color: #111827;
+  color: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px;
+}
+
+.left-buttons {
+  margin-left: 31px;
+}
+
+.container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+}
+
+.title-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.title-header {
+  font-family: "Jacques Francois", serif;
+  font-size: 20px;
+  margin: 0;
+}
+
+.buttons-header {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-img {
+  width: 16px;
+  height: 12px;
+}
+.search-img {
+  width: 16.19px;
+  height: 15.73px;
+}
+.user-img {
+  width: 40px;
+  height: 45px;
+}
+
+.category-nav {
+  width: 437px;
+  height: 30px;
+  margin: 0 auto;
+  background-color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.category-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.category-item {
+  margin: 0;
+  padding: 0;
+}
+
+.category-item a {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 86px;
+  height: 28px;
+  text-decoration: none;
+  color: white;
+  background-color: #111827;
+  border: 1px solid white;
+  font-weight: bold;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.category-item a:hover {
+  background-color: #142648;
+}
+
+}
+@media(max-width: 480px){
+  .header {
+  width: 480px;
+  height: 100px;
+  background-color: #111827;
+  color: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px;
+}
+
+.left-buttons {
+  margin-left: 31px;
+}
+
+.container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+}
+
+.title-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.title-header {
+  font-family: "Jacques Francois", serif;
+  font-size: 20px;
+  margin: 0;
+}
+
+.buttons-header {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-img {
+  width: 16px;
+  height: 12px;
+}
+.search-img {
+  width: 16.19px;
+  height: 15.73px;
+}
+.user-img {
+  width: 40px;
+  height: 45px;
+}
+
+.category-nav {
+  width: 0px;
+  height: 0px;
+  margin: 0 auto;
+  background-color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.category-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.category-item {
+  margin: 0;
+  padding: 0;
+}
+
+.category-item a {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 28px;
+  text-decoration: none;
+  color: white;
+  background-color: #111827;
+  border: 1px solid white;
+  font-weight: bold;
+  font-size: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.category-item a:hover {
+  background-color: #142648;
+}
+
+}
