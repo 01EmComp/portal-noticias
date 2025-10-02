@@ -113,6 +113,7 @@ npm run build
 | Vite                  | Latest | Build tool para React         |
 | Firebase              | —      | Autenticação e banco de dados |
 | Java Spring           | Latest | Backend futuro (em avaliação) |
+
 | Figma                 | —      | Ferramenta de Prototipação    |
 
 ---
@@ -400,4 +401,4 @@ Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE)
 ## 📞 Contato
 Para dúvidas ou sugestões, entre em contato com:
 - Email:  emcomprp@gmail.com
-- Slack: http://www.emcomp.com.br
+- Site: http://www.emcomp.com.br
