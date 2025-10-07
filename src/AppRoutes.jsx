@@ -9,6 +9,7 @@ import Profile from "./Pages/Profile/Profile";
 import Contact from "./Pages/Contact/Contact";
 import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
+import News from "./Pages/News/News";
 
 const AppRoutes = () => {
   return (
@@ -29,7 +30,9 @@ const AppRoutes = () => {
 
       {/* Sobre nos */}
       <Route path="/about" element={<About />} />
-
+      
+      {/* News */}
+      <Route path="/news" element={<News />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<h1>404 - Página não encontrada</h1>} />

@@ -1,0 +1,117 @@
+.news-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem 3rem;
+}
+
+.news-container .header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.news-container .header .about {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.news-container .header .about .author-and-time {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.news-container .header .about h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.news-container .header .about .author-and-time p,
+.news-container .header .about .author-and-time span {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.news-container .header .image {
+  width: 100%;
+}
+
+.news-container .header .image img {
+  object-fit: contain;
+  width: 100%;
+}
+
+.news-container .news-text {
+  width: 100%;
+}
+
+.news-container .news-text p {
+  text-align: justify;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (min-width: 600px) {
+  .news-container {
+    padding: 2rem 4rem 3.5rem;
+  }
+
+  .news-container .header .image img {
+    width: 470px;
+    height: 285px;
+  }
+
+  .news-container .header {
+    max-width: 90%;
+  }
+
+  .news-container .news-text {
+    width: 100%;
+    max-width: 90%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .news-container {
+    padding: 3rem 0rem 4rem;
+    gap: 2.5rem;
+  }
+
+  .news-container .header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 2rem;
+    width: 70%;
+  }
+
+  .news-container .header .about {
+    gap: 0.8rem;
+  }
+
+  .news-container .header .image {
+    width: auto;
+  }
+
+  .news-container .header .image img {
+    width: 500px;
+    height: 305px;
+  }
+
+  .news-container .news-text {
+    width: 100%;
+    max-width: 70%;
+  }
+
+  .news-container .news-text p {
+    font-size: 17px;
+  }
+}

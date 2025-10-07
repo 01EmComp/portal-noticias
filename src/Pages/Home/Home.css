@@ -105,11 +105,6 @@
   transition: 0.2s ease;
 }
 
-.h-container .h-social .bottom--scroolX .arc-story:hover .social-story {
-  opacity: 0.8;
-  transform: scale(1.1);
-}
-
 /* Main-new */
 
 .h-container .h-main-new {
