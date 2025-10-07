@@ -62,7 +62,6 @@ const Header = () => {
                 </Link>
 
                 <Link to="/about">
-
                   <li>Sobre nós</li>
                 </Link>
               </ul>

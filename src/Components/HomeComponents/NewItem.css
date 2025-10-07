@@ -9,6 +9,11 @@
   transition: 0.2s ease;
 }
 
+.newItem p,
+.newItem span {
+  color: #000;
+}
+
 .newItem:hover {
   background-color: #e9e8e8;
 }
