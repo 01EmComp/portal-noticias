@@ -19,12 +19,36 @@
 .news-container .header .about {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.news-container .header .about .title-and-author {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+}
+
+.news-container .header .about .author-and-time .author p span {
+  color: var(--secundary-color);
+  font-weight: 700;
+}
+
+.news-container .header .about .author-and-time .date {
+  display: flex;
+}
+
+.news-container .header .about .author-and-time .date p:nth-child(2) {
+  margin: 0 5px;
 }
 
 .news-container .header .about .author-and-time {
   display: flex;
+  flex-direction: column;
   gap: 0.2rem;
+}
+
+.news-container .header .about .social-links {
+  display: none;
 }
 
 .news-container .header .about h2 {
@@ -80,7 +104,7 @@
 
 @media screen and (min-width: 1024px) {
   .news-container {
-    padding: 3rem 0rem 4rem;
+    padding: 6rem 0rem 6rem;
     gap: 2.5rem;
   }
 
@@ -95,6 +119,24 @@
 
   .news-container .header .about {
     gap: 0.8rem;
+    height: 19rem;
+  }
+
+  .news-container .header .about .social-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .news-container .header .about .social-links div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    height: 2.8rem;
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
   }
 
   .news-container .header .image {
