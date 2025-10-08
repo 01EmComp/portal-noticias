@@ -1,0 +1,392 @@
+.create-news-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+}
+
+.create-news-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin: 0 0 2rem 0;
+}
+
+.create-news-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #aaa;
+}
+
+.form-input:focus {
+  border-color: #ff4000;
+}
+
+.image-select-button {
+  display: inline-block;
+  background-color: #ff4000;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.image-select-button:hover {
+  background-color: #e63900;
+}
+
+.image-input-hidden {
+  display: none;
+}
+
+.image-preview-container {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #aaa;
+}
+
+.placeholder-icon {
+  width: 60px;
+  height: 60px;
+  stroke: #d3d3d3;
+  stroke-width: 2;
+}
+
+.placeholder-text {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.form-textarea::placeholder {
+  color: #aaa;
+}
+
+.form-textarea:focus {
+  border-color: #ff4000;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  flex-wrap: wrap;
+}
+
+.editor-btn {
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.editor-btn:hover {
+  background-color: #ff4000;
+  color: white;
+  border-color: #ff4000;
+}
+
+.editor-btn:active {
+  transform: scale(0.95);
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: #ddd;
+  margin: 0 0.25rem;
+}
+
+.editor-select {
+  padding: 0.4rem 0.6rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.editor-select:hover {
+  border-color: #ff4000;
+}
+
+.editor-select:focus {
+  border-color: #ff4000;
+}
+
+.editor-content {
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0 0 8px 8px;
+  background-color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.editor-content:focus {
+  border-color: #ff4000;
+}
+
+.editor-content:empty:before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none;
+}
+
+.editor-content p {
+  margin: 0 0 1rem 0;
+}
+
+.editor-content h1,
+.editor-content h2,
+.editor-content h3 {
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.editor-content h1 {
+  font-size: 1.8rem;
+}
+
+.editor-content h2 {
+  font-size: 1.5rem;
+}
+
+.editor-content h3 {
+  font-size: 1.2rem;
+}
+
+.editor-content ul,
+.editor-content ol {
+  margin: 0.5rem 0;
+  padding-left: 2rem;
+}
+
+.editor-content li {
+  margin: 0.25rem 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-cancel,
+.btn-post {
+  flex: 1;
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background-color: #ff0000;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #cc0000;
+}
+
+.btn-post {
+  background-color: #00ff00;
+  color: #333;
+}
+
+.btn-post:hover {
+  background-color: #00cc00;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create-news-container {
+    padding: 1rem;
+  }
+
+  .create-news-title {
+    font-size: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-post {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-select-button {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    font-size: 0.95rem;
+  }
+
+  .placeholder-icon {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.not-authenticated,
+.not-authorized {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.not-authenticated h1,
+.not-authorized h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.not-authenticated p,
+.not-authorized p {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0;
+}
+
+.role-info {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #ff4000;
+}
+
+.role-info strong {
+  color: #ff4000;
+}
+
+.not-authenticated button,
+.not-authorized button {
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #ff4000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.not-authenticated button:hover,
+.not-authorized button:hover {
+  background-color: #e63900;
+}
