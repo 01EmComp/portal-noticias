@@ -11,11 +11,12 @@ import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import CreateNews from "./Pages/CreateNews/CreateNews";
+import AdmPainel from "./Pages/Admin/AdmPainel";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Rota principal */}
+      {/* Principal Route */}
       <Route path="/" element={<Home />} />
 
       {/* Login / Register / Profile */}
@@ -23,20 +24,23 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/profile" element={<Profile />} />
 
-      {/* Contate-nos */}
+      {/* Contact-us */}
       <Route path="/contact" element={<Contact />} />
 
-      {/* Autor */}
+      {/* Author */}
       <Route path="/author-page" element={<Author />} />
 
-      {/* Sobre nos */}
+      {/* About Us */}
       <Route path="/about" element={<About />} />
-      
+
       {/* News */}
       <Route path="/news" element={<News />} />
 
       {/* Create News */}
       <Route path="/create-news" element={<CreateNews />} />
+
+      {/* Admin Page */}
+      <Route path="/admin-painel" element={<AdmPainel />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
