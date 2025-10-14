@@ -4,7 +4,7 @@
   justify-content: center;
   position: relative;
   min-height: 70vh;
-  padding: 1rem 0 1rem 3rem;
+  padding: 1rem 1rem 1rem 4rem;
 }
 
 .adm-painel-container .side-bar {
@@ -74,13 +74,34 @@
 .adm-painel-container .side-bar .options li .hidden-links {
 }
 
+.adm-p-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 @media screen and (min-width: 400px) {
+  .adm-painel-container {
+    padding: 2rem 2rem 2rem 5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
   .adm-painel-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     position: relative;
     min-height: 70vh;
-    padding: 2rem 5rem;
+    padding: 2rem 5rem 2rem 5rem;
+  }
+
+  .adm-p-content {
+    gap: 2rem;
+  }
+
+  .adm-p-content h2 {
+    font-size: 28px;
   }
 }

@@ -19,7 +19,7 @@ import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faGears } from "@fortawesome/free-solid-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Css
@@ -120,7 +120,7 @@ const AdmPainel = () => {
             onClick={() => setOpenTab("settings")}
           >
             <div className="icon">
-              <FontAwesomeIcon icon={faGear} />
+              <FontAwesomeIcon icon={faGears} />
             </div>
             <div className="hidden-links">Configurações</div>
           </li>

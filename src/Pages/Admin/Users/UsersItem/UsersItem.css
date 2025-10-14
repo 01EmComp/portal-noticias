@@ -1,0 +1,80 @@
+.users-item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.users-item-container ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.users-item-container:first-child ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  gap: 1.8rem;
+}
+
+.users-item-container:first-child ul ul li p {
+  color: #000 !important;
+}
+
+.users-item-container {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.users-item-container:first-child ul div {
+  display: none;
+}
+
+.users-item-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+}
+
+.users-item-container ul ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.users-item-container:first-child ul li {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.users-item-container ul li {
+  font-size: 14px;
+  text-align: center;
+}
+
+.users-item-container > ul > li:first-child {
+  text-align: start;
+  width: 40%;
+}
+
+@media screen and (min-width: 500px) {
+  .users-item-container:first-child ul {
+    gap: 2.3rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .users-item-container:first-child ul li {
+    font-size: 20px;
+  }
+
+  .users-item-container ul li {
+    font-size: 16px;
+  }
+}
