@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import Header from "../../componentes/Header";
-import TextoFormatado from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/uses/TextoFormatado.jsx";
+import Header from "../../Components/Header";
+import TextoFormatado from "../../Services/TextoFormatado";
 import "./style.css";
 
 function TelaNoticia() {

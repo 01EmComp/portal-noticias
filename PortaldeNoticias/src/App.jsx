@@ -1,7 +1,7 @@
-import Header from "../src/Components/Header"
+import TelaAssinatura from "./Pages/TelaAssinatura";
 function App() {
   return (
-   <Header/>
+   <TelaAssinatura />
   );
 }
 

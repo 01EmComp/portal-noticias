@@ -1,0 +1,196 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Agbalumo', sans-serif;
+}
+
+.cadastro-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 24px 16px;
+}
+
+.cadastro-container {
+  width: 420px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  margin-top: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+}
+
+.cadastro-container h2 {
+  font-size: 24px;
+  color: #111;
+  text-align: center;
+}
+
+.cadastro-container p {
+  text-align: center;
+  margin-top: 10px;
+  color: #444;
+  font-size: 14px;
+}
+
+.cadastro-container a {
+  color: #FF4000;
+  text-decoration: none;
+}
+
+.cadastro-container .checkbox-container {
+  align-self: flex-start;
+  margin-left: 10px;
+}
+
+.cadastro-container > * {
+  width: 100%;
+}
+
+.cadastro-container label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.cadastro-container .button-full {
+  width: 100%;
+  height: 58px;
+  margin-top: 5px;
+}
+
+@media (max-width: 360px) {
+  .cadastro-screen {
+    padding: 14px 10px;
+  }
+
+  .cadastro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 48px;
+    padding: 14px;
+    gap: 12px;
+    border-radius: 8px;
+  }
+
+  .cadastro-container h2 {
+    font-size: 18px;
+  }
+
+  .cadastro-container p {
+    font-size: 12px;
+  }
+
+  .cadastro-container label {
+    font-size: 13px;
+  }
+
+  .cadastro-container .checkbox-container {
+    margin-left: 6px;
+  }
+
+  .cadastro-container .button-full {
+    height: 50px;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 768px) {
+  .cadastro-screen {
+    padding: 18px 12px;
+  }
+
+  .cadastro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 600px;
+    max-width: 92%;
+    margin-top: 72px;
+    padding: 20px;
+    gap: 16px;
+    border-radius: 10px;
+  }
+
+  .cadastro-container h2 {
+    font-size: 20px;
+  }
+
+  .cadastro-container p {
+    font-size: 14px;
+  }
+
+  .cadastro-container label {
+    font-size: 14px;
+  }
+
+  .cadastro-container .button-full {
+    height: 56px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .cadastro-screen {
+    padding: 22px;
+  }
+
+  .cadastro-container {
+    width: 720px;
+    max-width: 70%;
+    margin-top: 90px;
+    padding: 24px;
+    gap: 18px;
+    border-radius: 12px;
+  }
+
+  .cadastro-container h2 {
+    font-size: 22px;
+  }
+
+  .cadastro-container p {
+    font-size: 15px;
+  }
+
+  .cadastro-container label {
+    font-size: 15px;
+  }
+
+  .cadastro-container .button-full {
+    height: 58px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .cadastro-screen {
+    justify-content: center;
+  }
+
+  .cadastro-container {
+    width: 420px;
+    max-width: 420px;
+    margin-top: 0;
+    padding: 28px;
+  }
+
+  .cadastro-container h2 {
+    font-size: 24px;
+  }
+
+  .cadastro-container p {
+    font-size: 14px;
+  }
+}
+
+
+
+

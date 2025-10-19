@@ -1,0 +1,127 @@
+:root{
+	--bg: #f7f7f8;
+	--card-bg: #ffffff;
+	--muted: #666666;
+	--accent: #0057b8;
+	--radius: 12px;
+}
+
+*{box-sizing: border-box;}
+body{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+
+.conteiner-assinatura{
+	max-width: 1200px;
+	margin: 2.5rem auto;
+	padding: 1rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.25rem;
+	align-items: start;
+}
+
+.conteiner-card-assinatura{
+	background: var(--card-bg);
+	border-radius: var(--radius);
+	padding: 1.25rem;
+	box-shadow: 0 6px 18px rgba(20,20,20,0.06);
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	min-height: 380px;
+}
+
+.conteiner-card-assinatura h2{
+	margin: 0.25rem 0;
+	font-size: 1.25rem;
+	color: #111;
+}
+.conteiner-card-assinatura li img.listCheckIcon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+
+.title-assinatura-icon{
+	width: 50px;
+	height: 50px;
+	object-fit: contain;
+	margin: 0 auto;
+}
+
+.conteiner-card-assinatura p{
+	margin: 0;
+	font-weight: 600;
+	color: var(--accent);
+}
+
+.conteiner-card-assinatura ul{
+	list-style: none;
+	padding: 0;
+	margin: 0.5rem 0 1rem 0;
+	text-align: left;
+	flex: 1 1 auto;
+	overflow: auto;
+}
+
+.conteiner-card-assinatura li{
+	margin: 0.35rem 0;
+	color: var(--muted);
+	font-size: 0.95rem;
+}
+
+@media (max-width: 480px){
+	.conteiner-assinatura{
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		padding: 0.75rem;
+		margin: 1rem auto;
+	}
+	.conteiner-card-assinatura{
+		min-height: auto;
+		padding: 1rem;
+	}
+	.conteiner-card-assinatura img{
+		width: 96px;
+	}
+	.conteiner-card-assinatura ul{
+		font-size: 0.9rem;
+		max-height: 160px;
+	}
+	.conteiner-card-assinatura h2{font-size: 1.05rem}
+}
+
+@media (min-width: 481px) and (max-width: 780px){
+	.conteiner-assinatura{
+		max-width: 900px;
+		padding: 1rem;
+	}
+	.conteiner-card-assinatura{
+		min-height: 560px;
+		padding: 1rem;
+	}
+	.conteiner-card-assinatura img{
+		width: 110px;
+	}
+	.conteiner-card-assinatura ul{max-height: 560px}
+}
+
+@media (min-width: 781px) and (max-width: 1024px){
+	.conteiner-assinatura{
+		max-width: 1100px;
+		padding: 1rem;
+	}
+	.conteiner-card-assinatura{
+		min-height: 380px;
+		padding: 1.15rem;
+	}
+	.conteiner-card-assinatura img{width: 115px}
+}
+
+@media (min-width: 1025px){
+	.conteiner-assinatura{grid-template-columns: repeat(3,1fr)}
+}
+

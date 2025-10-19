@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import InputText from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/InputText/index.jsx";
-import Button from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/Button/index.jsx";
-import Checkbox from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/Checkbox/index.jsx";
-import Header from "/home/serafim/SiteNoticiasEmcomp/portal-noticias/PortaldeNoticias/src/componentes/Header/index.jsx";
+import InputText from "../../Components/InputText";
+import Button from "../../Components/Button";
+import Checkbox from "../../Components/Checkbox";
+import Header from "../../Components/Header";
 
 import "./style.css";
 
@@ -27,7 +27,6 @@ function LoginScreen() {
     <>
       <Header />
       <div className="cadastro-screen">
-
         <div className="cadastro-container">
           <h2>Crie sua conta</h2>
           <InputText
