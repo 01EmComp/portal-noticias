@@ -1,0 +1,81 @@
+.news-item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item-container ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.news-item-container:first-child ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  gap: 1.8rem;
+}
+
+.news-item-container:first-child ul ul li p {
+  color: #000 !important;
+}
+
+.news-item-container {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.news-item-container:first-child ul ul li button {
+  display: none;
+}
+
+.news-item-container ul ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.news-item-container ul ul li button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 8px;
+}
+
+.news-item-container:first-child ul li {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.news-item-container ul li {
+  font-size: 14px;
+  text-align: center;
+}
+
+.news-item-container > ul > li:first-child {
+  text-align: start;
+  width: 40%;
+}
+
+@media screen and (min-width: 500px) {
+  .news-item-container:first-child ul {
+    gap: 2.3rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .news-item-container:first-child ul li {
+    font-size: 20px;
+  }
+
+  .news-item-container ul li {
+    font-size: 16px;
+  }
+}

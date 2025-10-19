@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+// Font Awesome Icon's
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+
 // Image
 import img from "/src/Assets/Images/Welcome-mensage.png";
 
@@ -15,12 +21,37 @@ function Contact() {
     <div className="news-container">
       <section className="header">
         <div className="about">
-          <h2>Lorem Ipsum</h2>
-          <div className="author-and-time">
-            <p>Autor:</p>
-            <span>|</span>
-            <p>00/00/00</p>
-            <p>00:00:00</p>
+          <div className="title-and-author">
+            <h2>Lorem Ipsum</h2>
+            <div className="author-and-time">
+              <div className="author">
+                <p>
+                  Autor: <span>Joel Santos</span>
+                </p>
+              </div>
+              <div className="date">
+                <p>00/00/00</p>
+                <p>às</p>
+                <p>00:00:00</p>
+              </div>
+            </div>
+          </div>
+          <div className="social-links">
+            <div className="facebook">
+              <FontAwesomeIcon
+                icon={faFacebook}
+                style={{ color: "#0091ff", fontSize: "24px" }}
+              />
+            </div>
+            <div className="whatsapp">
+              <FontAwesomeIcon
+                icon={faWhatsapp}
+                style={{ color: "#22cc00", fontSize: "24px" }}
+              />
+            </div>
+            <div className="link">
+              <FontAwesomeIcon icon={faLink} style={{ fontSize: "20px" }} />
+            </div>
           </div>
         </div>
         <div className="image">

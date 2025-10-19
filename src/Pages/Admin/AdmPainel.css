@@ -1,0 +1,107 @@
+.adm-painel-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: relative;
+  min-height: 70vh;
+  padding: 1rem 1rem 1rem 4rem;
+}
+
+.adm-painel-container .side-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--secundary-background-color);
+  padding: 1rem 1rem 1rem 0.95rem;
+  overflow: hidden;
+  transition: 0.3s ease-in-out;
+  height: 100%;
+}
+
+.adm-painel-container .side-bar .options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.adm-painel-container .side-bar .options li {
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  font-size: 18px;
+  padding: 0;
+  gap: 0.8rem;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.adm-painel-container .side-bar .options li:hover {
+  opacity: 0.7;
+}
+
+.adm-painel-container .side-bar .options-open li {
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  font-size: 18px;
+  padding: 0.7rem 0.9rem;
+  gap: 0.8rem;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.adm-painel-container .side-bar .options li:first-child {
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.adm-painel-container .side-bar .options-open li:first-child {
+  margin-bottom: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.adm-painel-container .side-bar .options-open li.active {
+  background-color: rgba(33, 44, 68, 0.7);
+  border-radius: 10px;
+}
+
+.adm-painel-container .side-bar .options li .icon {
+}
+
+.adm-painel-container .side-bar .options li .hidden-links {
+}
+
+.adm-p-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: 400px) {
+  .adm-painel-container {
+    padding: 2rem 2rem 2rem 5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .adm-painel-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    min-height: 70vh;
+    padding: 2rem 5rem 2rem 5rem;
+  }
+
+  .adm-p-content {
+    gap: 2rem;
+  }
+
+  .adm-p-content h2 {
+    font-size: 28px;
+  }
+}
