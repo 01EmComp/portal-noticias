@@ -79,11 +79,15 @@
   * Navegador moderno (Chrome, Firefox, Edge)
 
 ### Instalação
+
 ```bash
-# Exemplo de comandos de instalação
+# Clonar o projeto
 git clone https://github.com/nome-empresa/projeto-xyz.git
 cd projeto-xyz
 
+# --- FRONTEND ---
+
+# Instalar dependências do frontend
 npm install
 npm i --save @fortawesome/react-fontawesome@latest
 npm i --save @fortawesome/fontawesome-svg-core
@@ -92,18 +96,34 @@ npm i --save @fortawesome/free-regular-svg-icons
 npm i --save @fortawesome/free-brands-svg-icons
 npm i react-social-login-buttons
 
-# Rodar em modo de desenvolvimento
+# Rodar em modo de desenvolvimento (frontend)
 npm run dev
 
-# O projeto estará disponível em:
+# O frontend estará disponível em:
 # http://localhost:5173 (ou a porta que o Vite indicar)
 
-# Rodar em produção
+# Rodar em produção (frontend)
 npm run build
 # O conteúdo gerado ficará na pasta 'dist/'
-```
 
----
+
+# --- BACKEND ---
+
+# Entrar na pasta do backend
+cd backend
+
+# Inicializar o projeto Node.js (caso ainda não tenha feito)
+npm init -y
+
+# Instalar dependências necessárias
+npm install express node-fetch cors multer form-data
+
+# Rodar o servidor em modo de desenvolvimento
+node server.js
+
+# O backend estará disponível em:
+# http://localhost:4000 (ou a porta que você configurar no Express)
+```
 
 ## 🛠️ Tecnologias Utilizadas
 
