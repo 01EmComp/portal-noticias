@@ -116,7 +116,7 @@ cd backend
 npm init -y
 
 # Instalar dependências necessárias
-npm install express node-fetch cors multer
+npm install express node-fetch cors multer form-data
 
 # Rodar o servidor em modo de desenvolvimento
 node server.js
