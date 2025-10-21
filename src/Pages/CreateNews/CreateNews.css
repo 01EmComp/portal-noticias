@@ -52,6 +52,42 @@
   border-color: #ff4000;
 }
 
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-select:focus {
+  border-color: #ff4000;
+}
+
+.form-select option {
+  padding: 0.5rem;
+}
+
+.form-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
 .image-select-button {
   display: inline-block;
   background-color: #ff4000;
@@ -68,6 +104,12 @@
 
 .image-select-button:hover {
   background-color: #e63900;
+}
+
+.image-select-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .image-input-hidden {
@@ -167,7 +209,7 @@
   height: 16px;
 }
 
-.editor-btn:hover {
+.editor-btn:hover:not(:disabled) {
   background-color: #ff4000;
   color: white;
   border-color: #ff4000;
@@ -175,6 +217,11 @@
 
 .editor-btn:active {
   transform: scale(0.95);
+}
+
+.editor-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .toolbar-separator {
@@ -204,6 +251,11 @@
   border-color: #ff4000;
 }
 
+.editor-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .editor-content {
   min-height: 300px;
   max-height: 500px;
@@ -220,6 +272,7 @@
 
 .editor-content:focus {
   border-color: #ff4000;
+  box-shadow: 0 0 0 2px rgba(255, 64, 0, 0.25);
 }
 
 .editor-content:empty:before {
@@ -280,21 +333,69 @@
 }
 
 .btn-cancel {
-  background-color: #ff0000;
+  background-color: #dc3545;
   color: white;
 }
 
-.btn-cancel:hover {
-  background-color: #cc0000;
+.btn-cancel:hover:not(:disabled) {
+  background-color: #bb2d3b;
 }
 
 .btn-post {
-  background-color: #00ff00;
-  color: #333;
+  background-color: #28a745;
+  color: #fff;
 }
 
-.btn-post:hover {
-  background-color: #00cc00;
+.btn-post:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.btn-cancel:disabled,
+.btn-post:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-post:disabled {
+  background-color: #6c757d;
+}
+
+.btn-post:disabled:hover {
+  background-color: #6c757d;
+  transform: none;
+}
+
+.submit-message {
+  padding: 12px 16px;
+  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  animation: slideDown 0.3s ease-out;
+}
+
+.submit-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.submit-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */
@@ -315,6 +416,10 @@
   .btn-post {
     width: 100%;
   }
+
+  .editor-toolbar {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -324,13 +429,18 @@
   }
 
   .form-input,
-  .form-textarea {
+  .form-textarea,
+  .form-select {
     font-size: 0.95rem;
   }
 
   .placeholder-icon {
     width: 50px;
     height: 50px;
+  }
+
+  .editor-toolbar {
+    flex-wrap: wrap;
   }
 }
 
