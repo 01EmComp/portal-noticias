@@ -1,9 +1,6 @@
 // Components
 import UserItem from "./UsersItem/UsersItem";
 
-// Css
-import "./Users.css";
-
 const Users = () => {
   return (
     <div className="users-list-container">
