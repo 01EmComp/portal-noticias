@@ -16,6 +16,7 @@ import Settings from "./Settings/Settings";
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons";
@@ -24,14 +25,50 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./AdmPainel.css";
+import CreateNews from "./CreateNews/CreateNews";
 
 const AdmPainel = () => {
   
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState("3.2rem");
   const [openTab, setOpenTab] = useState("news");
+  const [userData, setUserData] = useState(null);
 
   const allowedRoles = ["admin", "editor"];
+
+  // Verificação de autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        } catch (err) {
+          console.error("Erro ao buscar usuário:", err);
+        }
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+    if (!userData) {
+    return (
+      <div className="not-authenticated">
+        <h1>Acesso negado</h1>
+        <p>Você precisa estar logado para acessar está página.</p>
+        <Link to="/login">
+          <button>Fazer login</button>
+        </Link>
+      </div>
+    );
+  }
 
   if (!allowedRoles.includes(userData.role)) {
     return (
@@ -109,6 +146,15 @@ const AdmPainel = () => {
             <div className="hidden-links">Notícias</div>
           </li>
           <li
+            className={openTab == "create-news" ? "active" : ""}
+            onClick={() => setOpenTab("create-news")}
+          >
+            <div className="icon">
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+            <div className="hidden-links">Criar Notícia</div>
+          </li>
+          <li
             className={openTab == "categories" ? "active" : ""}
             onClick={() => setOpenTab("categories")}
           >
@@ -149,6 +195,7 @@ const AdmPainel = () => {
       <div className="adm-p-content">
         <h2>Painel do Administrador</h2>
         {openTab == "news" && <News />}
+        {openTab == "create-news" && <CreateNews />}
         {openTab == "categories" && <Categories />}
         {openTab == "users" && <Users />}
         {openTab == "statistics" && <Statistics />}
