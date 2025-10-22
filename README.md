@@ -87,6 +87,9 @@ cd projeto-xyz
 
 # --- FRONTEND ---
 
+# Entrar na pasta do frontend
+cd frontend
+
 # Instalar dependências do frontend
 npm install
 npm i --save @fortawesome/react-fontawesome@latest
@@ -96,13 +99,13 @@ npm i --save @fortawesome/free-regular-svg-icons
 npm i --save @fortawesome/free-brands-svg-icons
 npm i react-social-login-buttons
 
-# Rodar em modo de desenvolvimento (frontend)
+# Rodar em modo de desenvolvimento
 npm run dev
 
 # O frontend estará disponível em:
 # http://localhost:5173 (ou a porta que o Vite indicar)
 
-# Rodar em produção (frontend)
+# Rodar em produção
 npm run build
 # O conteúdo gerado ficará na pasta 'dist/'
 
@@ -127,15 +130,14 @@ node server.js
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Tecnologia            | Versão | Descrição                     |
-| --------------------- | ------ | ----------------------------- |
-| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web    |
-| React                 | Latest | Framework frontend            |
-| Vite                  | Latest | Build tool para React         |
-| Firebase              | —      | Autenticação e banco de dados |
-| Java Spring           | Latest | Backend futuro (em avaliação) |
-
-| Figma                 | —      | Ferramenta de Prototipação    |
+| Tecnologia            | Versão | Descrição                                        |
+| --------------------- | ------ | ------------------------------------------------ |
+| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web                       |
+| React                 | Latest | Framework frontend                               |
+| Vite                  | Latest | Build tool para React                            |
+| Firebase              | —      | Autenticação e banco de dados                    |
+| **Express (Node.js)** | Latest | Framework backend leve para criação de APIs REST |
+| Figma                 | —      | Ferramenta de Prototipação                       |
 
 ---
 
@@ -172,7 +174,7 @@ node server.js
 - Branch `main` protegida para releases
 - Pull requests obrigatórios para `develop`
 - Apenas tech lead pode:
-          - Realizar merges na `main`
+          - Realizar merges na `main` e `development`
   - Lançar novas versões
   - Revisar código
 

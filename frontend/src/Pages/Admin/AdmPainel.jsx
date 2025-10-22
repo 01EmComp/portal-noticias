@@ -26,9 +26,29 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import "./AdmPainel.css";
 
 const AdmPainel = () => {
+  
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState("3.2rem");
   const [openTab, setOpenTab] = useState("news");
+
+  const allowedRoles = ["admin", "editor"];
+
+  if (!allowedRoles.includes(userData.role)) {
+    return (
+      <div className="not-authorized">
+        <h1>Permissão negada</h1>
+        <p>Você não tem permissão para acessar essa página!</p>
+
+        <p className="role-info">
+          Apenas usuários com cargo de <strong>Editor</strong> ou{" "}
+          <strong>Admin</strong> podem criar notícias.
+        </p>
+        <Link to="/">
+          <button>Voltar para início</button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="adm-painel-container">
