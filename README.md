@@ -130,15 +130,14 @@ node server.js
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Tecnologia            | Versão | Descrição                     |
-| --------------------- | ------ | ----------------------------- |
-| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web    |
-| React                 | Latest | Framework frontend            |
-| Vite                  | Latest | Build tool para React         |
-| Firebase              | —      | Autenticação e banco de dados |
-| Java Spring           | Latest | Backend futuro (em avaliação) |
-
-| Figma                 | —      | Ferramenta de Prototipação    |
+| Tecnologia            | Versão | Descrição                                        |
+| --------------------- | ------ | ------------------------------------------------ |
+| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web                       |
+| React                 | Latest | Framework frontend                               |
+| Vite                  | Latest | Build tool para React                            |
+| Firebase              | —      | Autenticação e banco de dados                    |
+| **Express (Node.js)** | Latest | Framework backend leve para criação de APIs REST |
+| Figma                 | —      | Ferramenta de Prototipação                       |
 
 ---
 
@@ -175,7 +174,7 @@ node server.js
 - Branch `main` protegida para releases
 - Pull requests obrigatórios para `develop`
 - Apenas tech lead pode:
-          - Realizar merges na `main`
+          - Realizar merges na `main` e `development`
   - Lançar novas versões
   - Revisar código
 
