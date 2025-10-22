@@ -87,6 +87,9 @@ cd projeto-xyz
 
 # --- FRONTEND ---
 
+# Entrar na pasta do frontend
+cd frontend
+
 # Instalar dependências do frontend
 npm install
 npm i --save @fortawesome/react-fontawesome@latest
@@ -96,13 +99,13 @@ npm i --save @fortawesome/free-regular-svg-icons
 npm i --save @fortawesome/free-brands-svg-icons
 npm i react-social-login-buttons
 
-# Rodar em modo de desenvolvimento (frontend)
+# Rodar em modo de desenvolvimento
 npm run dev
 
 # O frontend estará disponível em:
 # http://localhost:5173 (ou a porta que o Vite indicar)
 
-# Rodar em produção (frontend)
+# Rodar em produção
 npm run build
 # O conteúdo gerado ficará na pasta 'dist/'
 
