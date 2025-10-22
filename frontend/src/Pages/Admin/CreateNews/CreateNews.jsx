@@ -163,6 +163,7 @@ const CreateNews = () => {
         imageURL: imageURL,
         content: editorContent,
         status: "pending",
+        views: 0,
         author: {
           uid: auth.currentUser.uid,
           name: userData.name,
@@ -219,12 +220,12 @@ const CreateNews = () => {
         imageURL: imageURL,
         content: editorContent,
         status: "published",
+        views: 0,
         author: {
           uid: auth.currentUser.uid,
           name: userData.name,
           email: userData.email,
         },
-        views: 0,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         publishedAt: serverTimestamp(),
