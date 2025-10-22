@@ -1,3 +1,24 @@
 .categories-list-container {
   width: 100%;
 }
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.no-categories {
+  text-align: center;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.no-categories p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
