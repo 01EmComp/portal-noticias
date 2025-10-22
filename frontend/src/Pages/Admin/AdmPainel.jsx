@@ -16,6 +16,7 @@ import Settings from "./Settings/Settings";
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +25,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./AdmPainel.css";
+import CreateNews from "./CreateNews/CreateNews";
 
 const AdmPainel = () => {
   
@@ -144,6 +146,15 @@ const AdmPainel = () => {
             <div className="hidden-links">Notícias</div>
           </li>
           <li
+            className={openTab == "create-news" ? "active" : ""}
+            onClick={() => setOpenTab("create-news")}
+          >
+            <div className="icon">
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+            <div className="hidden-links">Criar Notícia</div>
+          </li>
+          <li
             className={openTab == "categories" ? "active" : ""}
             onClick={() => setOpenTab("categories")}
           >
@@ -184,6 +195,7 @@ const AdmPainel = () => {
       <div className="adm-p-content">
         <h2>Painel do Administrador</h2>
         {openTab == "news" && <News />}
+        {openTab == "create-news" && <CreateNews />}
         {openTab == "categories" && <Categories />}
         {openTab == "users" && <Users />}
         {openTab == "statistics" && <Statistics />}
