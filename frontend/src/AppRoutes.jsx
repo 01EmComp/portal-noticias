@@ -10,7 +10,6 @@ import Contact from "./Pages/Contact/Contact";
 import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
 import News from "./Pages/News/News";
-import CreateNews from "./Pages/CreateNews/CreateNews";
 import AdmPainel from "./Pages/Admin/AdmPainel";
 
 const AppRoutes = () => {
@@ -35,9 +34,6 @@ const AppRoutes = () => {
 
       {/* News */}
       <Route path="/news" element={<News />} />
-
-      {/* Create News */}
-      <Route path="/create-news" element={<CreateNews />} />
 
       {/* Admin Page */}
       <Route path="/admin-painel" element={<AdmPainel />} />
