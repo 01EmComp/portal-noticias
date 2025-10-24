@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,16 +8,14 @@ import "./UsersItem.css";
 
 const UsersItem = ({ name, email }) => {
   return (
-    <div className="users-item-container">
-      <ul>
-        <li>{name}</li>
-        <li>{email}</li>
-        <div>
-          <button>
-            <FontAwesomeIcon icon={faGear} style={{ fontSize: "18px" }} />
-          </button>
-        </div>
-      </ul>
+    <div className="users-item">
+      <div className="user-name">{name}</div>
+      <div className="user-email">{email}</div>
+      <div className="user-actions">
+        <button className="user-action-button">
+          <FontAwesomeIcon icon={faGear} />
+        </button>
+      </div>
     </div>
   );
 };

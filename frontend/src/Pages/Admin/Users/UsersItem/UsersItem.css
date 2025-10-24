@@ -1,80 +1,80 @@
-.users-item-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.users-item-container ul {
-  display: flex;
-  list-style: none;
-  justify-content: space-between;
+.users-item {
+  display: grid;
+  grid-template-columns: 2.5fr 3fr 120px;
+  gap: 30px;
+  padding: 20px 35px;
   align-items: center;
-  gap: 0.9rem;
+  border-bottom: 1px solid #ddd;
+  transition: background 0.2s, transform 0.15s ease;
 }
 
-.users-item-container:first-child ul {
+.users-item:hover {
+  background: #f9f9f9;
+  transform: scale(1.01);
+}
+
+.user-name,
+.user-email {
+  font-size: 15px;
+  color: #0A0A0A;
+  word-break: break-word;
+}
+
+.user-actions {
   display: flex;
-  list-style: none;
-  justify-content: space-between;
-  gap: 1.8rem;
-}
-
-.users-item-container:first-child ul ul li p {
-  color: #000 !important;
-}
-
-.users-item-container {
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-}
-
-.users-item-container:first-child ul div {
-  display: none;
-}
-
-.users-item-container button {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-}
-
-.users-item-container ul ul li {
-  display: flex;
-  flex-direction: column;
   align-items: center;
+}
+
+.user-action-button {
+  display: flex;
   justify-content: center;
-  gap: 0.3rem;
+  align-items: center;
+  background: #FFFFFF;
+  border: 2px solid #FF4000;
+  color: #FF4000;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.users-item-container:first-child ul li {
-  font-size: 16px;
-  font-weight: 600;
+.user-action-button:hover {
+  background: #FF4000;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 64, 0, 0.3);
 }
 
-.users-item-container ul li {
-  font-size: 14px;
-  text-align: center;
+.user-action-button svg {
+  font-size: 18px;
 }
 
-.users-item-container > ul > li:first-child {
-  text-align: start;
-  width: 40%;
-}
-
-@media screen and (min-width: 500px) {
-  .users-item-container:first-child ul {
-    gap: 2.3rem;
+/* Responsividade */
+@media (max-width: 900px) {
+  .users-item {
+    grid-template-columns: 2fr 2.5fr 100px;
+    gap: 20px;
+    padding: 16px 20px;
   }
 }
 
-@media screen and (min-width: 800px) {
-  .users-item-container:first-child ul li {
-    font-size: 20px;
+@media (max-width: 650px) {
+  .users-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #ddd;
   }
 
-  .users-item-container ul li {
-    font-size: 16px;
+  .user-actions {
+    justify-content: flex-start;
+  }
+
+  .users-item::before {
+    content: "Usuário:";
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #FF4000;
   }
 }
