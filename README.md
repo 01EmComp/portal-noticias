@@ -265,26 +265,25 @@ flowchart LR
 
 ### 📂 Estrutura do Projeto
 
-workspace/portal  
+portal-noticias/  
 │  
-├── public/                  # Arquivos públicos (ícones, imagens, favicon, etc.)  
-│   ├── images/  
-│   ├── icons/  
-│   └── index.html  
+├── backend/   
+│   └── server.js                 # Servidor backend (Node.js/Express)  
 │  
-├── src/  
-│   ├── assets/              # Fontes, imagens e recursos estáticos  
-│   ├── components/          # Componentes reutilizáveis React  
-│   ├── pages/               # Páginas da aplicação  
-│   ├── services/            # APIs, Firebase, etc.  
-│   ├── styles/              # Estilos  
-│   ├── utils/               # Funções utilitárias  
-│   ├── App.jsx              # Componente principal  
-│   ├── index.js             # Ponto de entrada  
-│   └── routes.jsx           # Configuração de rotas  
+├── frontend/    
+│   └── src/   
+│       ├── App.jsx               # Componente principal  
+│       ├── AppRoutes.jsx         # Configuração das rotas do app  
+│       ├── Assets/               # Imagens, ícones e recursos estáticos  
+│       ├── Components/           # Componentes reutilizáveis React  
+│       ├── Context/              # Contextos globais do React  
+│       ├── Pages/                # Páginas da aplicação  
+│       ├── Services/             # APIs, Firebase, etc.  
+│       ├── index.css             # Estilos globais  
+│       └── main.jsx              # Ponto de entrada do React  
 │  
-├── .gitignore               # Arquivo para ignorar arquivos/pastas no Git
-└── README.md                # Este documento
+├── .gitignore                    # Arquivo para ignorar arquivos/pastas no Git  
+└── README.md                     # Este documento
 
 ---
 
