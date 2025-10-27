@@ -68,12 +68,6 @@
   border-radius: 10px;
 }
 
-.adm-painel-container .side-bar .options li .icon {
-}
-
-.adm-painel-container .side-bar .options li .hidden-links {
-}
-
 .adm-p-content {
   display: flex;
   flex-direction: column;
