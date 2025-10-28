@@ -102,7 +102,7 @@ export const loginWithGoogle = async () => {
       await setDoc(userRef, {
         lastLogin: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        emailVerified: user.emailVerified,
+        emailVerified: true,
       }, { merge: true });
 
       return user;
@@ -116,7 +116,7 @@ export const loginWithGoogle = async () => {
       phone: "",
       role: "leitor",
       provider: "google",
-      emailVerified: user.emailVerified,
+      emailVerified: true,
       photoURL: user.photoURL || "https://via.placeholder.com/150",
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -158,7 +158,7 @@ export const loginWithFacebook = async () => {
       await setDoc(userRef, {
         lastLogin: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        emailVerified: user.emailVerified,
+        emailVerified: true,
       }, { merge: true });
 
       return user;
@@ -172,7 +172,7 @@ export const loginWithFacebook = async () => {
       phone: "",
       role: "leitor",
       provider: "facebook",
-      emailVerified: user.emailVerified,
+      emailVerified: true,
       photoURL: user.photoURL || "https://via.placeholder.com/150",
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
