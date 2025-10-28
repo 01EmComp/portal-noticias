@@ -26,7 +26,6 @@ const News = () => {
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
-      // Você pode buscar mais dados se necessário
       setUserData({ uid: user.uid });
     }
   }, []);
@@ -50,14 +49,13 @@ const News = () => {
             rejected: "rejected"
           };
           
-          // Query sem orderBy para evitar erro de índice
           q = query(
             collection(db, "news"),
             where("status", "==", statusMap[filter])
           );
         }
 
-        // Usar onSnapshot para atualizações em tempo real
+        // Usando onSnapshot para atualizações em tempo real
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const newsData = [];
           querySnapshot.forEach((doc) => {
@@ -67,7 +65,6 @@ const News = () => {
             });
           });
           
-          // Ordenar manualmente por createdAt
           if (filter !== "all") {
             newsData.sort((a, b) => {
               if (!a.createdAt || !b.createdAt) return 0;
@@ -76,7 +73,7 @@ const News = () => {
               return dateOrder === "desc" ? timeB - timeA : timeA - timeB;
             });
           } else {
-            // Para "all", também aplicar ordenação baseada em dateOrder
+        
             newsData.sort((a, b) => {
               if (!a.createdAt || !b.createdAt) return 0;
               const timeA = a.createdAt.toMillis();
@@ -99,7 +96,6 @@ const News = () => {
     fetchNews();
   }, [filter, dateOrder]);
 
-  // Função para formatar data com hora
   const formatDate = (timestamp) => {
     if (!timestamp) return "Data não disponível";
     
@@ -120,7 +116,6 @@ const News = () => {
     }
   };
 
-  // Função para traduzir status
   const translateStatus = (status) => {
     const statusMap = {
       pending: "Em Análise",
