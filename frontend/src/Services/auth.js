@@ -1,81 +1,127 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-import {
-  signOut,
-  sendEmailVerification,
-  deleteUser,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
+import { signOut, sendEmailVerification, deleteUser, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "./firebaseConfig";
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc, serverTimestamp, query, collection, where, getDocs } from "firebase/firestore";
 
 // Register with Email And Password function
-export async function register(name, email, phone, password) {
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredential.user;
+export async function register(name, email, phone, password, role = "leitor", provider = "email") {
+  try {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      return null;
+    }
 
-  // Salva dados do usuário no Firestore
-  await setDoc(doc(db, "users", user.uid), {
-    name,
-    email,
-    phone,
-    photoURL: user.photoURL || "https://via.placeholder.com/150",
-  });
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
 
-  // Envia email de verificação
-  await sendVerificationEmail(user);
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      name: name,
+      email: email,
+      phone: phone || "",
+      role: role,
+      provider: provider,
+      emailVerified: false,
+      photoURL: user.photoURL || "https://via.placeholder.com/150",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
+    });
 
-  return user;
-}
+    await sendVerificationEmail(user);
 
-// Login with Email And Password function
-export async function login(email, password) {
-  const userCredential = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredential.user;
-
-  if (!user.emailVerified) {
-    throw new Error("Email não verificado. Verifique sua caixa de entrada.");
+    return user;
+  } catch (error) {
+    if (error.code === "auth/email-already-in-use") {
+      return null;
+    }
+    console.error("Erro no registro:", error);
+    throw error;
   }
-
-  return user;
 }
 
-// Login with Google function
+export async function login(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    if (!user.emailVerified) {
+      throw new Error("Email não verificado. Verifique sua caixa de entrada.");
+    }
+
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      lastLogin: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
+
+    return user;
+  } catch (error) {
+    console.error("Erro no login:", error);
+    throw error;
+  }
+}
+
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: 'select_account'
+  });
+
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Salva dados no Firestore
-    const userRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(userRef);
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", user.email));
+    const querySnapshot = await getDocs(q);
 
-    if (!docSnap.exists()) {
-      await setDoc(
-        userRef,
-        {
-          name: user.displayName || "",
-          email: user.email || "",
-          phone: "",
-          photoURL: user.photoURL || "https://via.placeholder.com/150",
-        },
-        { merge: true }
-      );
+    if (!querySnapshot.empty) {
+      const existingUserDoc = querySnapshot.docs[0];
+      const existingUserData = existingUserDoc.data();
+
+      if (existingUserData.provider !== "google") {
+        await auth.signOut();
+        throw new Error(`Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`);
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        lastLogin: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        emailVerified: user.emailVerified,
+      }, { merge: true });
+
+      return user;
     }
+
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      uid: user.uid,
+      name: user.displayName || "Usuário",
+      email: user.email || "",
+      phone: "",
+      role: "leitor",
+      provider: "google",
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL || "https://via.placeholder.com/150",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
+    });
 
     return user;
   } catch (err) {
@@ -87,26 +133,51 @@ export const loginWithGoogle = async () => {
 // Login with Facebook function
 export const loginWithFacebook = async () => {
   const provider = new FacebookAuthProvider();
+  provider.setCustomParameters({
+    display: 'popup'
+  });
+
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Salva dados no Firestore
-    const userRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(userRef);
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", user.email));
+    const querySnapshot = await getDocs(q);
 
-    if (!docSnap.exists()) {
-      await setDoc(
-        userRef,
-        {
-          name: user.displayName || "",
-          email: user.email || "",
-          phone: "",
-          photoURL: user.photoURL || "https://via.placeholder.com/150",
-        },
-        { merge: true }
-      );
+    if (!querySnapshot.empty) {
+      const existingUserDoc = querySnapshot.docs[0];
+      const existingUserData = existingUserDoc.data();
+
+      if (existingUserData.provider !== "facebook") {
+        await auth.signOut();
+        throw new Error(`Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`);
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        lastLogin: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        emailVerified: user.emailVerified,
+      }, { merge: true });
+
+      return user;
     }
+
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      uid: user.uid,
+      name: user.displayName || "Usuário",
+      email: user.email || "",
+      phone: "",
+      role: "leitor",
+      provider: "facebook",
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL || "https://via.placeholder.com/150",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
+    });
 
     return user;
   } catch (err) {
@@ -117,23 +188,56 @@ export const loginWithFacebook = async () => {
 
 // Logout function
 export async function logout() {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Erro no logout:", error);
+    throw error;
+  }
 }
 
 // Email verification function
 export const sendVerificationEmail = async (user) => {
   try {
-    await sendEmailVerification(user);
-    alert("Email de verificação enviado!");
+    await sendEmailVerification(user, {
+      url: `${window.location.origin}/login`,
+      handleCodeInApp: false,
+    });
+    console.log("Email de verificação enviado com sucesso!");
   } catch (err) {
     console.error("Erro ao enviar email de verificação:", err);
+    throw err;
   }
 };
 
-// email has already been verified fuction
 export const isEmailVerified = () => {
   const user = auth.currentUser;
   return user ? user.emailVerified : false;
+};
+
+export const getUserData = async (uid) => {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc.exists()) {
+      return userDoc.data();
+    }
+    return null;
+  } catch (error) {
+    console.error("Erro ao buscar dados do usuário:", error);
+    throw error;
+  }
+};
+
+export const hasRole = async (uid, requiredRole) => {
+  try {
+    const userData = await getUserData(uid);
+    return userData && userData.role === requiredRole;
+  } catch (error) {
+    console.error("Erro ao verificar role:", error);
+    return false;
+  }
 };
 
 // Delete account function
@@ -141,20 +245,24 @@ export const deleteAccount = async () => {
   try {
     const user = auth.currentUser;
 
-    if (!user) return;
+    if (!user) {
+      throw new Error("Nenhum usuário autenticado.");
+    }
 
-    // Opcional: remover dados do Firestore
     const userDocRef = doc(db, "users", user.uid);
     await deleteDoc(userDocRef);
-    // Excluir conta no Firebase Auth
-    await deleteUser(user);
-  } catch (err) {
 
-    alert("Erro ao excluir conta:", err);
+    await deleteUser(user);
+    
+    console.log("Conta excluída com sucesso!");
+  } catch (err) {
+    console.error("Erro ao excluir conta:", err);
 
     if (err.code === "auth/requires-recent-login") {
-      alert("Para excluir a conta, você precisa entrar novamente antes de tentar.");
+      throw new Error("Para excluir a conta, você precisa fazer login novamente.");
     }
+    
+    throw err;
   }
 };
 
@@ -162,7 +270,7 @@ export const deleteAccount = async () => {
 export const resetPassword = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
-    alert("Email para redefinir senha enviado!");
+    console.log("Email para redefinir senha enviado!");
   } catch (err) {
     console.error("Erro ao enviar email de redefinição de senha:", err);
   }
