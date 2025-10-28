@@ -97,7 +97,7 @@ const UsersItem = ({ id, name, email, role }) => {
 
   const translateRole = (roleValue) => {
     const roleMap = {
-      user: "Usuário",
+      reader: "Leitor",
       admin: "Administrador",
       editor: "Editor"
     };
