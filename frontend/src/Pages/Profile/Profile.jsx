@@ -18,7 +18,14 @@ import {
   faChevronUp,
   faCog,
   faTimes,
+  faEnvelope,
+  faPhone,
+  faUserTag,
+  faCalendar,
+  faSignInAlt,
+  faIdCard,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 
 // CSS
 import "./Profile.css";
@@ -198,6 +205,56 @@ const Profile = () => {
       document.body.classList.add("hide-images");
     } else {
       document.body.classList.remove("hide-images");
+    }
+  };
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return "Não disponível";
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getProviderIcon = (provider) => {
+    switch (provider) {
+      case "google":
+        return faGoogle;
+      case "facebook":
+        return faFacebook;
+      default:
+        return faEnvelope;
+    }
+  };
+
+  const getProviderName = (provider) => {
+    switch (provider) {
+      case "google":
+        return "Google";
+      case "facebook":
+        return "Facebook";
+      case "email":
+        return "E-mail";
+      default:
+        return provider || "E-mail";
+    }
+  };
+
+  const getRoleName = (role) => {
+    switch (role) {
+      case "admin":
+        return "Administrador";
+      case "editor":
+        return "Editor";
+      case "leitor":
+        return "Leitor";
+      default:
+        return role || "Leitor";
     }
   };
 
@@ -439,21 +496,85 @@ const Profile = () => {
       {dataButtonClicked && (
         <div className="my-data-section">
           <h3>Meus dados</h3>
-          <div className="user-name">
-            <p>Nome:</p>
-            <span>{userData.name ? userData.name : "Não fornecido"}</span>
+          
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faUser} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Nome</p>
+              <span className="data-value">{userData.name || "Não fornecido"}</span>
+            </div>
           </div>
-          <div className="user-email">
-            <p>Email:</p>
-            <span>{userData.email ? userData.email : "Não fornecido"}</span>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faEnvelope} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">E-mail</p>
+              <span className="data-value">{userData.email || "Não fornecido"}</span>
+            </div>
           </div>
-          <div className="user-phone">
-            <p>Telefone:</p>
-            <span>{userData.phone ? userData.phone : "Não fornecido"}</span>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faPhone} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Telefone</p>
+              <span className="data-value">{userData.phone || "Não fornecido"}</span>
+            </div>
           </div>
-          <div className="user-role">
-            <p>Tipo de conta:</p>
-            <span>{userData.role ? userData.role : "Leitor"}</span>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faUserTag} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Tipo de conta</p>
+              <span className="data-value">{getRoleName(userData.role)}</span>
+            </div>
+          </div>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={getProviderIcon(userData.provider)} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Método de login</p>
+              <span className="data-value">{getProviderName(userData.provider)}</span>
+            </div>
+          </div>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faIdCard} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">ID do usuário</p>
+              <span className="data-value user-id">{userData.uid || "Não disponível"}</span>
+            </div>
+          </div>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faCalendar} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Conta criada em</p>
+              <span className="data-value">{formatDate(userData.createdAt)}</span>
+            </div>
+          </div>
+
+          <div className="user-data-item">
+            <div className="data-icon">
+              <FontAwesomeIcon icon={faSignInAlt} />
+            </div>
+            <div className="data-content">
+              <p className="data-label">Último acesso</p>
+              <span className="data-value">{formatDate(userData.lastLogin)}</span>
+            </div>
           </div>
         </div>
       )}
