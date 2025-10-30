@@ -79,37 +79,84 @@
   * Navegador moderno (Chrome, Firefox, Edge)
 
 ### Instalação
+
 ```bash
-# Exemplo de comandos de instalação
+# Clonar o projeto
 git clone https://github.com/nome-empresa/projeto-xyz.git
 cd projeto-xyz
+
+# --- FRONTEND ---
+
+# Entrar na pasta do frontend
+cd frontend
+
+# Instalar dependências do frontend
 npm install
+npm i --save @fortawesome/react-fontawesome@latest
+npm i --save @fortawesome/fontawesome-svg-core
+npm i --save @fortawesome/free-solid-svg-icons
+npm i --save @fortawesome/free-regular-svg-icons
+npm i --save @fortawesome/free-brands-svg-icons
+npm i react-social-login-buttons
+
+# Rodar em modo de desenvolvimento
+npm run dev
+
+# O frontend estará disponível em:
+# http://localhost:5173 (ou a porta que o Vite indicar)
+
+# Rodar em produção
+npm run build
+# O conteúdo gerado ficará na pasta 'dist/'
+
+
+# --- BACKEND ---
+
+# Entrar na pasta do backend
+cd backend
+
+# Inicializar o projeto Node.js (caso ainda não tenha feito)
+npm init -y
+
+# Instalar dependências necessárias
+npm install express node-fetch cors multer form-data
+
+# Rodar o servidor em modo de desenvolvimento
+node server.js
+
+# O backend estará disponível em:
+# http://localhost:4000 (ou a porta que você configurar no Express)
 ```
-
-### Configuração
-- Criar variáveis de ambiente (Firebase, APIs externas, etc.)
-- Configurações adicionais serão documentadas em breve
-
----
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Tecnologia            | Versão | Descrição                     |
-| --------------------- | ------ | ----------------------------- |
-| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web    |
-| React                 | Latest | Framework frontend            |
-| Vite                  | Latest | Build tool para React         |
-| Firebase              | —      | Autenticação e banco de dados |
-| PHP                   | Latest | Backend futuro                |
-| Figma                 | —      | Ferramenta de Prototipação    |
+| Tecnologia            | Versão | Descrição                                        |
+| --------------------- | ------ | ------------------------------------------------ |
+| HTML, CSS, JavaScript | Latest | Tecnologias básicas da web                       |
+| React                 | Latest | Framework frontend                               |
+| Vite                  | Latest | Build tool para React                            |
+| Firebase              | —      | Autenticação e banco de dados                    |
+| **Express (Node.js)** | Latest | Framework backend leve para criação de APIs REST |
+| Figma                 | —      | Ferramenta de Prototipação                       |
 
 ---
 
-## 📊 Padrões e Boas Práticas
+### 📊 Padrões e Boas Práticas
 
-### Commit Messages:
-- Formato padronizado: [tipo] Descrição da alteração
-- Exemplo: [fix] Correção de bug no layout
+### Commit Messages
+- **Formato padronizado:** `[tipo] Descrição da alteração [PROJ-XXX]`
+- **Objetivo:** Garantir histórico claro, rastreável e organizado.
+
+### Exemplos de commits
+| Tipo      | Exemplo de Commit                                      | Descrição                                     |
+|----------|--------------------------------------------------------|----------------------------------------------- |
+| feat     | `[feat] Criação da página de login`         | Nova funcionalidade adicionada                            |
+| fix      | `[fix] Correção no layout responsivo do Header` | Correção de bug                                       |
+| style    | `[style] Padronização de espaçamentos no Footer` | Alterações de formatação ou aparência                |
+| docs     | `[docs] Atualização do README com instruções de instalação` | Alterações apenas na documentação         |
+| refactor | `[refactor] Reestruturação da lógica de rotas` | Refatoração de código sem alterar comportamento        |
+| test     | `[test] Adição de testes unitários para o Header` | Inclusão ou ajuste de testes                        |
+| chore    | `[chore] Configuração inicial do ESLint e Prettier` | Tarefas de manutenção do projeto                  |
 
 ### Code Reviews:
 - Pull Requests obrigatórios
@@ -127,7 +174,7 @@ npm install
 - Branch `main` protegida para releases
 - Pull requests obrigatórios para `develop`
 - Apenas tech lead pode:
-          - Realizar merges na `main`
+          - Realizar merges na `main` e `development`
   - Lançar novas versões
   - Revisar código
 
@@ -218,26 +265,25 @@ flowchart LR
 
 ### 📂 Estrutura do Projeto
 
-workspace/portal  
+portal-noticias/  
 │  
-├── public/                  # Arquivos públicos (ícones, imagens, favicon, etc.)  
-│   ├── images/  
-│   ├── icons/  
-│   └── index.html  
+├── backend/   
+│   └── server.js                 # Servidor backend (Node.js/Express)  
 │  
-├── src/  
-│   ├── assets/              # Fontes, imagens e recursos estáticos  
-│   ├── components/          # Componentes reutilizáveis React  
-│   ├── pages/               # Páginas da aplicação  
-│   ├── services/            # APIs, Firebase, etc.  
-│   ├── styles/              # Estilos  
-│   ├── utils/               # Funções utilitárias  
-│   ├── App.jsx              # Componente principal  
-│   ├── index.js             # Ponto de entrada  
-│   └── routes.jsx           # Configuração de rotas  
+├── frontend/    
+│   └── src/   
+│       ├── App.jsx               # Componente principal  
+│       ├── AppRoutes.jsx         # Configuração das rotas do app  
+│       ├── Assets/               # Imagens, ícones e recursos estáticos  
+│       ├── Components/           # Componentes reutilizáveis React  
+│       ├── Context/              # Contextos globais do React  
+│       ├── Pages/                # Páginas da aplicação  
+│       ├── Services/             # APIs, Firebase, etc.  
+│       ├── index.css             # Estilos globais  
+│       └── main.jsx              # Ponto de entrada do React  
 │  
-├── .gitignore               # Arquivo para ignorar arquivos/pastas no Git
-└── README.md                # Este documento
+├── .gitignore                    # Arquivo para ignorar arquivos/pastas no Git  
+└── README.md                     # Este documento
 
 ---
 
@@ -285,8 +331,6 @@ git push origin dev_[seu-nome]
 - Indicadores principais
 - Ferramentas utilizadas
 - Frequência de medição
-
-(A definir futuramente)
 
 ---
 
@@ -379,4 +423,4 @@ Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE)
 ## 📞 Contato
 Para dúvidas ou sugestões, entre em contato com:
 - Email:  emcomprp@gmail.com
-- Slack: http://www.emcomp.com.br
+- Site: http://www.emcomp.com.br

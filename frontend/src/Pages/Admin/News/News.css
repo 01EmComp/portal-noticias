@@ -1,0 +1,132 @@
+.news-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.news-filters {
+  display: flex;
+  gap: 0;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.news-filters button {
+  padding: 10px 24px;
+  border: none;
+  background-color: transparent;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.news-filters button:hover:not(.active) {
+  color: #334155;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.news-filters button.active {
+  background-color: white;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.date-sort {
+  display: flex;
+  gap: 0;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.date-sort button {
+  padding: 10px 16px;
+  border: none;
+  background-color: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-sort button:hover:not(.active) {
+  color: #334155;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.date-sort button.active {
+  background-color: white;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.date-sort button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.loading,
+.no-news {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.no-news p {
+  margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .news-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .news-filters {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .news-filters::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .news-filters button {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .date-sort {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .date-sort button {
+    flex: 1;
+  }
+}

@@ -1,0 +1,34 @@
+# Dependências
+/node_modules/
+
+# Build
+/dist/
+/build/
+/out/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Cache
+.vite/
+.next/
+.cache/
+.temporary/
+coverage/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Ferramentas de build
+/.gradle/
+<<<<<<< HEAD
+/.gradle-cache/
+=======
+/.gradle-cache/
+>>>>>>> origin/develop

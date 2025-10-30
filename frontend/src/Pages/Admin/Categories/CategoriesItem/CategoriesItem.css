@@ -1,0 +1,78 @@
+.categories-item-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.categories-item-container:first-child ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.categories-item-container ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categories-item-container ul div .icon {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.categories-item-container:first-child ul div .icon {
+  display: none;
+}
+
+.categories-item-container {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.categories-item-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+}
+
+.categories-item-container:first-child ul li,
+.categories-item-container:first-child ul div p {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.categories-item-container ul li {
+  font-size: 14px;
+  text-align: center;
+}
+
+.categories-item-container > ul > li:first-child {
+  text-align: start;
+  width: 40%;
+}
+
+@media screen and (min-width: 500px) {
+  .categories-item-container:first-child ul {
+    gap: 5rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .categories-item-container:first-child ul li,
+  .categories-item-container:first-child ul div p {
+    font-size: 20px;
+  }
+
+  .categories-item-container ul li {
+    font-size: 16px;
+  }
+}
