@@ -1,35 +1,39 @@
 .statistics-container {
   display: flex;
   flex-direction: column;
-  width: 20rem;
-  min-height: 70vh;
-}
-
-.statistics-container p {
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 1rem;
+  min-height: 70vh;
+  gap: 1.5rem;
 }
 
-@media screen and (max-width: 370px) {
+/* Gráfico */
+.graph {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 700px;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 400px) {
   .statistics-container {
     display: flex;
     flex-direction: column;
-    padding-top: 2rem;
     width: 100%;
-    max-width: 15rem;
+    max-width: 20rem;
     min-height: 70vh;
   }
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 600px) {
   .statistics-container {
     display: flex;
     flex-direction: column;
-    padding-top: 2rem;
-    width: 25rem;
+    width: 35rem;
     min-height: 70vh;
   }
 }
@@ -38,7 +42,6 @@
   .statistics-container {
     display: flex;
     flex-direction: column;
-    padding-top: 2rem;
     width: 50rem;
     min-height: 70vh;
   }

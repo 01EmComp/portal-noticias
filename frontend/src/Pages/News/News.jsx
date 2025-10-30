@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 // Image
 import img from "/src/Assets/Images/Welcome-mensage.png";
 
 // Css
 import "./News.css";
+import ImageFullScreen from "../../Components/ImageFullScreen/ImageFullScreen";
 
 function Contact() {
   const [news, setNews] = useState(
@@ -49,13 +51,19 @@ function Contact() {
                 style={{ color: "#22cc00", fontSize: "24px" }}
               />
             </div>
+            <div className="instagram">
+              <FontAwesomeIcon
+                icon={faInstagram}
+                style={{ color: "#FF3A37", fontSize: "24px" }}
+              />
+            </div>
             <div className="link">
               <FontAwesomeIcon icon={faLink} style={{ fontSize: "20px" }} />
             </div>
           </div>
         </div>
         <div className="image">
-          <img src={img} alt="Imagem da notícia" />
+          <ImageFullScreen src={img} alt="Imagem da notícia" />
         </div>
       </section>
       <section className="news-text">

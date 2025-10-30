@@ -20,6 +20,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 0.7rem;
+  width: 100%;
 }
 
 .news-container .header .about .title-and-author {
@@ -48,7 +50,29 @@
 }
 
 .news-container .header .about .social-links {
-  display: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.news-container .header .about .social-links div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 10rem;
+  width: 100%;
+  min-width: 8rem;
+  height: 2.5rem;
+  background-color: rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.news-container .header .about .social-links div:hover {
+  background-color: rgba(0, 0, 0, 0.13);
 }
 
 .news-container .header .about h2 {
@@ -68,7 +92,8 @@
 }
 
 .news-container .header .image img {
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 20px;
   width: 100%;
 }
 

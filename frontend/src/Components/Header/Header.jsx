@@ -49,7 +49,11 @@ const Header = () => {
       <div className={`hamburger-menu ${menuOpen ? "show" : ""}`}>
         <ul>
           <li className="close">
-            <FontAwesomeIcon icon={faXmark} style={{ fontSize: "22px" }} />
+            <FontAwesomeIcon
+              icon={faXmark}
+              style={{ fontSize: "22px" }}
+              onClick={toggleMenu}
+            />
           </li>
           <Link to="/login">
             <li>Login</li>
