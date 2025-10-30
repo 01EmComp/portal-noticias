@@ -22,6 +22,7 @@ import "./Login.css";
 
 function LoginScreen() {
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,11 +38,15 @@ function LoginScreen() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    
+    if (errorMsg) setErrorMsg("");
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMsg(""); // limpa erros anteriores
+    setErrorMsg("");
+
+    if (isLoading) return;
 
     if (!formData.email || !formData.password) {
       setErrorMsg("Preencha todos os campos!");
@@ -52,6 +57,8 @@ function LoginScreen() {
       setErrorMsg("Por favor, complete o CAPTCHA!");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       await login(formData.email, formData.password);
@@ -73,30 +80,50 @@ function LoginScreen() {
           msg = "Esta conta foi desativada.";
           break;
         default:
-          msg = "Ocorreu um erro. Tente novamente mais tarde.";
+          msg = err.message || "Ocorreu um erro. Tente novamente mais tarde.";
       }
       setErrorMsg(msg);
       resetCaptcha();
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    setErrorMsg("");
+
     try {
       await loginWithGoogle();
-      // Redireciona após login
+      
       navigate("/profile");
     } catch (err) {
-      setErrorMsg(err);
+      const msg = err.message || "Erro ao fazer login com Google. Tente novamente.";
+      setErrorMsg(msg);
+      console.error("Erro no login do Google:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleFacebookLogin = async () => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    setErrorMsg("");
+
     try {
       await loginWithFacebook();
-      // Redireciona após login
-      navigate("/perfil");
+      
+      navigate("/profile");
     } catch (err) {
-      setErrorMsg(err);
+      const msg = err.message || "Erro ao fazer login com Facebook. Tente novamente.";
+      setErrorMsg(msg);
+      console.error("Erro no login do Facebook:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,6 +140,8 @@ function LoginScreen() {
             value={formData.email}
             onChange={handleChange}
             placeholder="Digite seu e-mail"
+            disabled={isLoading}
+            autoComplete="email"
           />
           <InputText
             label="Senha"
@@ -121,6 +150,8 @@ function LoginScreen() {
             value={formData.password}
             onChange={handleChange}
             placeholder="Digite sua senha"
+            disabled={isLoading}
+            autoComplete="current-password"
           />
 
           <Checkbox
@@ -128,34 +159,48 @@ function LoginScreen() {
             name="remember"
             checked={formData.remember}
             onChange={handleChange}
+            disabled={isLoading}
           />
 
           <div className="captcha-container">
             <CaptchaWidget />
           </div>
 
+          <Button
+            text={isLoading ? "Entrando..." : "Entrar"}
+            type="submit"
+            disabled={isLoading}
+            style={{ marginTop: "5px", width: "100%", height: "58px" }}
+          />
+
+          <div className="divider" style={{ margin: "20px 0", textAlign: "center" }}>
+            <span style={{ color: "#666" }}>ou entre com</span>
+          </div>
+
           <div className="login-with-socials">
-            <GoogleLoginButton onClick={handleGoogleLogin}>
+            <GoogleLoginButton 
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+            >
               <span>Fazer login com o Google</span>
             </GoogleLoginButton>
-            <FacebookLoginButton onClick={handleFacebookLogin}>
+            <FacebookLoginButton 
+              onClick={handleFacebookLogin}
+              disabled={isLoading}
+            >
               <span>Fazer login com o Facebook</span>
             </FacebookLoginButton>
           </div>
-
-          <Button
-            text="Entrar"
-            type="submit"
-            style={{ marginTop: "5px", width: "100%", height: "58px" }}
-          />
         </form>
 
-        <div>
-          <Link to="/register">Cadastrar</Link> | Esqueceu a senha?
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <Link to="/register">Cadastrar</Link> | <Link to="/reset-password">Esqueceu a senha?</Link>
         </div>
 
         {errorMsg && (
-          <p style={{ color: "red", marginTop: "10px" }}>{errorMsg}</p>
+          <p style={{ color: "red", marginTop: "10px", textAlign: "center" }}>
+            {errorMsg}
+          </p>
         )}
       </div>
     </div>
