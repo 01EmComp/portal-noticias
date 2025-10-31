@@ -1,4 +1,4 @@
-.cadastro-screen {
+.register-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,14 +8,14 @@
   padding: 2rem 0;
 }
 
-.cadastro-container {
+.register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
 }
 
-.cadastro-container p {
+.register-container p {
   text-align: center;
   margin-top: 10px;
 }
@@ -26,18 +26,24 @@
   gap: 1rem;
 }
 
-.cadastro-container a {
+.register-container a {
   color: var(--secundary-color);
   text-decoration: none;
 }
-.cadastro-container .checkbox-container {
+.register-container .checkbox-container {
   align-self: flex-start;
   margin-left: 10px;
 }
 
-.cadastro-container .captcha-container {
+.register-container .captcha-container {
   margin: 15px 0;
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .register-container h2 {
+    font-size: 26px;
+  }
 }

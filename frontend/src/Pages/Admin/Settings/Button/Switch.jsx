@@ -1,16 +1,11 @@
 import styled from "styled-components";
 
-const Switch = () => {
+const Switch = ({ id }) => {
   return (
     <StyledWrapper>
       <div className="toggler">
-        <input
-          id="toggler-1"
-          name="toggler-1"
-          type="checkbox"
-          defaultValue={1}
-        />
-        <label htmlFor="toggler-1">
+        <input id={id} name={id} type="checkbox" defaultValue={1} />
+        <label htmlFor={id}>
           <svg
             className="toggler-on"
             version="1.1"
@@ -53,6 +48,7 @@ const StyledWrapper = styled.div`
   .toggler {
     width: 72px;
     margin: 40px auto;
+    user-select: none;
   }
 
   .toggler input {

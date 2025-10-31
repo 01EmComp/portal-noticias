@@ -174,8 +174,8 @@ function RegisterScreen() {
   };
 
   return (
-    <div className="cadastro-screen">
-      <div className="cadastro-container">
+    <div className="register-screen">
+      <div className="register-container">
         <h2>Crie sua conta</h2>
         <form onSubmit={handleRegister} className="register-form">
           <InputText

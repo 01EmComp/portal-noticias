@@ -9,11 +9,11 @@ const Settings = () => {
     <div className="adm-settings-container">
       <div>
         <h3>Desativar site</h3>
-        <Switch />
+        <Switch id={"toggler-1"} />
       </div>
       <div>
         <h3>Ativar modo manutenção</h3>
-        <Switch />
+        <Switch id={"toggler-2"} />
       </div>
     </div>
   );
