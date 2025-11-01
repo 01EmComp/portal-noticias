@@ -5,6 +5,7 @@ import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./UsersItem.css";
@@ -12,19 +13,22 @@ import "./UsersItem.css";
 const UsersItem = ({ id, name, email, role }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState({ type: "", text: "" });
-  
+  const [feedbackMessage, setFeedbackMessage] = useState({
+    type: "",
+    text: "",
+  });
+
   const [formData, setFormData] = useState({
     name: name || "",
     email: email || "",
-    role: role || "user"
+    role: role || "user",
   });
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -34,7 +38,7 @@ const UsersItem = ({ id, name, email, role }) => {
     if (!formData.name.trim()) {
       setFeedbackMessage({
         type: "error",
-        text: "O nome não pode estar vazio."
+        text: "O nome não pode estar vazio.",
       });
       return;
     }
@@ -42,7 +46,7 @@ const UsersItem = ({ id, name, email, role }) => {
     if (!formData.email.trim() || !formData.email.includes("@")) {
       setFeedbackMessage({
         type: "error",
-        text: "Por favor, insira um email válido."
+        text: "Por favor, insira um email válido.",
       });
       return;
     }
@@ -56,12 +60,12 @@ const UsersItem = ({ id, name, email, role }) => {
         name: formData.name.trim(),
         email: formData.email.trim(),
         role: formData.role,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       setFeedbackMessage({
         type: "success",
-        text: "Usuário atualizado com sucesso!"
+        text: "Usuário atualizado com sucesso!",
       });
 
       setTimeout(() => {
@@ -72,7 +76,7 @@ const UsersItem = ({ id, name, email, role }) => {
       console.error("Erro ao atualizar usuário:", error);
       setFeedbackMessage({
         type: "error",
-        text: "Erro ao atualizar usuário. Tente novamente."
+        text: "Erro ao atualizar usuário. Tente novamente.",
       });
     } finally {
       setIsUpdating(false);
@@ -83,7 +87,7 @@ const UsersItem = ({ id, name, email, role }) => {
     setFormData({
       name: name || "",
       email: email || "",
-      role: role || "user"
+      role: role || "user",
     });
     setFeedbackMessage({ type: "", text: "" });
     setShowPopup(true);
@@ -99,9 +103,22 @@ const UsersItem = ({ id, name, email, role }) => {
     const roleMap = {
       leitor: "Leitor",
       admin: "Administrador",
-      editor: "Editor"
+      editor: "Editor",
     };
     return roleMap[roleValue] || roleValue;
+  };
+
+  // Delete account
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm("Tem certeza que deseja deletar este usuário?")) return;
+
+    try {
+      await deleteDoc(doc(db, "users", userId));
+      alert("Usuário deletado do Firestore!");
+    } catch (error) {
+      console.error("Erro ao deletar usuário:", error);
+      alert("Erro ao deletar usuário.");
+    }
   };
 
   return (
@@ -110,7 +127,7 @@ const UsersItem = ({ id, name, email, role }) => {
         <div className="user-name">{name}</div>
         <div className="user-email">{email}</div>
         <div className="user-actions">
-          <button 
+          <button
             className="user-action-button"
             onClick={handleOpenPopup}
             disabled={isUpdating}
@@ -122,20 +139,20 @@ const UsersItem = ({ id, name, email, role }) => {
       </div>
 
       {showPopup && (
-        <div 
-          className="popup-overlay" 
+        <div
+          className="popup-overlay"
           onClick={handleClosePopup}
           onMouseDown={(e) => e.stopPropagation()}
         >
-          <div 
-            className="popup-container" 
+          <div
+            className="popup-container"
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="popup-header">
               <h3>Configurar Usuário</h3>
-              <button 
-                className="popup-close-btn" 
+              <button
+                className="popup-close-btn"
                 onClick={handleClosePopup}
                 disabled={isUpdating}
                 type="button"
@@ -204,6 +221,14 @@ const UsersItem = ({ id, name, email, role }) => {
                     <option value="admin">Administrador</option>
                   </select>
                 </div>
+
+                <div
+                  className="form-exclude-user"
+                  onClick={() => handleDeleteUser()}
+                >
+                  <FontAwesomeIcon icon={faTrash} className="icon" />
+                  <p className="text">Excluir usuário</p>
+                </div>
               </div>
 
               {/* Mensagem de feedback */}
@@ -214,16 +239,16 @@ const UsersItem = ({ id, name, email, role }) => {
               )}
 
               <div className="popup-actions">
-                <button 
-                  className="btn-save" 
+                <button
+                  className="btn-save"
                   onClick={handleSave}
                   disabled={isUpdating}
                   type="button"
                 >
                   {isUpdating ? "Salvando..." : "Salvar"}
                 </button>
-                <button 
-                  className="btn-close" 
+                <button
+                  className="btn-close"
                   onClick={handleClosePopup}
                   disabled={isUpdating}
                   type="button"

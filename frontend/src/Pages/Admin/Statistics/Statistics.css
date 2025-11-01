@@ -38,6 +38,15 @@
   }
 }
 
+@media (max-width: 768px) {
+  .statistics-container .news-filters {
+    width: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+}
+
 @media screen and (min-width: 1024px) {
   .statistics-container {
     display: flex;

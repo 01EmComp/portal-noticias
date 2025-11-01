@@ -1,17 +1,43 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
-import { signOut, sendEmailVerification, deleteUser, sendPasswordResetEmail } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import {
+  signOut,
+  sendEmailVerification,
+  deleteUser,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth, db } from "./firebaseConfig";
-import { doc, getDoc, setDoc, deleteDoc, serverTimestamp, query, collection, where, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 // Register with Email And Password function
-export async function register(name, email, phone, password, role = "leitor", provider = "email") {
+export async function register(
+  name,
+  email,
+  phone,
+  password,
+  role = "leitor",
+  provider = "email"
+) {
   try {
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("email", "==", email));
     const querySnapshot = await getDocs(q);
-    
+
     if (!querySnapshot.empty) {
       return null;
     }
@@ -29,6 +55,7 @@ export async function register(name, email, phone, password, role = "leitor", pr
       email: email,
       phone: phone || "",
       role: role,
+      subscriptionType: "free",
       provider: provider,
       emailVerified: false,
       photoURL: user.photoURL || "https://via.placeholder.com/150",
@@ -63,10 +90,14 @@ export async function login(email, password) {
     }
 
     const userRef = doc(db, "users", user.uid);
-    await setDoc(userRef, {
-      lastLogin: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    }, { merge: true });
+    await setDoc(
+      userRef,
+      {
+        lastLogin: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
 
     return user;
   } catch (error) {
@@ -78,7 +109,7 @@ export async function login(email, password) {
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
-    prompt: 'select_account'
+    prompt: "select_account",
   });
 
   try {
@@ -95,15 +126,21 @@ export const loginWithGoogle = async () => {
 
       if (existingUserData.provider !== "google") {
         await auth.signOut();
-        throw new Error(`Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`);
+        throw new Error(
+          `Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`
+        );
       }
 
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        lastLogin: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        emailVerified: true,
-      }, { merge: true });
+      await setDoc(
+        userRef,
+        {
+          lastLogin: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          emailVerified: true,
+        },
+        { merge: true }
+      );
 
       return user;
     }
@@ -115,6 +152,7 @@ export const loginWithGoogle = async () => {
       email: user.email || "",
       phone: "",
       role: "leitor",
+      subscriptionType: "free",
       provider: "google",
       emailVerified: true,
       photoURL: user.photoURL || "https://via.placeholder.com/150",
@@ -134,7 +172,7 @@ export const loginWithGoogle = async () => {
 export const loginWithFacebook = async () => {
   const provider = new FacebookAuthProvider();
   provider.setCustomParameters({
-    display: 'popup'
+    display: "popup",
   });
 
   try {
@@ -151,15 +189,21 @@ export const loginWithFacebook = async () => {
 
       if (existingUserData.provider !== "facebook") {
         await auth.signOut();
-        throw new Error(`Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`);
+        throw new Error(
+          `Este email já está registrado com ${existingUserData.provider}. Use esse método para fazer login.`
+        );
       }
 
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        lastLogin: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        emailVerified: true,
-      }, { merge: true });
+      await setDoc(
+        userRef,
+        {
+          lastLogin: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          emailVerified: true,
+        },
+        { merge: true }
+      );
 
       return user;
     }
@@ -171,6 +215,7 @@ export const loginWithFacebook = async () => {
       email: user.email || "",
       phone: "",
       role: "leitor",
+      subscriptionType: "free",
       provider: "facebook",
       emailVerified: true,
       photoURL: user.photoURL || "https://via.placeholder.com/150",
@@ -219,7 +264,7 @@ export const getUserData = async (uid) => {
   try {
     const userRef = doc(db, "users", uid);
     const userDoc = await getDoc(userRef);
-    
+
     if (userDoc.exists()) {
       return userDoc.data();
     }
@@ -240,7 +285,17 @@ export const hasRole = async (uid, requiredRole) => {
   }
 };
 
-// Delete account function
+// Delete account function (admin)
+export const deleteUserAdmin = async (userId) => {
+  try {
+    await deleteDoc(doc(db, "users", userId));
+    console.log("Usuário deletado do Firestore!");
+  } catch (error) {
+    console.error("Erro ao deletar usuário:", error);
+  }
+};
+
+// Delete account function (user)
 export const deleteAccount = async () => {
   try {
     const user = auth.currentUser;
@@ -253,15 +308,17 @@ export const deleteAccount = async () => {
     await deleteDoc(userDocRef);
 
     await deleteUser(user);
-    
+
     console.log("Conta excluída com sucesso!");
   } catch (err) {
     console.error("Erro ao excluir conta:", err);
 
     if (err.code === "auth/requires-recent-login") {
-      throw new Error("Para excluir a conta, você precisa fazer login novamente.");
+      throw new Error(
+        "Para excluir a conta, você precisa fazer login novamente."
+      );
     }
-    
+
     throw err;
   }
 };

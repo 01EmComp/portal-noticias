@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { logout } from "/src/Services/auth.js";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 // Images
@@ -39,6 +40,7 @@ const Profile = () => {
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const navigate = useNavigate();
 
   // Informations about users
   useEffect(() => {
@@ -210,7 +212,7 @@ const Profile = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "Não disponível";
-    
+
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return date.toLocaleDateString("pt-BR", {
       day: "2-digit",
@@ -292,15 +294,28 @@ const Profile = () => {
       setShowSettingsPopup(false);
     };
 
+    // Sair da conta
+    const handleLogout = async () => {
+      setLoading(true);
+      try {
+        const optionInput = confirm("Realmente deseja sair da conta?");
+        if (optionInput) {
+          logout();
+          navigate("/");
+        }
+      } catch (err) {
+        alert(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     return (
       <div className="settings-overlay" onClick={handleCancel}>
         <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
           <div className="settings-header">
             <h2>Configurações</h2>
-            <button
-              className="close-button"
-              onClick={handleCancel}
-            >
+            <button className="close-button" onClick={handleCancel}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
           </div>
@@ -386,7 +401,10 @@ const Profile = () => {
                 />
                 <span className="font-size-label large">A</span>
               </div>
-              <p className="font-preview" style={{ fontSize: `${tempSettings.fontSize}px` }}>
+              <p
+                className="font-preview"
+                style={{ fontSize: `${tempSettings.fontSize}px` }}
+              >
                 Exemplo de texto com o tamanho selecionado
               </p>
             </div>
@@ -426,13 +444,23 @@ const Profile = () => {
                 <span className="slider"></span>
               </label>
             </div>
+
+            {/* Fazer logout */}
+            <div className="setting-item" onClick={() => handleLogout()}>
+              <button className="Btn">
+                <div className="sign">
+                  <svg viewBox="0 0 512 512">
+                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+                  </svg>
+                </div>
+
+                <div className="text">Sair da conta</div>
+              </button>
+            </div>
           </div>
 
           <div className="settings-footer">
-            <button
-              className="cancel-button"
-              onClick={handleCancel}
-            >
+            <button className="cancel-button" onClick={handleCancel}>
               Cancelar
             </button>
             <button
@@ -457,7 +485,7 @@ const Profile = () => {
           Configurações salvas com sucesso!
         </div>
       )}
-      
+
       <div className="profile-frame">
         <div className="profile-card">
           <div className="profile-avatar">
@@ -496,14 +524,16 @@ const Profile = () => {
       {dataButtonClicked && (
         <div className="my-data-section">
           <h3>Meus dados</h3>
-          
+
           <div className="user-data-item">
             <div className="data-icon">
               <FontAwesomeIcon icon={faUser} />
             </div>
             <div className="data-content">
               <p className="data-label">Nome</p>
-              <span className="data-value">{userData.name || "Não fornecido"}</span>
+              <span className="data-value">
+                {userData.name || "Não fornecido"}
+              </span>
             </div>
           </div>
 
@@ -513,7 +543,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">E-mail</p>
-              <span className="data-value">{userData.email || "Não fornecido"}</span>
+              <span className="data-value">
+                {userData.email || "Não fornecido"}
+              </span>
             </div>
           </div>
 
@@ -523,7 +555,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">Telefone</p>
-              <span className="data-value">{userData.phone || "Não fornecido"}</span>
+              <span className="data-value">
+                {userData.phone || "Não fornecido"}
+              </span>
             </div>
           </div>
 
@@ -543,7 +577,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">Método de login</p>
-              <span className="data-value">{getProviderName(userData.provider)}</span>
+              <span className="data-value">
+                {getProviderName(userData.provider)}
+              </span>
             </div>
           </div>
 
@@ -553,7 +589,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">ID do usuário</p>
-              <span className="data-value user-id">{userData.uid || "Não disponível"}</span>
+              <span className="data-value user-id">
+                {userData.uid || "Não disponível"}
+              </span>
             </div>
           </div>
 
@@ -563,7 +601,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">Conta criada em</p>
-              <span className="data-value">{formatDate(userData.createdAt)}</span>
+              <span className="data-value">
+                {formatDate(userData.createdAt)}
+              </span>
             </div>
           </div>
 
@@ -573,7 +613,9 @@ const Profile = () => {
             </div>
             <div className="data-content">
               <p className="data-label">Último acesso</p>
-              <span className="data-value">{formatDate(userData.lastLogin)}</span>
+              <span className="data-value">
+                {formatDate(userData.lastLogin)}
+              </span>
             </div>
           </div>
         </div>

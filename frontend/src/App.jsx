@@ -1,5 +1,6 @@
 // React
-// import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { registerVisit } from "./Services/analytics";
 
 // React Router DOM
 import { BrowserRouter } from "react-router-dom";
@@ -14,6 +15,13 @@ import { CaptchaProvider } from "./Context/Captcha/CaptchaContext.jsx";
 import "./App.css";
 
 function App() {
+  useEffect(() => {
+    if (!localStorage.getItem("visit_counted")) {
+      registerVisit();
+      localStorage.setItem("visit_counted", "true");
+    }
+  }, []);
+
   return (
     <CaptchaProvider>
       <div className="App">
