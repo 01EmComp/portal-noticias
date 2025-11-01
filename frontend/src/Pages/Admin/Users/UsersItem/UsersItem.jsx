@@ -2,6 +2,9 @@ import { useState } from "react";
 import { db } from "/src/Services/firebaseConfig";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 
+// Auth
+import { deleteUserAdmin } from "../../../../Services/auth";
+
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -113,10 +116,21 @@ const UsersItem = ({ id, name, email, role }) => {
     if (!window.confirm("Tem certeza que deseja deletar este usuário?")) return;
 
     try {
-      await deleteDoc(doc(db, "users", userId));
+      // Delete from "auth"
+      const response = await fetch("http://localhost:4000/deleteUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid: userId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok)
+        throw new Error(data.error || "Erro ao deletar usuário.");
+
       alert("Usuário deletado do Firestore!");
-    } catch (error) {
-      console.error("Erro ao deletar usuário:", error);
+    } catch (err) {
+      console.error("Erro ao deletar usuário:", err);
       alert("Erro ao deletar usuário.");
     }
   };
@@ -224,7 +238,7 @@ const UsersItem = ({ id, name, email, role }) => {
 
                 <div
                   className="form-exclude-user"
-                  onClick={() => handleDeleteUser()}
+                  onClick={() => handleDeleteUser(id)}
                 >
                   <FontAwesomeIcon icon={faTrash} className="icon" />
                   <p className="text">Excluir usuário</p>
