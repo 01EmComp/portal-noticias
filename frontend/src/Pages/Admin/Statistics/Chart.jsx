@@ -1,3 +1,10 @@
+import { useEffect, useState } from "react";
+
+// Firebase
+import { db } from "/src/Services/firebaseConfig.js";
+import { collection, getDocs } from "firebase/firestore";
+
+// Charts
 import {
   LineChart,
   Line,
@@ -12,35 +19,105 @@ import {
   Cell,
 } from "recharts";
 
-// Datas
-const dataAccesses = [
-  { mes: "Jan", Acessos: 400 },
-  { mes: "Fev", Acessos: 350 },
-  { mes: "Mar", Acessos: 300 },
-  { mes: "Abr", Acessos: 250 },
-  { mes: "Mai", Acessos: 200 },
-  { mes: "Jun", Acessos: 1540 },
-];
-
-const dataSubscribers = [
-  { tipo: "Free", value: 240 },
-  { tipo: "Premium", value: 120 },
-  { tipo: "Empresarial", value: 60 },
-];
-
+// Variables and auxiliary functions
 const colors = ["#8884d8", "#82ca9d", "#ffc658"];
 
+// Convert "2025-10" → "Oct"
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const getMonthName = (key) => {
+  const [year, month] = key.split("-");
+  return months[parseInt(month) - 1];
+};
+
 const Chart = ({ tab }) => {
+  const [monthlyAccessData, setMonthlyAccessData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [subscriberData, setSubscriberData] = useState([]);
+
+  // Fetch subscriptionType from Firestore
+  useEffect(() => {
+    const fetchSubscribers = async () => {
+      try {
+        const usersRef = collection(db, "users");
+        const snapshot = await getDocs(usersRef);
+
+        const counts = { Free: 0, Premium: 0, Business: 0 };
+
+        snapshot.forEach((doc) => {
+          const subscription = doc.data().subscriptionType;
+          if (counts[subscription] !== undefined) {
+            counts[subscription]++;
+          }
+        });
+
+        setSubscriberData([
+          { type: "Free", value: counts.Free },
+          { type: "Premium", value: counts.Premium },
+          { type: "Business", value: counts.Business },
+        ]);
+      } catch (error) {
+        console.error("Error fetching subscribers:", error);
+      }
+    };
+
+    fetchSubscribers();
+  }, []);
+
+  // Fetch monthly accesses from Firestore
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const colRef = collection(db, "analytics", "visitors", "monthly");
+        const snapshot = await getDocs(colRef);
+
+        const data = snapshot.docs.map((doc) => ({
+          month: getMonthName(doc.id),
+          accesses: doc.data().total || 0,
+        }));
+
+        // Sort by month
+        const sortedData = data.sort(
+          (a, b) => months.indexOf(a.month) - months.indexOf(b.month)
+        );
+
+        setMonthlyAccessData(sortedData);
+      } catch (error) {
+        console.error("Error fetching data from Firestore:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <p style={{ textAlign: "center" }}>Loading data...</p>;
+  }
+
   if (tab === "monthly-accesses") {
     return (
       <div style={{ width: "100%", height: "400px" }}>
         <ResponsiveContainer>
           <LineChart
-            data={dataAccesses}
+            data={monthlyAccessData}
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-            <XAxis dataKey="mes" stroke="#000" />
+            <XAxis dataKey="month" stroke="#000" />
             <YAxis stroke="#000" />
             <Tooltip />
             <Legend
@@ -52,7 +129,7 @@ const Chart = ({ tab }) => {
             />
             <Line
               type="monotone"
-              dataKey="Acessos"
+              dataKey="accesses"
               stroke="#8884d8"
               strokeWidth={3}
               activeDot={{ r: 8 }}
@@ -77,15 +154,15 @@ const Chart = ({ tab }) => {
               }}
             />
             <Pie
-              data={dataSubscribers}
+              data={subscriberData}
               dataKey="value"
-              nameKey="tipo"
+              nameKey="type"
               cx="50%"
               cy="50%"
               outerRadius={120}
               label
             >
-              {dataSubscribers.map((entry, index) => (
+              {subscriberData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={colors[index % colors.length]}
@@ -97,7 +174,7 @@ const Chart = ({ tab }) => {
       </div>
     );
   } else {
-    return <p style={{ textAlign: "center" }}>Selecione uma aba</p>;
+    return <p style={{ textAlign: "center" }}>Select a tab</p>;
   }
 };
 

@@ -16,7 +16,7 @@
 .user-name,
 .user-email {
   font-size: 15px;
-  color: #0A0A0A;
+  color: #0a0a0a;
   word-break: break-word;
 }
 
@@ -30,9 +30,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #FFFFFF;
-  border: 2px solid #FF4000;
-  color: #FF4000;
+  background: #ffffff;
+  border: 2px solid #ff4000;
+  color: #ff4000;
   border-radius: 6px;
   padding: 8px 10px;
   cursor: pointer;
@@ -40,8 +40,8 @@
 }
 
 .user-action-button:hover:not(:disabled) {
-  background: #FF4000;
-  color: #FFFFFF;
+  background: #ff4000;
+  color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 64, 0, 0.3);
 }
@@ -202,7 +202,7 @@
 .form-field input:focus,
 .form-field select:focus {
   outline: none;
-  border-color: #FF4000;
+  border-color: #ff4000;
   box-shadow: 0 0 0 3px rgba(255, 64, 0, 0.1);
 }
 
@@ -211,6 +211,29 @@
   background-color: #f9fafb;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.form-exclude-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+.form-exclude-user .icon {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.form-exclude-user p,
+.form-exclude-user .icon {
+  transition: 0.25s ease;
+}
+
+.form-exclude-user:hover p,
+.form-exclude-user:hover .icon {
+  color: #9e0313;
 }
 
 .checkbox-field {
@@ -232,7 +255,7 @@
   height: 20px;
   margin-right: 0.75rem;
   cursor: pointer;
-  accent-color: #FF4000;
+  accent-color: #ff4000;
 }
 
 .checkbox-field span {
@@ -297,7 +320,7 @@
 }
 
 .btn-save {
-  background-color: #FF4000;
+  background-color: #ff4000;
   color: white;
 }
 
@@ -342,7 +365,7 @@
     content: "Usuário:";
     font-weight: 700;
     margin-bottom: 6px;
-    color: #FF4000;
+    color: #ff4000;
   }
 
   .popup-container {
