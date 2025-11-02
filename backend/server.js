@@ -3,10 +3,44 @@ import fetch from "node-fetch";
 import cors from "cors";
 import multer from "multer";
 import FormData from "form-data";
+import admin from "firebase-admin";
+import fs from "fs";
+
+const serviceAccount = JSON.parse(
+  fs.readFileSync(new URL("./servicesAccountKey.json", import.meta.url))
+);
 
 const app = express();
 app.use(cors());
 const upload = multer();
+app.use(express.json());
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// Delete user
+app.post("/deleteUser", async (req, res) => {
+  try {
+    const { uid } = req.body;
+
+    if (!uid) {
+      return res.status(400).json({ error: "UID do usuário não informado." });
+    }
+
+    await admin.auth().deleteUser(uid);
+    await admin.firestore().collection("users").doc(uid).delete();
+
+    return res
+      .status(200)
+      .json({ message: `Usuário ${uid} deletado com sucesso.` });
+  } catch (error) {
+    console.error("Erro ao deletar usuário:", error);
+    return res
+      .status(500)
+      .json({ error: "Erro ao deletar usuário.", details: error.message });
+  }
+});
 
 app.post("/upload", upload.single("fileToUpload"), async (req, res) => {
   try {
@@ -32,7 +66,7 @@ app.post("/upload", upload.single("fileToUpload"), async (req, res) => {
     }
 
     const imageUrl = (await response.text()).trim();
-    
+
     if (!imageUrl || imageUrl.includes("error")) {
       throw new Error("Falha ao fazer upload da imagem");
     }
@@ -40,7 +74,9 @@ app.post("/upload", upload.single("fileToUpload"), async (req, res) => {
     res.json({ url: imageUrl });
   } catch (err) {
     console.error("Erro no upload:", err);
-    res.status(500).json({ error: "Erro ao enviar imagem", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao enviar imagem", details: err.message });
   }
 });
 
