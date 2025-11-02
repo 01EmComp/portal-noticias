@@ -1,6 +1,3 @@
-// React
-// import { useState, useEffect } from "react";
-
 // React Router DOM
 import { BrowserRouter } from "react-router-dom";
 

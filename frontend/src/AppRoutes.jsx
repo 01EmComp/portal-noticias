@@ -11,7 +11,7 @@ import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import AdmPainel from "./Pages/Admin/AdmPainel";
-
+import NotFound from "./Pages/NotFound/NotFound";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -39,7 +39,7 @@ const AppRoutes = () => {
       <Route path="/admin-painel" element={<AdmPainel />} />
 
       {/* Rota fallback para páginas inexistentes */}
-      <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
