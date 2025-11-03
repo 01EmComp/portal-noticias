@@ -1,4 +1,9 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
+// Font Awesome Icon's
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 // Images
 import img from "/src/Assets/Images/blog-image.png";
@@ -10,6 +15,8 @@ import CommentsItem from "./CommentsItem";
 import "./Blog.css";
 
 function Blog() {
+  const [newComment, setNewComment] = useState(3);
+
   return (
     <div className="blog-container">
       <header className="blog-header">
@@ -43,7 +50,20 @@ function Blog() {
       <section className="blog-comments">
         <h3>Comentários</h3>
         <div className="comments-list">
-          <CommentsItem />
+          {Array.from({ length: newComment }, (_, i) => (
+            <CommentsItem key={i} />
+          ))}
+        </div>
+        <div className="more" onClick={() => setNewComment(newComment + 2)}>
+          <p>Mais</p>
+          <FontAwesomeIcon
+            icon={faAngleDown}
+            style={{
+              color: "black",
+              marginTop: "3px",
+              fontSize: "14px",
+            }}
+          />
         </div>
       </section>
     </div>

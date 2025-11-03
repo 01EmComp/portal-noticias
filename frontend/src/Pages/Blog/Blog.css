@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1.4rem 1.8rem;
+  justify-content: flex-start;
+  padding: 2rem 1.8rem;
+  min-height: 100vh;
+  gap: 1rem;
 }
 
 .blog-container header {
@@ -47,12 +49,13 @@
 .blog-container .blog-body {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  padding: 0 0 1rem;
 }
 
 .blog-container .blog-body .title {
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
 }
 
 .blog-container .blog-body .title h3 {
@@ -67,4 +70,89 @@
 .blog-container .blog-body .title .date p,
 .blog-container .blog-body .title .date span {
   font-size: 15px;
+}
+
+.blog-container .image {
+  position: relative;
+  width: 200px;
+  height: 100%;
+  cursor: none;
+  border-radius: 0;
+  z-index: 0;
+}
+
+.blog-container .blog-body .blog-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-container .blog-body .blog-text p {
+  text-align: justify;
+}
+
+.blog-container .blog-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.blog-container .blog-comments .comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.blog-container .blog-comments .comments-list .comments-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.blog-container .blog-comments .comments-list .comments-item:last-child {
+  padding-bottom: 0.5rem;
+  border-bottom: 0;
+}
+
+.blog-container .blog-comments .comments-list .comments-item .left-side {
+  display: flex;
+  max-height: 40px;
+  max-width: 40px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+.blog-container .blog-comments .comments-list .comments-item .left-side img {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.blog-container .blog-comments .comments-list .comments-item .right-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.blog-container
+  .blog-comments
+  .comments-list
+  .comments-item
+  .right-side
+  .user-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.blog-container .blog-comments .comments-list .comments-item .right-side .text {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.blog-container .blog-comments .more {
+  display: flex;
+  gap: 3px;
+  margin: 0 auto;
 }
