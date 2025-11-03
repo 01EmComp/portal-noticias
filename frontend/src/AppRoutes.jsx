@@ -1,5 +1,9 @@
 // React Router DOM
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+
+import { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "/src/Services/firebaseConfig";
 
 // Pages
 import Home from "./Pages/Home/Home";
@@ -11,8 +15,81 @@ import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import AdmPainel from "./Pages/Admin/AdmPainel";
+import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 
 const AppRoutes = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname === "/admin-painel";
+
+  const [siteStatus, setSiteStatus] = useState({
+    siteDisabled: false,
+    maintenanceMode: false,
+    loading: !isAdminRoute, // Não carrega se for rota admin
+  });
+
+  useEffect(() => {
+    // Se for rota admin, pula a verificação
+    if (isAdminRoute) {
+      setSiteStatus({
+        siteDisabled: false,
+        maintenanceMode: false,
+        loading: false,
+      });
+      return;
+    }
+
+    const checkSiteStatus = async () => {
+      try {
+        const settingsRef = doc(db, "settings", "siteConfig");
+        const settingsSnap = await getDoc(settingsRef);
+
+        if (settingsSnap.exists()) {
+          const data = settingsSnap.data();
+          setSiteStatus({
+            siteDisabled: data.siteDisabled || false,
+            maintenanceMode: data.maintenanceMode || false,
+            loading: false,
+          });
+        } else {
+          setSiteStatus({
+            siteDisabled: false,
+            maintenanceMode: false,
+            loading: false,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao verificar status do site:", error);
+        setSiteStatus({
+          siteDisabled: false,
+          maintenanceMode: false,
+          loading: false,
+        });
+      }
+    };
+
+    checkSiteStatus();
+  }, [isAdminRoute]);
+
+  if (isAdminRoute) {
+    return (
+      <Routes>
+        <Route path="/admin-painel" element={<AdmPainel />} />
+      </Routes>
+    );
+  }
+
+  if (siteStatus.loading) return null;
+  
+
+  // Se o site estiver desativado
+  if (siteStatus.siteDisabled) {
+    return <MaintenancePage type="disabled" />;
+  }
+
+  if (siteStatus.maintenanceMode) {
+    return <MaintenancePage type="maintenance" />;
+  }
+
   return (
     <Routes>
       {/* Principal Route */}
@@ -34,9 +111,6 @@ const AppRoutes = () => {
 
       {/* News */}
       <Route path="/news" element={<News />} />
-
-      {/* Admin Page */}
-      <Route path="/admin-painel" element={<AdmPainel />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
