@@ -12,10 +12,27 @@ import "./Header.css";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const menuRef = useRef();
+  const searchRef = useRef();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const toggleSearch = () => {
+    setSearchOpen(!searchOpen);
+    if (!searchOpen) {
+      setTimeout(() => searchRef.current?.focus(), 100);
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // navigate(`/search?q=${searchQuery}`); abrir notícia qnd estiver pronto
+    }
   };
 
   // Fecha o menu ao clicar fora dele
@@ -77,11 +94,27 @@ const Header = () => {
         <h1 className="logo">Notícias RP</h1>
       </Link>
 
-      <div className="search-icon">
-        <FontAwesomeIcon
-          icon={faMagnifyingGlass}
-          style={{ fontSize: "22px", color: "#fff", cursor: "pointer" }}
-        />
+      <div className="search-container">
+        <form 
+          className={`search-form ${searchOpen ? "open" : ""}`}
+          onSubmit={handleSearch}
+        >
+          <input
+            ref={searchRef}
+            type="text"
+            placeholder="Pesquisar notícias..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </form>
+        
+        <div className="search-icon" onClick={toggleSearch}>
+          <FontAwesomeIcon
+            icon={searchOpen ? faXmark : faMagnifyingGlass}
+            style={{ fontSize: "22px", color: "#fff", cursor: "pointer" }}
+          />
+        </div>
       </div>
     </header>
   );
