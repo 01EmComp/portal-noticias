@@ -16,6 +16,15 @@ import "./Blog.css";
 
 function Blog() {
   const [newComment, setNewComment] = useState(3);
+  const [follow, setFollow] = useState("Seguir");
+
+  const toggleFollow = () => {
+    if (follow == "Seguir") {
+      setFollow("Seguindo");
+    } else {
+      setFollow("Seguir");
+    }
+  };
 
   return (
     <div className="blog-container">
@@ -25,7 +34,14 @@ function Blog() {
           <Link to="/">
             <div className="link-button">Posts</div>
           </Link>
-          <button className="follow-button">Seguir</button>
+          <button
+            className={
+              follow == "Seguir" ? "follow-button" : "follow-button active"
+            }
+            onClick={() => toggleFollow()}
+          >
+            {follow}
+          </button>
         </div>
       </header>
       <section className="blog-body">
@@ -43,7 +59,23 @@ function Blog() {
         <div className="blog-text">
           <p>
             Viagem incrivel com muitos lugares bonitos e comidas deliciosas, me
-            senti encantada com o ambiente, quero me mudar pra lá rsrsrs
+            senti encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. Viagem
+            incrivel com muitos lugares bonitos e comidas deliciosas, me senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs. senti
+            encantada com o ambiente, quero me mudar pra lá rsrsrs.
           </p>
         </div>
       </section>
@@ -55,9 +87,10 @@ function Blog() {
           ))}
         </div>
         <div className="more" onClick={() => setNewComment(newComment + 2)}>
-          <p>Mais</p>
+          <p>Mais comentários</p>
           <FontAwesomeIcon
             icon={faAngleDown}
+            className="icon"
             style={{
               color: "black",
               marginTop: "3px",
