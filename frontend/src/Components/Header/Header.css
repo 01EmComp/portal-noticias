@@ -14,6 +14,55 @@ header .logo {
   font-size: 20px;
 }
 
+/* Search Bar */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.search-form {
+  position: absolute;
+  right: 2.5rem;
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.search-form.open {
+  width: 200px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.search-input:focus {
+  background-color: #fff;
+}
+
+.search-input::placeholder {
+  color: #666;
+}
+
+.search-icon {
+  z-index: 10;
+  position: relative;
+}
+
 /* Hamburger menu */
 .hamburger-container {
   position: relative;
@@ -45,7 +94,7 @@ header .logo {
   height: 60rem;
   transition: max-height 0.4s ease, opacity 0.4s ease, 0.3s ease;
   flex-direction: column;
-  z-index: 15;
+  z-index: 50;
 }
 
 .hamburger-menu.show {
@@ -123,6 +172,14 @@ header .logo {
     font-family: "Jacques Francois", sans-serif;
     font-weight: 400;
     font-size: 25px;
+  }
+
+  .search-form.open {
+    width: 300px;
+  }
+
+  .search-input {
+    font-size: 15px;
   }
 }
 
