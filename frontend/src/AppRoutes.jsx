@@ -16,6 +16,7 @@ import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import AdmPainel from "./Pages/Admin/AdmPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
+import Blog from "./Pages/Blog/Blog";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -105,6 +106,9 @@ const AppRoutes = () => {
 
       {/* Author */}
       <Route path="/author-page" element={<Author />} />
+  
+      {/* Blog */}
+      <Route path="/blog" element={<Blog />} />
 
       {/* About Us */}
       <Route path="/about" element={<About />} />

@@ -84,6 +84,9 @@ const Header = () => {
           <Link to="/author-page">
             <li>Autor</li>
           </Link>
+          <Link to="/blog">
+            <li>Blog</li>
+          </Link>
           <Link to="/about">
             <li>Sobre nós</li>
           </Link>
