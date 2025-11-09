@@ -12,6 +12,7 @@ import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import AdmPainel from "./Pages/Admin/AdmPainel";
 import NotFound from "./Pages/NotFound/NotFound";
+import Reporter from "./Pages/Reporter/Reporter";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -28,6 +29,9 @@ const AppRoutes = () => {
 
       {/* Author */}
       <Route path="/author-page" element={<Author />} />
+
+      {/* Reporter */}
+      <Route path="/reporter-page" element={<Reporter />} />
 
       {/* About Us */}
       <Route path="/about" element={<About />} />
