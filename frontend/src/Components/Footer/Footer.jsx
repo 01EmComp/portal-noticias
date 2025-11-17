@@ -78,11 +78,11 @@ const Footer = () => {
       </div>
       <div className="hr"></div>
       <div className="bottom">
-        <Link to="/">
+        <Link to="/about-us">
           <p>Sobre o Notícias RP</p>
         </Link>
-        <Link to="/">
-          <p>Aviso legal e Política de Privacidade</p>
+        <Link to="/terms-and-services">
+          <p>Termos e Serviços</p>
         </Link>
         <Link to="/contact">
           <p>Fale com o Notícias RP</p>

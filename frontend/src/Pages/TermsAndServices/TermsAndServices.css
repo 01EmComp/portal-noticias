@@ -1,0 +1,31 @@
+.ts-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1.6rem 2rem;
+}
+
+.ts-container span {
+  font-weight: 600;
+}
+
+.ts-container .date {
+  font-weight: 600;
+}
+
+.ts-container h2 {
+  padding-bottom: 0.6rem;
+}
+
+.ts-container p {
+  padding: 0.6rem 0;
+}
+
+.ts-container div {
+}
+
+.ts-container ul {
+}
+
+.ts-container li {
+}
