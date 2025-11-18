@@ -17,6 +17,7 @@ import News from "./Pages/News/News";
 import AdmPainel from "./Pages/Admin/AdmPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 import Blog from "./Pages/Blog/Blog";
+import TermsAndServices from "./Pages/TermsAndServices/TermsAndServices";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -80,7 +81,6 @@ const AppRoutes = () => {
   }
 
   if (siteStatus.loading) return null;
-  
 
   // Se o site estiver desativado
   if (siteStatus.siteDisabled) {
@@ -106,15 +106,18 @@ const AppRoutes = () => {
 
       {/* Author */}
       <Route path="/author-page" element={<Author />} />
-  
+
       {/* Blog */}
       <Route path="/blog" element={<Blog />} />
 
       {/* About Us */}
-      <Route path="/about" element={<About />} />
+      <Route path="/about-us" element={<About />} />
 
       {/* News */}
       <Route path="/news" element={<News />} />
+
+      {/* Terms and Services */}
+      <Route path="/terms-and-services" element={<TermsAndServices />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
