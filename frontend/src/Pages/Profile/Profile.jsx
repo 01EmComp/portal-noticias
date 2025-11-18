@@ -34,7 +34,7 @@ import "./Profile.css";
 const Profile = () => {
   const [showMoreArticles, setShowMoreArticles] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [dataButtonClicked, setDataButtonClicked] = useState(false);
+  const [showDataPopup, setShowDataPopup] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
@@ -149,10 +149,6 @@ const Profile = () => {
     setShowMoreArticles(!showMoreArticles);
   };
 
-  const handleDataButtonClick = () => {
-    setDataButtonClicked((prev) => !prev);
-  };
-
   const handleSaveSettings = async (newSettings) => {
     if (!auth.currentUser) return;
 
@@ -258,6 +254,127 @@ const Profile = () => {
       default:
         return role || "Leitor";
     }
+  };
+
+  const DataPopup = () => {
+    const handleClose = () => {
+      setShowDataPopup(false);
+    };
+
+    return (
+      <div className="settings-overlay" onClick={handleClose}>
+        <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
+          <div className="settings-header">
+            <h2>Meus Dados</h2>
+            <button className="close-button" onClick={handleClose}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
+
+          <div className="data-popup-content">
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Nome</p>
+                <span className="data-value">
+                  {userData.name || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faEnvelope} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">E-mail</p>
+                <span className="data-value">
+                  {userData.email || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faPhone} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Telefone</p>
+                <span className="data-value">
+                  {userData.phone || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faUserTag} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Tipo de conta</p>
+                <span className="data-value">{getRoleName(userData.role)}</span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={getProviderIcon(userData.provider)} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Método de login</p>
+                <span className="data-value">
+                  {getProviderName(userData.provider)}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faIdCard} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">ID do usuário</p>
+                <span className="data-value user-id">
+                  {userData.uid || "Não disponível"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faCalendar} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Conta criada em</p>
+                <span className="data-value">
+                  {formatDate(userData.createdAt)}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faSignInAlt} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Último acesso</p>
+                <span className="data-value">
+                  {formatDate(userData.lastLogin)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="settings-footer">
+            <button className="save-button" onClick={handleClose}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const SettingsPopup = () => {
@@ -479,6 +596,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       {showSettingsPopup && <SettingsPopup />}
+      {showDataPopup && <DataPopup />}
       {showSuccessToast && (
         <div className="success-toast">
           <span className="toast-icon">✓</span>
@@ -515,111 +633,10 @@ const Profile = () => {
 
       {/* Botão Meus Dados */}
       <div className="data-section">
-        <button className="data-button" onClick={handleDataButtonClick}>
-          {dataButtonClicked ? "Fechar" : "Meus Dados"}
+        <button className="data-button" onClick={() => setShowDataPopup(true)}>
+          Meus Dados
         </button>
       </div>
-
-      {/* Dados do Usuário */}
-      {dataButtonClicked && (
-        <div className="my-data-section">
-          <h3>Meus dados</h3>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faUser} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Nome</p>
-              <span className="data-value">
-                {userData.name || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faEnvelope} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">E-mail</p>
-              <span className="data-value">
-                {userData.email || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faPhone} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Telefone</p>
-              <span className="data-value">
-                {userData.phone || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faUserTag} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Tipo de conta</p>
-              <span className="data-value">{getRoleName(userData.role)}</span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={getProviderIcon(userData.provider)} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Método de login</p>
-              <span className="data-value">
-                {getProviderName(userData.provider)}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faIdCard} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">ID do usuário</p>
-              <span className="data-value user-id">
-                {userData.uid || "Não disponível"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faCalendar} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Conta criada em</p>
-              <span className="data-value">
-                {formatDate(userData.createdAt)}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faSignInAlt} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Último acesso</p>
-              <span className="data-value">
-                {formatDate(userData.lastLogin)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Notícias */}
       <div className="articles-section">
