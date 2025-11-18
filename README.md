@@ -51,14 +51,13 @@
 
 #### 💻 Desenvolvedores
 - [Vinícius Reis](https://github.com/ViniPlugner)
-- [Andrei Gomes](https://github.com/AndreiGTeixeira)
+- [Guilherme Bernardino](https://github.com/Guilherme-ber)
 - [João Matheus Filgueira](https://github.com/JoaoMFSerafim)
 
 #### 🎨 Designers
 - [Luan Rodrigues](https://github.com/lgrodriguess)
 - [Andrei Gomes](https://github.com/AndreiGTeixeira)
 - [João Matheus Filgueira](https://github.com/JoaoMFSerafim)
-- [Vinícius Reis](https://github.com/ViniPlugner)
 
 ---
 
