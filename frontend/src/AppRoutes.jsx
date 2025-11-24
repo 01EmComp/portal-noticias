@@ -16,12 +16,15 @@ import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import NotFound from "./Pages/NotFound/NotFound";
 import AdmPainel from "./Pages/Admin/AdmPainel";
+import Writer from "./Pages/Writer/WriterPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 import Blog from "./Pages/Blog/Blog";
+import TermsAndServices from "./Pages/TermsAndServices/TermsAndServices";
 
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname === "/admin-painel";
+  const isWriterRoute = location.pathname === "/writer-painel";
 
   const [siteStatus, setSiteStatus] = useState({
     siteDisabled: false,
@@ -32,6 +35,16 @@ const AppRoutes = () => {
   useEffect(() => {
     // Se for rota admin, pula a verificação
     if (isAdminRoute) {
+      setSiteStatus({
+        siteDisabled: false,
+        maintenanceMode: false,
+        loading: false,
+      });
+      return;
+    }
+
+    // Igualmente para a rota writer
+    if (isWriterRoute) {
       setSiteStatus({
         siteDisabled: false,
         maintenanceMode: false,
@@ -70,7 +83,7 @@ const AppRoutes = () => {
     };
 
     checkSiteStatus();
-  }, [isAdminRoute]);
+  }, [isAdminRoute, isWriterRoute]);
 
   if (isAdminRoute) {
     return (
@@ -80,8 +93,15 @@ const AppRoutes = () => {
     );
   }
 
+  if (isWriterRoute) {
+    return (
+      <Routes>
+        <Route path="/writer-painel" element={<Writer />} />
+      </Routes>
+    );
+  }
+
   if (siteStatus.loading) return null;
-  
 
   // Se o site estiver desativado
   if (siteStatus.siteDisabled) {
@@ -107,15 +127,18 @@ const AppRoutes = () => {
 
       {/* Author */}
       <Route path="/author-page" element={<Author />} />
-  
+
       {/* Blog */}
       <Route path="/blog" element={<Blog />} />
 
       {/* About Us */}
-      <Route path="/about" element={<About />} />
+      <Route path="/about-us" element={<About />} />
 
       {/* News */}
       <Route path="/news" element={<News />} />
+
+      {/* Terms and Services */}
+      <Route path="/terms-and-services" element={<TermsAndServices />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<NotFound />} />

@@ -28,13 +28,12 @@ import "./AdmPainel.css";
 import CreateNews from "./CreateNews/CreateNews";
 
 const AdmPainel = () => {
-  
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState("3.2rem");
   const [openTab, setOpenTab] = useState("news");
   const [userData, setUserData] = useState(null);
 
-  const allowedRoles = ["admin", "editor"];
+  const allowedRoles = ["admin"];
 
   // Verificação de autenticação
   useEffect(() => {
@@ -58,9 +57,9 @@ const AdmPainel = () => {
     return () => unsubscribe();
   }, []);
 
-    if (!userData) {
+  if (!userData) {
     return (
-      <div className="not-authenticated">
+      <div className="not-authenticated" style={{ minHeight: "67vh" }}>
         <h1>Acesso negado</h1>
         <p>Você precisa estar logado para acessar está página.</p>
         <Link to="/login">
@@ -72,13 +71,13 @@ const AdmPainel = () => {
 
   if (!allowedRoles.includes(userData.role)) {
     return (
-      <div className="not-authorized">
+      <div className="not-authorized" style={{ minHeight: "67vh" }}>
         <h1>Permissão negada</h1>
         <p>Você não tem permissão para acessar essa página!</p>
 
         <p className="role-info">
-          Apenas usuários com cargo de <strong>Editor</strong> ou{" "}
-          <strong>Admin</strong> podem criar notícias.
+          Apenas usuários com cargo de <strong>Admin</strong> podem acessar essa
+          página.
         </p>
         <Link to="/">
           <button>Voltar para início</button>

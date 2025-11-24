@@ -6,6 +6,7 @@
   padding: 2rem;
   width: 100%;
   height: auto;
+  min-height: 100vh;
 }
 
 .h-container section {

@@ -1,11 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 import "./CreateNews.css";
 
@@ -36,7 +42,7 @@ const CreateNews = () => {
     "Esportes",
     "Entretenimento",
     "Cultura",
-    "Ciência"
+    "Ciência",
   ];
 
   // Verificação de autenticação
@@ -103,7 +109,6 @@ const CreateNews = () => {
 
       const data = await response.json();
       return data.url; // URL
-
     } catch (error) {
       console.error("Falha no upload da imagem:", error);
       throw error;
@@ -118,54 +123,52 @@ const CreateNews = () => {
 
   // converter HTML para o formato JSON do exemplo do JM
   const convertEditorToJSON = (htmlContent) => {
-    const tempDiv = document.createElement('div');
+    const tempDiv = document.createElement("div");
     tempDiv.innerHTML = htmlContent;
-    
+
     const bodyArray = [];
     const children = tempDiv.childNodes;
-    
+
     children.forEach((node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
-
         const tagName = node.tagName.toLowerCase();
         const text = node.innerHTML.trim();
-        
+
         if (text) {
           let type;
-          
+
           switch (tagName) {
-            case 'h2':
-              type = 'heading';
+            case "h2":
+              type = "heading";
               break;
-            case 'h3':
-              type = 'subheading';
+            case "h3":
+              type = "subheading";
               break;
-            case 'ul':
-            case 'ol':
-              type = 'list';
+            case "ul":
+            case "ol":
+              type = "list";
               break;
             default:
-              type = 'paragraph';
+              type = "paragraph";
           }
-          
+
           bodyArray.push({
             type: type,
-            text: text
+            text: text,
           });
         }
       } else if (node.nodeType === Node.TEXT_NODE) {
-
         const text = node.textContent.trim();
 
         if (text) {
           bodyArray.push({
-            type: 'paragraph',
-            text: text
+            type: "paragraph",
+            text: text,
           });
         }
       }
     });
-    
+
     return bodyArray;
   };
 
@@ -190,7 +193,7 @@ const CreateNews = () => {
       return false;
     }
 
-    if (!editorContent.trim() || editorContent === '<br>') {
+    if (!editorContent.trim() || editorContent === "<br>") {
       setSubmitMessage({ type: "error", text: "O conteúdo é obrigatório" });
       return false;
     }
@@ -206,7 +209,6 @@ const CreateNews = () => {
     setSubmitMessage({ type: "", text: "" });
 
     try {
-
       const imageURL = await uploadImage(formData.image);
       const bodyContent = convertEditorToJSON(editorContent);
 
@@ -238,7 +240,6 @@ const CreateNews = () => {
       setTimeout(() => {
         handleCancel();
       }, 2000);
-
     } catch (error) {
       console.error("Erro ao enviar notícia:", error);
       setSubmitMessage({
@@ -266,7 +267,6 @@ const CreateNews = () => {
     setSubmitMessage({ type: "", text: "" });
 
     try {
-
       const imageURL = await uploadImage(formData.image);
       const bodyContent = convertEditorToJSON(editorContent);
 
@@ -276,7 +276,7 @@ const CreateNews = () => {
         title: formData.title,
         subtitle: formData.subtitle,
         category: formData.category,
-         imageURL: imageURL,
+        imageURL: imageURL,
         body: bodyContent,
         views: 0,
         author: {
@@ -299,7 +299,6 @@ const CreateNews = () => {
       setTimeout(() => {
         handleCancel();
       }, 2000);
-
     } catch (error) {
       console.error("Erro ao publicar notícia:", error);
       setSubmitMessage({
@@ -438,11 +437,7 @@ const CreateNews = () => {
           <label className="form-label">Imagem</label>
           <div className="image-preview-container">
             {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="image-preview"
-              />
+              <img src={imagePreview} alt="Preview" className="image-preview" />
             ) : (
               <div className="image-placeholder">
                 <svg
@@ -472,7 +467,12 @@ const CreateNews = () => {
               title="Negrito (Ctrl+B)"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M4 2h4.5a3.5 3.5 0 0 1 2.5 6 3.5 3.5 0 0 1-2.5 6H4V2zm4.5 5a1.5 1.5 0 1 0 0-3H6v3h2.5zM6 9v3h2.5a1.5 1.5 0 1 0 0-3H6z" />
               </svg>
             </button>
@@ -483,7 +483,12 @@ const CreateNews = () => {
               title="Itálico (Ctrl+I)"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M6 2h6v2h-2l-2 8h2v2H4v-2h2l2-8H6V2z" />
               </svg>
             </button>
@@ -494,7 +499,12 @@ const CreateNews = () => {
               title="Sublinhado (Ctrl+U)"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M8 13c2.2 0 4-1.8 4-4V3h-2v6c0 1.1-.9 2-2 2s-2-.9-2-2V3H4v6c0 2.2 1.8 4 4 4zm-6 2h12v1H2v-1z" />
               </svg>
             </button>
@@ -527,7 +537,12 @@ const CreateNews = () => {
               title="Lista com marcadores"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M2 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3-1h9v1H5V3zm0 5h9v1H5V8zm0 5h9v1H5v-1zM2 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
               </svg>
             </button>
@@ -538,7 +553,12 @@ const CreateNews = () => {
               title="Lista numerada"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M2 2h1v2H2V2zm0 3h1v2H2V5zm0 3h1v2H2V8zm0 3h1v2H2v-2zM5 3h9v1H5V3zm0 5h9v1H5V8zm0 5h9v1H5v-1z" />
               </svg>
             </button>
@@ -552,7 +572,12 @@ const CreateNews = () => {
               title="Alinhar à esquerda"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M2 3h12v1H2V3zm0 3h8v1H2V6zm0 3h12v1H2V9zm0 3h8v1H2v-1z" />
               </svg>
             </button>
@@ -563,7 +588,12 @@ const CreateNews = () => {
               title="Centralizar"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M2 3h12v1H2V3zm2 3h8v1H4V6zm-2 3h12v1H2V9zm2 3h8v1H4v-1z" />
               </svg>
             </button>
@@ -574,7 +604,12 @@ const CreateNews = () => {
               title="Alinhar à direita"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M2 3h12v1H2V3zm4 3h8v1H6V6zm-4 3h12v1H2V9zm4 3h8v1H6v-1z" />
               </svg>
             </button>
@@ -588,7 +623,12 @@ const CreateNews = () => {
               title="Inserir link"
               disabled={isSubmitting}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
                 <path d="M6.5 10a3.5 3.5 0 0 0 4.95 0l2-2a3.5 3.5 0 0 0-4.95-4.95l-1.15 1.15a.5.5 0 0 1-.7-.7l1.15-1.15a4.5 4.5 0 0 1 6.36 6.36l-2 2a4.5 4.5 0 0 1-6.36 0 .5.5 0 0 1 .7-.7zm-3-3a3.5 3.5 0 0 0 4.95 0 .5.5 0 0 1 .7.7 4.5 4.5 0 0 1-6.36 0l-2-2a4.5 4.5 0 0 1 6.36-6.36l1.15 1.15a.5.5 0 0 1-.7.7L6.45 2.34A3.5 3.5 0 0 0 1.5 7.29l2 2z" />
               </svg>
             </button>
