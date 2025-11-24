@@ -16,6 +16,7 @@ import About from "./Pages/About/About";
 import News from "./Pages/News/News";
 import NotFound from "./Pages/NotFound/NotFound";
 import AdmPainel from "./Pages/Admin/AdmPainel";
+import Writer from "./Pages/Writer/WriterPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 import Blog from "./Pages/Blog/Blog";
 import TermsAndServices from "./Pages/TermsAndServices/TermsAndServices";
@@ -23,6 +24,7 @@ import TermsAndServices from "./Pages/TermsAndServices/TermsAndServices";
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname === "/admin-painel";
+  const isWriterRoute = location.pathname === "/writer-painel";
 
   const [siteStatus, setSiteStatus] = useState({
     siteDisabled: false,
@@ -33,6 +35,16 @@ const AppRoutes = () => {
   useEffect(() => {
     // Se for rota admin, pula a verificação
     if (isAdminRoute) {
+      setSiteStatus({
+        siteDisabled: false,
+        maintenanceMode: false,
+        loading: false,
+      });
+      return;
+    }
+
+    // Igualmente para a rota writer
+    if (isWriterRoute) {
       setSiteStatus({
         siteDisabled: false,
         maintenanceMode: false,
@@ -71,12 +83,20 @@ const AppRoutes = () => {
     };
 
     checkSiteStatus();
-  }, [isAdminRoute]);
+  }, [isAdminRoute, isWriterRoute]);
 
   if (isAdminRoute) {
     return (
       <Routes>
         <Route path="/admin-painel" element={<AdmPainel />} />
+      </Routes>
+    );
+  }
+
+  if (isWriterRoute) {
+    return (
+      <Routes>
+        <Route path="/writer-painel" element={<Writer />} />
       </Routes>
     );
   }

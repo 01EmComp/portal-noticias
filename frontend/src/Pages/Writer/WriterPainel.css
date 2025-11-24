@@ -1,0 +1,165 @@
+.writer-painel-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 2rem 3rem;
+}
+
+.writer-painel-container .wp-welcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.writer-painel-container .wp-welcome .photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 122px;
+  min-width: 122px;
+  background-color: #cc6e01;
+  border-radius: 50%;
+}
+
+.writer-painel-container .wp-welcome .photo img {
+  width: 100%;
+  height: 100%;
+}
+
+.writer-painel-container .wp-welcome .text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.writer-painel-container .wp-welcome .text p {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.writer-painel-container .wp-welcome .text h2 {
+  text-align: center;
+}
+
+.writer-painel-container .wp-painel {
+  display: flex;
+  width: 100%;
+}
+
+.writer-painel-container .wp-painel ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  justify-content: center;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.writer-painel-container .wp-painel ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.25);
+  transition: 0.2s ease;
+}
+
+.writer-painel-container .wp-painel ul li p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
+}
+
+.writer-painel-container .wp-painel ul li:hover {
+  background-color: rgba(221, 221, 221, 0.25);
+}
+
+@media screen and (min-width: 550px) {
+  .writer-painel-container {
+    padding: 2.5rem 2.5rem 4rem;
+  }
+
+  .writer-painel-container .wp-welcome {
+    gap: 1.5rem;
+  }
+
+  .writer-painel-container .wp-welcome .photo {
+    min-width: 124px;
+    min-height: 124px;
+  }
+
+  .writer-painel-container .wp-welcome .text {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .writer-painel-container .wp-painel ul li {
+    padding: 1.5rem 1.8rem;
+  }
+
+  .writer-painel-container .wp-painel ul li p {
+    font-size: 20px;
+  }
+
+  .writer-painel-container .wp-painel ul li img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media screen and (min-width: 935px) {
+  .writer-painel-container {
+    padding: 5rem 2rem 7rem;
+    gap: 4rem;
+  }
+
+  .writer-painel-container .wp-welcome .photo {
+    min-width: 150px;
+    min-height: 150px;
+  }
+
+  .writer-painel-container .wp-welcome .text p {
+    font-size: 22px;
+  }
+
+  .writer-painel-container .wp-welcome .text h2 {
+    font-size: 30px;
+  }
+
+  .writer-painel-container .wp-painel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .writer-painel-container .wp-painel ul {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    align-content: center;
+    justify-items: center;
+    width: 0;
+  }
+
+  .writer-painel-container .wp-painel ul li {
+    width: 415px;
+    padding: 1.7rem 1.8rem;
+  }
+
+  .writer-painel-container .wp-painel ul li img {
+    width: 40px;
+    height: 40px;
+  }
+}
