@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import "./CreateNews.css";
 
@@ -116,6 +116,59 @@ const CreateNews = () => {
     }
   };
 
+  // converter HTML para o formato JSON do exemplo do JM
+  const convertEditorToJSON = (htmlContent) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    
+    const bodyArray = [];
+    const children = tempDiv.childNodes;
+    
+    children.forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+
+        const tagName = node.tagName.toLowerCase();
+        const text = node.innerHTML.trim();
+        
+        if (text) {
+          let type;
+          
+          switch (tagName) {
+            case 'h2':
+              type = 'heading';
+              break;
+            case 'h3':
+              type = 'subheading';
+              break;
+            case 'ul':
+            case 'ol':
+              type = 'list';
+              break;
+            default:
+              type = 'paragraph';
+          }
+          
+          bodyArray.push({
+            type: type,
+            text: text
+          });
+        }
+      } else if (node.nodeType === Node.TEXT_NODE) {
+
+        const text = node.textContent.trim();
+
+        if (text) {
+          bodyArray.push({
+            type: 'paragraph',
+            text: text
+          });
+        }
+      }
+    });
+    
+    return bodyArray;
+  };
+
   const validateForm = () => {
     if (!formData.title.trim()) {
       setSubmitMessage({ type: "error", text: "O título é obrigatório" });
@@ -153,16 +206,18 @@ const CreateNews = () => {
     setSubmitMessage({ type: "", text: "" });
 
     try {
-      const imageURL = await uploadImage(formData.image);
 
-      // json
+      const imageURL = await uploadImage(formData.image);
+      const bodyContent = convertEditorToJSON(editorContent);
+
       const newsData = {
+        id: uuidv4(),
+        status: "pending",
         title: formData.title,
         subtitle: formData.subtitle,
         category: formData.category,
         imageURL: imageURL,
-        content: editorContent,
-        status: "pending",
+        body: bodyContent,
         views: 0,
         author: {
           uid: auth.currentUser.uid,
@@ -211,15 +266,18 @@ const CreateNews = () => {
     setSubmitMessage({ type: "", text: "" });
 
     try {
+
       const imageURL = await uploadImage(formData.image);
+      const bodyContent = convertEditorToJSON(editorContent);
 
       const newsData = {
+        id: uuidv4(),
+        status: "published",
         title: formData.title,
         subtitle: formData.subtitle,
         category: formData.category,
-        imageURL: imageURL,
-        content: editorContent,
-        status: "published",
+         imageURL: imageURL,
+        body: bodyContent,
         views: 0,
         author: {
           uid: auth.currentUser.uid,
