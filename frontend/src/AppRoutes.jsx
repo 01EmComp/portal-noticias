@@ -14,6 +14,7 @@ import Contact from "./Pages/Contact/Contact";
 import Author from "./Pages/Author/Author";
 import About from "./Pages/About/About";
 import News from "./Pages/News/News";
+import NotFound from "./Pages/NotFound/NotFound";
 import AdmPainel from "./Pages/Admin/AdmPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 import Blog from "./Pages/Blog/Blog";
@@ -120,7 +121,7 @@ const AppRoutes = () => {
       <Route path="/terms-and-services" element={<TermsAndServices />} />
 
       {/* Rota fallback para páginas inexistentes */}
-      <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

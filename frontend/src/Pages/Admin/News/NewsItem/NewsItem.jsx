@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+
+
 import { db } from "/src/Services/firebaseConfig";
 import { doc, updateDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
@@ -49,6 +51,24 @@ const NewsItem = ({
 
     fetchNewsData();
   }, [showModal, id, isHeader]);
+
+  const renderBodyContent = (bodyArray) => {
+    if (!bodyArray || !Array.isArray(bodyArray)) return null;
+
+    return bodyArray.map((item, index) => {
+      switch (item.type) {
+        case 'heading':
+          return <h2 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+        case 'subheading':
+          return <h3 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+        case 'list':
+          return <div key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+        case 'paragraph':
+        default:
+          return <p key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+      }
+    });
+  };
 
   const handleApprove = async () => {
     if (!id || isHeader) return;
@@ -177,23 +197,26 @@ const NewsItem = ({
                     
                     {newsData && (
                       <>
+                        {newsData.subtitle && (
+                          <p><strong>Subtítulo:</strong> {newsData.subtitle}</p>
+                        )}
+                        
                         {newsData.category && (
                           <p><strong>Categoria:</strong> {newsData.category}</p>
                         )}
                         
-                        {newsData.imageUrl && (
+                        {newsData.imageURL && (
                           <div className="news-image-preview">
-                            <img src={newsData.imageUrl} alt={title} />
+                            <img src={newsData.imageURL} alt={title} />
                           </div>
                         )}
                         
-                        {newsData.content && (
+                        {newsData.body && Array.isArray(newsData.body) && (
                           <div className="news-content-preview">
                             <h5>Conteúdo:</h5>
-                            <div 
-                              className="content-text"
-                              dangerouslySetInnerHTML={{ __html: newsData.content }}
-                            />
+                            <div className="content-text">
+                              {renderBodyContent(newsData.body)}
+                            </div>
                           </div>
                         )}
                       </>
