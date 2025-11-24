@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+
+// Auth
 import { db, auth } from "/src/Services/firebaseConfig";
 import { 
   collection, 
@@ -22,7 +24,6 @@ const News = () => {
   const [dateOrder, setDateOrder] = useState("desc"); // desc, asc
   const [userData, setUserData] = useState(null);
 
-  // Buscar dados do usuário
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
@@ -30,7 +31,6 @@ const News = () => {
     }
   }, []);
 
-  // Buscar notícias do Firestore
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -55,7 +55,6 @@ const News = () => {
           );
         }
 
-        // Usando onSnapshot para atualizações em tempo real
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const newsData = [];
           querySnapshot.forEach((doc) => {
