@@ -30,6 +30,18 @@
   gap: 0.5rem;
 }
 
+.news-container .header .about .title-and-author h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.news-container .header .about .title-and-author .subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: -0.3rem;
+}
+
 .news-container .header .about .author-and-time .author p span {
   color: var(--secundary-color);
   font-weight: 700;
@@ -75,11 +87,6 @@
   background-color: rgba(0, 0, 0, 0.13);
 }
 
-.news-container .header .about h2 {
-  font-size: 30px;
-  font-weight: 700;
-}
-
 .news-container .header .about .author-and-time p,
 .news-container .header .about .author-and-time span {
   font-size: 16px;
@@ -105,6 +112,75 @@
   text-align: justify;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.news-container .news-text h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.news-container .news-text h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 1.2rem 0 0.8rem;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.news-container .news-text ul,
+.news-container .news-text ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.news-container .news-text li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.news-container .news-text a {
+  color: var(--secundary-color);
+  text-decoration: underline;
+}
+
+.news-container .news-text a:hover {
+  opacity: 0.8;
+}
+
+/* Loading e Error States */
+.news-container .loading-message,
+.news-container .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.news-container .error-message h2 {
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.news-container .error-message button {
+  padding: 0.8rem 2rem;
+  background-color: var(--secundary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.news-container .error-message button:hover {
+  opacity: 0.9;
 }
 
 @media screen and (min-width: 600px) {
@@ -144,7 +220,8 @@
 
   .news-container .header .about {
     gap: 0.8rem;
-    height: 19rem;
+    height: auto;
+    min-height: 19rem;
   }
 
   .news-container .header .about .social-links {
@@ -180,5 +257,13 @@
 
   .news-container .news-text p {
     font-size: 17px;
+  }
+
+  .news-container .news-text h2 {
+    font-size: 26px;
+  }
+
+  .news-container .news-text h3 {
+    font-size: 22px;
   }
 }
