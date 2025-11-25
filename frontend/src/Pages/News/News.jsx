@@ -10,7 +10,7 @@ import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 // Firebase
 import { db } from "/src/Services/firebaseConfig";
-import { collection, query, where, getDocs, doc, updateDoc, increment } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, serverTimestamp, updateDoc, increment } from "firebase/firestore";
 
 // Components
 import ImageFullScreen from "../../Components/ImageFullScreen/ImageFullScreen";
@@ -29,6 +29,7 @@ function News() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
+
         setLoading(true);
         
         const newsQuery = query(
@@ -53,6 +54,9 @@ function News() {
         });
         
         setNewsData(data);
+        
+        // Salvar leitura do usuário
+        await saveToReadingHistory(data);
       } catch (err) {
         console.error("Erro ao buscar notícia:", err);
         setError("Erro ao carregar notícia");
@@ -66,8 +70,66 @@ function News() {
     }
   }, [id]);
 
+
+  const saveToReadingHistory = async (newsData) => {
+    try {
+
+      const { auth } = await import("/src/Services/firebaseConfig");
+      const { onAuthStateChanged } = await import("firebase/auth");
+      
+      return new Promise((resolve) => {
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) {
+            resolve();
+            return;
+          }
+
+          const { doc, getDoc, updateDoc, arrayUnion, arrayRemove } = await import("firebase/firestore");
+          
+          try {
+            const userRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userRef);
+            
+            if (!userDoc.exists()) {
+              resolve();
+              return;
+            }
+
+            const userData = userDoc.data();
+            let readingHistory = userData.readingHistory || [];
+
+            const readArticle = {
+              id: newsData.id,
+              title: newsData.title,
+              category: newsData.category,
+              imageURL: newsData.imageURL,
+              readAt: serverTimestamp(),
+            };
+
+            readingHistory = readingHistory.filter(item => item.id !== newsData.id);
+
+            readingHistory.unshift(readArticle);
+
+            readingHistory = readingHistory.slice(0, 5);
+
+            await updateDoc(userRef, {
+              readingHistory: readingHistory
+            });
+
+            resolve();
+          } catch (error) {
+            console.error("Erro ao salvar histórico de leitura:", error);
+            resolve();
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Erro ao importar Firebase:", error);
+    }
+  };
+
   const formatDate = (timestamp) => {
-    
+   
     if (!timestamp) return "00/00/00";
     
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -120,10 +182,6 @@ function News() {
         window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, '_blank');
         break;
       case "instagram":
-
-        navigator.clipboard.writeText(url);
-        alert("Link copiado! Cole no Instagram.");
-        break;
       case "link":
         navigator.clipboard.writeText(url);
         alert("Link copiado para a área de transferência!");
