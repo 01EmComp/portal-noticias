@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
 // Font Awesome Icon's
@@ -11,6 +11,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,21 +22,31 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
-    if (!searchOpen) {
-      setTimeout(() => searchRef.current?.focus(), 100);
-    }
-  };
-
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // navigate(`/search?q=${searchQuery}`); abrir notícia qnd estiver pronto
+
+    if (searchQuery.trim()) { 
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
     }
   };
 
-  // Fecha o menu ao clicar fora dele
+  const toggleSearch = () => {
+    if (searchOpen && searchQuery.trim()) {
+
+      const fakeEvent = { preventDefault: () => {} };
+      handleSearch(fakeEvent);
+    } else {
+      setSearchOpen(!searchOpen);
+      if (!searchOpen) {
+        setTimeout(() => searchRef.current?.focus(), 100);
+      } else {
+        setSearchQuery("");
+      }
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -43,7 +54,6 @@ const Header = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -56,7 +66,6 @@ const Header = () => {
         <button
           onClick={toggleMenu}
           className="hamburger-btn"
-          style={{ fontWeight: "550" }}
         >
           ☰
         </button>
@@ -68,7 +77,6 @@ const Header = () => {
           <li className="close">
             <FontAwesomeIcon
               icon={faXmark}
-              style={{ fontSize: "22px" }}
               onClick={toggleMenu}
             />
           </li>
@@ -114,8 +122,7 @@ const Header = () => {
         
         <div className="search-icon" onClick={toggleSearch}>
           <FontAwesomeIcon
-            icon={searchOpen ? faXmark : faMagnifyingGlass}
-            style={{ fontSize: "22px", color: "#fff", cursor: "pointer" }}
+            icon={searchOpen && searchQuery.trim() ? faMagnifyingGlass : searchOpen ? faXmark : faMagnifyingGlass}
           />
         </div>
       </div>

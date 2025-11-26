@@ -20,6 +20,7 @@ import Writer from "./Pages/Writer/WriterPainel";
 import MaintenancePage from "./Pages/MaintenancePage/MaintenancePage";
 import Blog from "./Pages/Blog/Blog";
 import TermsAndServices from "./Pages/TermsAndServices/TermsAndServices";
+import SearchNews from "./Pages/SearchNews/SearchNews";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -136,6 +137,9 @@ const AppRoutes = () => {
 
       {/* News */}
      <Route path="/news/:id" element={<News />} />
+
+      {/* SearchNews */}
+        <Route path="/search" element={<SearchNews />} />
 
       {/* Terms and Services */}
       <Route path="/terms-and-services" element={<TermsAndServices />} />
