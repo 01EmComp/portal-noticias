@@ -22,15 +22,6 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
-    if (!searchOpen) {
-      setTimeout(() => searchRef.current?.focus(), 100);
-    } else {
-      setSearchQuery("");
-    }
-  };
-
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -41,7 +32,21 @@ const Header = () => {
     }
   };
 
-  // Fecha o menu ao clicar fora dele
+  const toggleSearch = () => {
+    if (searchOpen && searchQuery.trim()) {
+
+      const fakeEvent = { preventDefault: () => {} };
+      handleSearch(fakeEvent);
+    } else {
+      setSearchOpen(!searchOpen);
+      if (!searchOpen) {
+        setTimeout(() => searchRef.current?.focus(), 100);
+      } else {
+        setSearchQuery("");
+      }
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -61,7 +66,6 @@ const Header = () => {
         <button
           onClick={toggleMenu}
           className="hamburger-btn"
-          style={{ fontWeight: "550" }}
         >
           ☰
         </button>
@@ -73,7 +77,6 @@ const Header = () => {
           <li className="close">
             <FontAwesomeIcon
               icon={faXmark}
-              style={{ fontSize: "22px" }}
               onClick={toggleMenu}
             />
           </li>
@@ -119,8 +122,7 @@ const Header = () => {
         
         <div className="search-icon" onClick={toggleSearch}>
           <FontAwesomeIcon
-            icon={searchOpen ? faXmark : faMagnifyingGlass}
-            style={{ fontSize: "22px", color: "#fff", cursor: "pointer" }}
+            icon={searchOpen && searchQuery.trim() ? faMagnifyingGlass : searchOpen ? faXmark : faMagnifyingGlass}
           />
         </div>
       </div>

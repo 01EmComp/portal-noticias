@@ -61,6 +61,9 @@ header .logo {
 .search-icon {
   z-index: 10;
   position: relative;
+  font-size: 22px;
+  color: #fff;
+  cursor: pointer;
 }
 
 /* Hamburger menu */
@@ -77,6 +80,7 @@ header .logo {
   border: none;
   color: white;
   font-size: 22px;
+  font-weight: 550;
   cursor: pointer;
   z-index: 50; /* para ficar acima do menu */
 }
@@ -128,6 +132,7 @@ header .logo {
   padding: 0.8rem 0 1.8rem;
   margin-left: 0.5rem;
   width: 95%;
+  font-size: 22px;
 }
 
 .hamburger-menu ul .close:hover {
