@@ -48,7 +48,7 @@ const Home = () => {
         <img
           src={img1}
           alt="Story 1"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          className="story-image"
         />
       ),
       duration: 5000,
@@ -118,30 +118,10 @@ const Home = () => {
           </div>
         </div>
         {storyOpen && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.9)",
-              zIndex: 5,
-            }}
-          >
+          <div className="story-overlay">
             <button
               onClick={() => setStoryOpen(false)}
-              style={{
-                position: "absolute",
-                top: "2rem",
-                right: "1.5rem",
-                fontSize: "1.5rem",
-                color: "#fff",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                zIndex: 100000,
-              }}
+              className="story-close-btn"
             >
               X
             </button>

@@ -105,6 +105,35 @@
   transition: 0.2s ease;
 }
 
+/* Story Overlay Styles */
+.story-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 5;
+}
+
+.story-close-btn {
+  position: absolute;
+  top: 2rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 100000;
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Main-new */
 
 .h-container .h-main-new {
