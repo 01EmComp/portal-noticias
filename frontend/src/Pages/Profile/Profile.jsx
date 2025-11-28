@@ -7,9 +7,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { logout } from "/src/Services/auth.js";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-// Images
-import img1 from "/src/Assets/Images/art-1.jpg";
-
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
@@ -34,7 +31,7 @@ import "./Profile.css";
 const Profile = () => {
   const [showMoreArticles, setShowMoreArticles] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [dataButtonClicked, setDataButtonClicked] = useState(false);
+  const [showDataPopup, setShowDataPopup] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
@@ -42,12 +39,11 @@ const Profile = () => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const navigate = useNavigate();
 
-  // Informations about users
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          // pega o doc do usuário pelo UID
+
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
 
@@ -85,59 +81,11 @@ const Profile = () => {
       </div>
     );
 
-  const articles = [
-    {
-      id: 1,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Educação",
-      source: "BBC News",
-      timeAgo: "12h atrás",
-      image: img1,
-    },
-    {
-      id: 2,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Educação",
-      source: "BBC News",
-      timeAgo: "12h atrás",
-      image: img1,
-    },
-    {
-      id: 3,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Educação",
-      source: "BBC News",
-      timeAgo: "12h atrás",
-      image: img1,
-    },
-    {
-      id: 4,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Educação",
-      source: "BBC News",
-      timeAgo: "12h atrás",
-      image: img1,
-    },
-    {
-      id: 5,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Tecnologia",
-      source: "TechNews",
-      timeAgo: "1d atrás",
-      image: img1,
-    },
-    {
-      id: 6,
-      title: "ENEM: Como se preparar para o ENEM 2025?",
-      category: "Educação",
-      source: "Estuda.com",
-      timeAgo: "2d atrás",
-      image: img1,
-    },
-  ];
-
-  const displayedArticles = showMoreArticles ? articles : articles.slice(0, 3);
-  const hasMoreArticles = articles.length > 3;
+  // Pegar histórico de notícias lidas
+  const readingHistory = userData.readingHistory || [];
+  
+  const displayedArticles = showMoreArticles ? readingHistory : readingHistory.slice(0, 3);
+  const hasMoreArticles = readingHistory.length > 3;
 
   const handleSeeMore = async () => {
     if (!showMoreArticles) {
@@ -147,10 +95,6 @@ const Profile = () => {
     }
 
     setShowMoreArticles(!showMoreArticles);
-  };
-
-  const handleDataButtonClick = () => {
-    setDataButtonClicked((prev) => !prev);
   };
 
   const handleSaveSettings = async (newSettings) => {
@@ -163,16 +107,13 @@ const Profile = () => {
         settings: newSettings,
       });
 
-      // Atualiza o estado local
       setUserData((prev) => ({
         ...prev,
         settings: newSettings,
       }));
 
-      // Aplica as configurações imediatamente
       applySettings(newSettings);
 
-      // Mostra toast de sucesso
       setShowSuccessToast(true);
       setTimeout(() => setShowSuccessToast(false), 3000);
     } catch (error) {
@@ -186,23 +127,19 @@ const Profile = () => {
   const applySettings = (settings) => {
     if (!settings) return;
 
-    // Aplica tema
     document.documentElement.setAttribute(
       "data-theme",
       settings.theme || "light"
     );
 
-    // Aplica tamanho da fonte
     document.documentElement.style.fontSize = `${settings.fontSize || 16}px`;
 
-    // Aplica contraste alto
     if (settings.highContrast) {
       document.body.classList.add("high-contrast");
     } else {
       document.body.classList.remove("high-contrast");
     }
 
-    // Aplica ocultar imagens
     if (settings.hideImages) {
       document.body.classList.add("hide-images");
     } else {
@@ -221,6 +158,25 @@ const Profile = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return "Agora";
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Agora";
+    if (diffMins < 60) return `${diffMins}min atrás`;
+    if (diffHours < 24) return `${diffHours}h atrás`;
+    if (diffDays === 1) return "Ontem";
+    if (diffDays < 7) return `${diffDays}d atrás`;
+    
+    return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
   };
 
   const getProviderIcon = (provider) => {
@@ -260,6 +216,131 @@ const Profile = () => {
     }
   };
 
+  const handleArticleClick = (articleId) => {
+    navigate(`/news/${articleId}`);
+  };
+
+  const DataPopup = () => {
+    const handleClose = () => {
+      setShowDataPopup(false);
+    };
+
+    return (
+      <div className="settings-overlay" onClick={handleClose}>
+        <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
+          <div className="settings-header">
+            <h2>Meus Dados</h2>
+            <button className="close-button" onClick={handleClose}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
+
+          <div className="data-popup-content">
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Nome</p>
+                <span className="data-value">
+                  {userData.name || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faEnvelope} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">E-mail</p>
+                <span className="data-value">
+                  {userData.email || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faPhone} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Telefone</p>
+                <span className="data-value">
+                  {userData.phone || "Não fornecido"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faUserTag} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Tipo de conta</p>
+                <span className="data-value">{getRoleName(userData.role)}</span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={getProviderIcon(userData.provider)} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Método de login</p>
+                <span className="data-value">
+                  {getProviderName(userData.provider)}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faIdCard} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">ID do usuário</p>
+                <span className="data-value user-id">
+                  {userData.uid || "Não disponível"}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faCalendar} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Conta criada em</p>
+                <span className="data-value">
+                  {formatDate(userData.createdAt)}
+                </span>
+              </div>
+            </div>
+
+            <div className="user-data-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faSignInAlt} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Último acesso</p>
+                <span className="data-value">
+                  {formatDate(userData.lastLogin)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="settings-footer">
+            <button className="save-button" onClick={handleClose}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const SettingsPopup = () => {
     const defaultSettings = {
       theme: "light",
@@ -274,7 +355,6 @@ const Profile = () => {
       userData?.settings || defaultSettings
     );
 
-    // Aplica configurações temporárias em tempo real
     useEffect(() => {
       applySettings(tempSettings);
     }, [tempSettings]);
@@ -285,7 +365,6 @@ const Profile = () => {
     };
 
     const handleCancel = () => {
-      // Reverte para as configurações salvas
       if (userData?.settings) {
         applySettings(userData.settings);
       } else {
@@ -479,6 +558,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       {showSettingsPopup && <SettingsPopup />}
+      {showDataPopup && <DataPopup />}
       {showSuccessToast && (
         <div className="success-toast">
           <span className="toast-icon">✓</span>
@@ -515,157 +595,70 @@ const Profile = () => {
 
       {/* Botão Meus Dados */}
       <div className="data-section">
-        <button className="data-button" onClick={handleDataButtonClick}>
-          {dataButtonClicked ? "Fechar" : "Meus Dados"}
+        <button className="data-button" onClick={() => setShowDataPopup(true)}>
+          Meus Dados
         </button>
       </div>
-
-      {/* Dados do Usuário */}
-      {dataButtonClicked && (
-        <div className="my-data-section">
-          <h3>Meus dados</h3>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faUser} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Nome</p>
-              <span className="data-value">
-                {userData.name || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faEnvelope} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">E-mail</p>
-              <span className="data-value">
-                {userData.email || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faPhone} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Telefone</p>
-              <span className="data-value">
-                {userData.phone || "Não fornecido"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faUserTag} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Tipo de conta</p>
-              <span className="data-value">{getRoleName(userData.role)}</span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={getProviderIcon(userData.provider)} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Método de login</p>
-              <span className="data-value">
-                {getProviderName(userData.provider)}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faIdCard} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">ID do usuário</p>
-              <span className="data-value user-id">
-                {userData.uid || "Não disponível"}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faCalendar} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Conta criada em</p>
-              <span className="data-value">
-                {formatDate(userData.createdAt)}
-              </span>
-            </div>
-          </div>
-
-          <div className="user-data-item">
-            <div className="data-icon">
-              <FontAwesomeIcon icon={faSignInAlt} />
-            </div>
-            <div className="data-content">
-              <p className="data-label">Último acesso</p>
-              <span className="data-value">
-                {formatDate(userData.lastLogin)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Notícias */}
       <div className="articles-section">
         <h3>Lidas recentemente</h3>
-        {displayedArticles.map((article) => (
-          <div key={article.id} className="article-item">
-            <div className="article-image">
-              <img src={article.image} alt={article.title} />
-            </div>
-            <div className="article-content">
-              <h3>{article.title}</h3>
-              <span className="article-category">{article.category}</span>
-              <div className="article-meta">
-                <span className="article-source">{article.source}</span>
-                <div className="meta-separator">•</div>
-                <div className="article-time">
-                  <FontAwesomeIcon icon={faClock} />
-                  <span>{article.timeAgo}</span>
+        
+        {readingHistory.length === 0 ? (
+          <div className="no-articles">
+            <p>Você ainda não leu nenhuma notícia.</p>
+            <Link to="/">
+              <button className="browse-button">Explorar notícias</button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            {displayedArticles.map((article) => (
+              <div 
+                key={article.id} 
+                className="article-item"
+                onClick={() => handleArticleClick(article.id)}
+              >
+                <div className="article-image">
+                  <img src={article.imageURL} alt={article.title} />
+                </div>
+                <div className="article-content">
+                  <h3>{article.title}</h3>
+                  <span className="article-category">{article.category}</span>
+                  <div className="article-meta">
+                    <div className="article-time">
+                      <FontAwesomeIcon icon={faClock} />
+                      <span>{formatTimeAgo(article.readAt)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))}
 
-        {/* Loading */}
-        {isLoadingMore && (
-          <div className="articles-loading">
-            <div className="loading-spinner"></div>
-          </div>
-        )}
+            {/* Loading */}
+            {isLoadingMore && (
+              <div className="articles-loading">
+                <div className="loading-spinner"></div>
+              </div>
+            )}
 
-        {/* Ver Mais */}
-        {hasMoreArticles && !isLoadingMore && (
-          <div className="see-more-container">
-            <button
-              className={`see-more-button ${
-                showMoreArticles ? "expanded" : ""
-              }`}
-              onClick={handleSeeMore}
-            >
-              <span>{showMoreArticles ? "Ver menos" : "Ver mais"}</span>
-              <FontAwesomeIcon
-                icon={showMoreArticles ? faChevronUp : faChevronDown}
-              />
-            </button>
-          </div>
+            {/* Ver Mais */}
+            {hasMoreArticles && !isLoadingMore && (
+              <div className="see-more-container">
+                <button
+                  className={`see-more-button ${
+                    showMoreArticles ? "expanded" : ""
+                  }`}
+                  onClick={handleSeeMore}
+                >
+                  <span>{showMoreArticles ? "Ver menos" : "Ver mais"}</span>
+                  <FontAwesomeIcon
+                    icon={showMoreArticles ? faChevronUp : faChevronDown}
+                  />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

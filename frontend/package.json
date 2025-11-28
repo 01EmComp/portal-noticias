@@ -25,7 +25,8 @@
     "react-social-login-buttons": "^4.1.1",
     "recharts": "^3.3.0",
     "styled-components": "^6.1.19",
-    "swiper": "^11.2.10"
+    "swiper": "^11.2.10",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

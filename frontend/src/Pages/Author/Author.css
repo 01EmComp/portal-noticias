@@ -8,6 +8,13 @@
   padding: 2rem;
 }
 
+.author-container .about-author,
+.author-container .their-news {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .author-container .about-author {
   display: flex;
   flex-direction: column;
