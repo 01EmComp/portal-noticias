@@ -1,5 +1,10 @@
 header {
   display: flex;
+  flex-direction: column;
+}
+
+header .header-container {
+  display: flex;
   align-items: center;
   justify-content: space-around;
   width: 100%;
@@ -7,7 +12,11 @@ header {
   background-color: var(--secundary-background-color);
 }
 
-header .logo {
+header .categories-bar {
+  display: none;
+}
+
+header .header-container .logo {
   color: #fff;
   font-family: "Jacques Francois", sans-serif;
   font-weight: 400;
@@ -105,7 +114,7 @@ header .logo {
   height: 100%;
   opacity: 1;
   visibility: visible;
-  width: 11rem;
+  width: 14rem;
   display: flex;
   transition: width 0.3s ease;
 }
@@ -164,19 +173,113 @@ header .logo {
   background-color: #555;
 }
 
+header .buttons-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+header .buttons-right .user-icon {
+  display: none;
+}
+
+.blog-icon header .search-bar-icon {
+  font-size: 18px;
+}
+
+header .hamburger-menu div {
+  display: flex;
+  align-items: center;
+  margin-left: 0.8rem;
+  padding-top: 0.5rem;
+}
+
+header .hamburger-menu .profile .user-icon {
+  height: 24px;
+}
+
+header .hamburger-menu div .blog-icon,
+header .hamburger-menu div .contact-icon,
+header .hamburger-menu div .about-icon {
+  height: 24px;
+  width: auto;
+}
+
 /* TABLET */
 @media screen and (min-width: 760px) {
-  header {
-    justify-content: space-between;
-    height: 5rem;
-    padding: 0 5rem;
-  }
-
-  header .logo {
+  header .header-container .logo {
     color: #fff;
     font-family: "Jacques Francois", sans-serif;
     font-weight: 400;
     font-size: 25px;
+    margin-left: 3rem;
+  }
+
+  header .buttons-right {
+    gap: 15px;
+  }
+
+  header .buttons-right .user-icon {
+    display: flex;
+    height: 26px;
+  }
+
+  header .hamburger-menu .profile .user-icon {
+    display: none;
+  }
+
+  header .hamburger-menu .profile {
+    display: none;
+  }
+
+  header .search-bar-icon {
+    font-size: 20px;
+  }
+
+  header .categories-bar {
+    display: flex;
+    width: 100%;
+  }
+
+  header .categories-bar ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    list-style: none;
+  }
+
+  header .categories-bar ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.8rem;
+    width: 100%;
+    max-width: 7.5rem;
+    height: 2.6rem;
+    color: #fff;
+    border: 1px solid #fff;
+    background-color: var(--secundary-background-color);
+    transition: 0.2s ease;
+  }
+
+  header .categories-bar ul li:hover {
+    background-color: #162442f1;
+  }
+
+  header .categories-bar ul .first {
+    border-radius: 0 0 0 10px;
+  }
+
+  header .categories-bar ul .last {
+    border-radius: 0 0 10px 0;
+  }
+
+  header .header-container {
+    justify-content: space-between;
+    height: 5rem;
+    padding: 0 3rem;
   }
 
   .search-form.open {
@@ -189,19 +292,43 @@ header .logo {
 }
 
 /* DESKTOP */
-
 @media screen and (min-width: 1024px) {
-  header {
+  header .header-container .logo {
+    color: #fff;
+    font-family: "Jacques Francois", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+  }
+
+  header .buttons-right {
+    gap: 20px;
+  }
+
+  header .buttons-right .user-icon {
+    display: flex;
+    height: 28px;
+  }
+
+  header .hamburger-menu .profile .user-icon {
+    display: none;
+  }
+
+  header .hamburger-menu .profile {
+    display: none;
+  }
+
+  header .search-bar-icon {
+    font-size: 22px;
+  }
+
+  header .header-container {
     justify-content: space-between;
     height: 6rem;
     padding: 0 5rem;
   }
 
-  header .logo {
-    color: #fff;
-    font-family: "Jacques Francois", sans-serif;
-    font-weight: 400;
-    font-size: 32px;
+  header .categories-bar ul li {
+    min-width: 7.7rem;
   }
 
   .hamburger-menu.show {
