@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+// Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,14 +27,16 @@ const About = () => {
       id: 1,
       name: "José Nogueira Dias",
       photo: memberPhoto1,
-      summary: "Nam mollis tellus ac magna dictum, a finibus mauris iaculis. Aenean nec pulvinar lectus. Suspendisse potenti. Sed commodo aliquam lacus, vitae pharetra ligula placerat in.",
+      summary:
+        "Nam mollis tellus ac magna dictum, a finibus mauris iaculis. Aenean nec pulvinar lectus. Suspendisse potenti. Sed commodo aliquam lacus, vitae pharetra ligula placerat in.",
       bio: "Nam mollis tellus ac magna dictum, a finibus mauris iaculis. Aenean nec pulvinar lectus. Suspendisse potenti. Sed commodo aliquam lacus, vitae pharetra ligula placerat in. Aliquam accumsan sapien noque, sit amet pellentesque mi porta non. Cras vitae dolor sed enim aliquet, pellentesque. Nunc ac metus nec risus porta laoreet et eu tellus. Nam venenatis odio non quam congue cursus. Curabitur porttitor lacus cursus est dignissim tempus. Integer commodo mi id tellus vulputate gravida ut vitae. Curabitur porta erat sit vel venenatis euismod. Vivamus at libero vel arcu varius interdum et eu metus. Praesent imperdiet ullamcorper dolor non interdum. Donec facilisis nunc vel sapien fermentum, ac ultricies magna venenatis. Sed euismod lectus quis orci dignissim.",
     },
     {
       id: 2,
       name: "Felipe Franco Ferreira",
       photo: memberPhoto2,
-      summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et ornet magna, nec pretium purus. Praesent euismod rhoncus arcu.",
+      summary:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et ornet magna, nec pretium purus. Praesent euismod rhoncus arcu.",
       bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et ornet magna, nec pretium purus. Praesent euismod rhoncus arcu. Pellentesque vestibulum a lacinia ullamcorper. Aliquam pharetra magna quis sem, non pellentesque tellus felis. Duis semper mattis lobortis vehicula. Maecenas ut turpis vel nunc ultricies aliquet urna eleifend ligula. Sed facilisis odio, eget pretium massa. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.",
     },
   ];
@@ -100,7 +104,9 @@ const About = () => {
                     </div>
                   </div>
                   <div className="member-bio">
-                    <p>{expandedMembers[member.id] ? member.bio : member.summary}</p>
+                    <p>
+                      {expandedMembers[member.id] ? member.bio : member.summary}
+                    </p>
                   </div>
                 </div>
               ))}
