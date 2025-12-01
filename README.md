@@ -68,8 +68,8 @@
   * Git (para clonar e versionar)
   * VS Code (opcional, mas recomendado)
 - Versões mínimas requeridas:
-  * Node.js: v22.16.0 ou superior
-  * NPM/Yarn: A que vier instalada com o Node
+  * Node.js: v24.11.0 (versão utilizada)
+  * NPM/Yarn: Já vem instalada no NODE
   * React/Vite: Latest
 - Ambiente necessário:
   * Sistema operacional (Windows, Linux, MacOS)
