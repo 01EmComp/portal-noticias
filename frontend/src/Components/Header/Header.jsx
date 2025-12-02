@@ -1,22 +1,101 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+
+// Auth
+import { auth, db } from "/src/Services/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./Header.css";
 
 const Header = () => {
-  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
   const menuRef = useRef();
   const searchRef = useRef();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Verificação de autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        } catch (err) {
+          console.error("Erro ao buscar usuário:", err);
+        }
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const dropDownFunction = () => {
+    if (!userData) {
+      return (
+        <ul className="dropdown-itens">
+          <Link to="/profile">
+            <li>Meu perfil</li>
+          </Link>
+        </ul>
+      );
+    }
+
+    if (userData?.role === "admin") {
+      return (
+        <ul className="dropdown-itens">
+          <Link to="/profile">
+            <li>Meu perfil</li>
+          </Link>
+          <Link to="/writer-painel">
+            <li>Painel do escritor</li>
+          </Link>
+          <Link to="/admin-painel">
+            <li>Painel do administrador</li>
+          </Link>
+        </ul>
+      );
+    } else if (userData?.role === "editor") {
+      return (
+        <ul className="dropdown-itens">
+          <Link to="/profile">
+            <li>Meu perfil</li>
+          </Link>
+          <Link to="/writer-painel">
+            <li>Painel do escritor</li>
+          </Link>
+        </ul>
+      );
+    } else {
+      return (
+        <ul className="dropdown-itens">
+          <Link to="/profile">
+            <li>Meu perfil</li>
+          </Link>
+        </ul>
+      );
+    }
+  };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -44,6 +123,10 @@ const Header = () => {
         setSearchQuery("");
       }
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
@@ -241,62 +324,82 @@ const Header = () => {
             </div>
           </div>
 
-          <Link to="/profile">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              width="512"
-              height="512"
-              x="0"
-              y="0"
-              viewBox="0 0 24 24"
-              style={{
-                enableBackground: "new 0 0 512 512",
-                width: "auto",
-              }}
-              xmlSpace="preserve"
-              className="user-icon"
-            >
-              <g>
-                <path
-                  d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0ZM8 21.164V19c0-.552.449-1 1-1h6c.551 0 1 .448 1 1v2.164c-1.226.537-2.578.836-4 .836s-2.774-.299-4-.836Zm10-1.169V19c0-1.654-1.346-3-3-3H9c-1.654 0-3 1.346-3 3v.995A9.991 9.991 0 0 1 2 12C2 6.486 6.486 2 12 2s10 4.486 10 10a9.992 9.992 0 0 1-4 7.995ZM12 6c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4Zm0 6c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2Z"
-                  fill="#ffffff"
-                  opacity="1"
-                  data-original="#000000"
-                  className=""
-                ></path>
-              </g>
-            </svg>
-          </Link>
+          <div className="profile-button">
+            <Link to="/profile">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                width="512"
+                height="512"
+                x="0"
+                y="0"
+                viewBox="0 0 24 24"
+                style={{
+                  enableBackground: "new 0 0 512 512",
+                  width: "auto",
+                }}
+                xmlSpace="preserve"
+                className="user-icon"
+              >
+                <g>
+                  <path
+                    d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0ZM8 21.164V19c0-.552.449-1 1-1h6c.551 0 1 .448 1 1v2.164c-1.226.537-2.578.836-4 .836s-2.774-.299-4-.836Zm10-1.169V19c0-1.654-1.346-3-3-3H9c-1.654 0-3 1.346-3 3v.995A9.991 9.991 0 0 1 2 12C2 6.486 6.486 2 12 2s10 4.486 10 10a9.992 9.992 0 0 1-4 7.995ZM12 6c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4Zm0 6c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2Z"
+                    fill="#ffffff"
+                    opacity="1"
+                    data-original="#000000"
+                    className=""
+                  ></path>
+                </g>
+              </svg>
+            </Link>
+
+            <div className="drop">
+              <FontAwesomeIcon
+                icon={faAngleDown}
+                style={{
+                  color: "#fff",
+                  fontSize: "18px",
+                  cursor: "pointer",
+                  transition: ".2s ease",
+                  transform: dropdownOpen ? "rotateZ(180deg)" : "rotateZ(0deg)",
+                }}
+                onClick={() => toggleDropdown()}
+              />
+            </div>
+
+            {dropdownOpen && dropDownFunction()}
+          </div>
         </div>
       </div>
 
-      <nav className="categories-bar">
-        <ul>
-          <Link>
-            <li className="first">Última hora</li>
-          </Link>
-          <Link>
-            <li>Saúde</li>
-          </Link>
-          <Link>
-            <li>Cultura</li>
-          </Link>
-          <Link>
-            <li>Esportes</li>
-          </Link>
-          <Link>
-            <li>Eventos</li>
-          </Link>
-          <Link>
-            <li>Política</li>
-          </Link>
-          <Link>
-            <li className="last">Região</li>
-          </Link>
-        </ul>
-      </nav>
+      {location.pathname === "/" && (
+        <nav className="categories-bar">
+          <ul>
+            <Link>
+              <li className="first">Última hora</li>
+            </Link>
+            <Link>
+              <li>Saúde</li>
+            </Link>
+            <Link>
+              <li>Cultura</li>
+            </Link>
+            <Link>
+              <li>Esportes</li>
+            </Link>
+            <Link>
+              <li>Eventos</li>
+            </Link>
+            <Link>
+              <li>Política</li>
+            </Link>
+            <Link>
+              <li className="last">Região</li>
+            </Link>
+          </ul>
+        </nav>
+      )}
     </header>
   );
 };

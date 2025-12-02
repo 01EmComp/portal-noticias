@@ -161,9 +161,22 @@
   gap: 0.5rem;
 }
 
+.h-container .h-main-new .top .weather .weather-and-city {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .h-container .h-main-new .top .weather span {
   font-size: 13px;
   font-weight: 700;
+  text-align: right;
+}
+
+.h-container .h-main-new .top .weather .weather-and-city .local {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .h-container .h-main-new .top .weather .icon {
@@ -689,9 +702,21 @@
   animation: spin 1s linear infinite;
 }
 
+.h-container .h-main-new .top .weather .weather-and-city {
+  gap: 2px;
+}
+
+.h-container .h-main-new .top .weather .weather-and-city .local {
+  font-size: 14px;
+}
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-home p {

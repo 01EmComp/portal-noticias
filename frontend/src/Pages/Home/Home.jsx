@@ -8,6 +8,9 @@ import Stories from "react-insta-stories";
 import { db } from "/src/Services/firebaseConfig";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 
+// Components
+import Weather from "../../Components/Wheater/Wheater";
+
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -44,7 +47,7 @@ const Home = () => {
   const [allNews, setAllNews] = useState([]);
   const [discoverNews, setDiscoverNews] = useState([]);
 
-  // Buscar notícias 
+  // Buscar notícias
   useEffect(() => {
     fetchAllNews();
   }, []);
@@ -60,16 +63,18 @@ const Home = () => {
       );
 
       const querySnapshot = await getDocs(newsQuery);
-      const newsList = querySnapshot.docs.map(doc => ({
+      const newsList = querySnapshot.docs.map((doc) => ({
         docId: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
 
       // Stories
       setStoryNews(newsList.slice(0, 18));
 
       // Mais acessados
-      const sortedByViews = [...newsList].sort((a, b) => (b.views || 0) - (a.views || 0));
+      const sortedByViews = [...newsList].sort(
+        (a, b) => (b.views || 0) - (a.views || 0)
+      );
       setFeaturedNews(sortedByViews.slice(0, 2));
 
       // Notícias
@@ -78,7 +83,6 @@ const Home = () => {
       // Descubra
       const shuffled = [...newsList].sort(() => 0.5 - Math.random());
       setDiscoverNews(shuffled.slice(0, 10));
-
     } catch (error) {
       console.error("Erro ao buscar notícias:", error);
     } finally {
@@ -88,18 +92,14 @@ const Home = () => {
 
   const storyList = storyNews.map((news) => ({
     content: ({ action, story }) => (
-      <div 
+      <div
         className="story-content"
         onClick={() => {
           setStoryOpen(false);
           navigate(`/news/${news.id}`);
         }}
       >
-        <img
-          src={news.imageURL}
-          alt={news.title}
-          className="story-image"
-        />
+        <img src={news.imageURL} alt={news.title} className="story-image" />
         <div className="story-text-overlay">
           <h3>{news.title}</h3>
           <p>{news.category}</p>
@@ -116,7 +116,7 @@ const Home = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "Recente";
-    
+
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     const now = new Date();
     const diffMs = now - date;
@@ -127,16 +127,16 @@ const Home = () => {
     if (diffHours < 24) return `${diffHours}h atrás`;
     if (diffDays === 1) return "Ontem";
     if (diffDays < 7) return `${diffDays}d atrás`;
-    
-    return date.toLocaleDateString("pt-BR", { 
-      day: "2-digit", 
-      month: "short" 
+
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
     });
   };
 
   const truncateTitle = (title, maxLength = 12) => {
-    return title && title.length > maxLength 
-      ? title.substring(0, maxLength) + "..." 
+    return title && title.length > maxLength
+      ? title.substring(0, maxLength) + "..."
       : title || "Notícia";
   };
 
@@ -166,12 +166,12 @@ const Home = () => {
               <div key={news.id} onClick={() => openStory(index)}>
                 <div className="story">
                   <div className="arc-story">
-                    <div 
+                    <div
                       className="social-story"
                       style={{
                         backgroundImage: `url(${news.imageURL})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}
                     ></div>
                   </div>
@@ -212,7 +212,12 @@ const Home = () => {
         <div className="top">
           <h2 className="sub-title">Mais acessado</h2>
           <div className="weather">
-            <span className="degrees">22°</span>
+            <div className="weather-and-city">
+              <span className="degrees">
+                <Weather />
+              </span>
+              <span className="local">Rio Pomba - Minas Gerais</span>
+            </div>
             <div className="icon">
               <FontAwesomeIcon
                 icon={faCloud}
@@ -224,9 +229,9 @@ const Home = () => {
         {featuredNews.length > 0 ? (
           <div className="bottoms">
             {featuredNews.map((news, index) => (
-              <div 
+              <div
                 key={news.id}
-                className={`bottom ${index === 1 ? 'secondDiv' : ''}`}
+                className={`bottom ${index === 1 ? "secondDiv" : ""}`}
                 onClick={() => navigate(`/news/${news.id}`)}
               >
                 <img src={news.imageURL} alt={news.title} />
@@ -238,14 +243,14 @@ const Home = () => {
                       style={{ color: "#fff", fontSize: "18px" }}
                     />
                     <div className="hr"></div>
-                    <div 
+                    <div
                       className="perfil-box"
                       style={{
-                        backgroundImage: news.author?.photoURL 
-                          ? `url(${news.author.photoURL})` 
-                          : 'none',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
+                        backgroundImage: news.author?.photoURL
+                          ? `url(${news.author.photoURL})`
+                          : "none",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}
                     ></div>
                     <span className="views-count">{news.views || 0} views</span>
@@ -291,21 +296,25 @@ const Home = () => {
                     <div className="right-side">
                       <div className="news-title">
                         <p>{news.title}</p>
-                        <span style={{ color: "#ff0000ff" }}>{news.category}</span>
+                        <span style={{ color: "#ff0000ff" }}>
+                          {news.category}
+                        </span>
                       </div>
                       <div className="credits">
-                        <div 
+                        <div
                           className="perfil-box"
                           style={{
-                            backgroundImage: news.author?.photoURL 
-                              ? `url(${news.author.photoURL})` 
-                              : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
+                            backgroundImage: news.author?.photoURL
+                              ? `url(${news.author.photoURL})`
+                              : "none",
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
                           }}
                         ></div>
                         <p>{news.author?.name || "Autor"}</p>-
-                        <span>{formatDate(news.publishedAt || news.createdAt)}</span>
+                        <span>
+                          {formatDate(news.publishedAt || news.createdAt)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -313,7 +322,7 @@ const Home = () => {
               ))}
             </div>
             {allNews.length > 6 && (
-              <div 
+              <div
                 className="more"
                 onClick={() => setShowAllNews(!showAllNews)}
               >
@@ -326,7 +335,7 @@ const Home = () => {
                     fontSize: "14px",
                     marginLeft: "3px",
                     transform: showAllNews ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.3s ease"
+                    transition: "transform 0.3s ease",
                   }}
                 />
               </div>
@@ -384,9 +393,9 @@ const Home = () => {
                   className="swiper-slide"
                   onClick={() => navigate(`/news/${news.id}`)}
                 >
-                  <img 
-                    className="slide-item" 
-                    src={news.imageURL} 
+                  <img
+                    className="slide-item"
+                    src={news.imageURL}
                     alt={news.title}
                   />
                   <div className="slide-info">

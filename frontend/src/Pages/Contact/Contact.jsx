@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import InputText from "/src/Components/InputText/index.jsx";
 import Button from "/src/Components/Button/index.jsx";
-import { useCaptcha } from "/src/Context/Captcha/CaptchaContext.jsx";
+import { useCaptcha } from "/src/Pages/Context/Captcha/CaptchaContext.jsx";
 
 import "./Contact.css";
 
@@ -16,7 +16,7 @@ function Contact() {
   });
 
   const [feedback, setFeedback] = useState(null);
- const { token, resetCaptcha, CaptchaWidget } = useCaptcha();
+  const { token, resetCaptcha, CaptchaWidget } = useCaptcha();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +27,10 @@ function Contact() {
     e.preventDefault();
 
     if (!formData.nome || !formData.email || !formData.assunto) {
-      setFeedback({ type: "error", message: "Preencha os campos obrigatórios!" });
+      setFeedback({
+        type: "error",
+        message: "Preencha os campos obrigatórios!",
+      });
       return;
     }
 
@@ -112,9 +115,7 @@ function Contact() {
         </form>
 
         {feedback && (
-          <p className={`feedback ${feedback.type}`}>
-            {feedback.message}
-          </p>
+          <p className={`feedback ${feedback.type}`}>{feedback.message}</p>
         )}
       </div>
     </div>
