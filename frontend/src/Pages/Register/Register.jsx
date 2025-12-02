@@ -7,7 +7,7 @@ import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
 import InputText from "/src/Components/InputText/index.jsx";
 import Button from "/src/Components/Button/index.jsx";
 import Checkbox from "/src/Components/Checkbox/index.jsx";
-import { useCaptcha } from "/src/Context/Captcha/CaptchaContext.jsx";
+import { useCaptcha } from "/src/Pages/Context/Captcha/CaptchaContext.jsx";
 import "./Register.css";
 
 function RegisterScreen() {
@@ -111,13 +111,17 @@ function RegisterScreen() {
       );
 
       resetCaptcha();
-      setSuccessMsg("Se você for um novo usuário, receberá um email de confirmação em breve.");
-      
+      setSuccessMsg(
+        "Se você for um novo usuário, receberá um email de confirmação em breve."
+      );
+
       setTimeout(() => {
         navigate("/login");
       }, 3000);
     } catch (err) {
-      setSuccessMsg("Se você for um novo usuário, receberá um email de confirmação em breve.");
+      setSuccessMsg(
+        "Se você for um novo usuário, receberá um email de confirmação em breve."
+      );
       resetCaptcha();
     } finally {
       setIsLoading(false);
@@ -130,14 +134,14 @@ function RegisterScreen() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    
+
     if (errorMsg) setErrorMsg("");
     if (successMsg) setSuccessMsg("");
   };
 
   const handleGoogleLogin = async () => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
     setErrorMsg("");
     setSuccessMsg("");
@@ -146,7 +150,8 @@ function RegisterScreen() {
       await loginWithGoogle();
       navigate("/profile");
     } catch (err) {
-      const msg = err.message || "Erro ao fazer login com Google. Tente novamente.";
+      const msg =
+        err.message || "Erro ao fazer login com Google. Tente novamente.";
       setErrorMsg(msg);
       console.error("Erro no login do Google:", err);
     } finally {
@@ -156,7 +161,7 @@ function RegisterScreen() {
 
   const handleFacebookLogin = async () => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
     setErrorMsg("");
     setSuccessMsg("");
@@ -165,7 +170,8 @@ function RegisterScreen() {
       await loginWithFacebook();
       navigate("/profile");
     } catch (err) {
-      const msg = err.message || "Erro ao fazer login com Facebook. Tente novamente.";
+      const msg =
+        err.message || "Erro ao fazer login com Facebook. Tente novamente.";
       setErrorMsg(msg);
       console.error("Erro no login do Facebook:", err);
     } finally {
@@ -247,18 +253,18 @@ function RegisterScreen() {
             style={{ marginTop: "5px", width: "100%", height: "58px" }}
           />
 
-          <div className="divider" style={{ margin: "20px 0", textAlign: "center" }}>
+          <div
+            className="divider"
+            style={{ margin: "20px 0", textAlign: "center" }}
+          >
             <span style={{ color: "#666" }}>ou registre-se com</span>
           </div>
 
           <div className="login-with-socials">
-            <GoogleLoginButton 
-              onClick={handleGoogleLogin}
-              disabled={isLoading}
-            >
+            <GoogleLoginButton onClick={handleGoogleLogin} disabled={isLoading}>
               <span>Registrar com o Google</span>
             </GoogleLoginButton>
-            <FacebookLoginButton 
+            <FacebookLoginButton
               onClick={handleFacebookLogin}
               disabled={isLoading}
             >

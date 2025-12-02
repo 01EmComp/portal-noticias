@@ -15,7 +15,7 @@ import Button from "/src/Components/Button/index.jsx";
 import Checkbox from "/src/Components/Checkbox/index.jsx";
 
 // Contexts
-import { useCaptcha } from "/src/Context/Captcha/CaptchaContext.jsx";
+import { useCaptcha } from "/src/Pages/Context/Captcha/CaptchaContext.jsx";
 
 // Css
 import "./Login.css";
@@ -38,7 +38,7 @@ function LoginScreen() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    
+
     if (errorMsg) setErrorMsg("");
   };
 
@@ -91,16 +91,17 @@ function LoginScreen() {
 
   const handleGoogleLogin = async () => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
     setErrorMsg("");
 
     try {
       await loginWithGoogle();
-      
+
       navigate("/profile");
     } catch (err) {
-      const msg = err.message || "Erro ao fazer login com Google. Tente novamente.";
+      const msg =
+        err.message || "Erro ao fazer login com Google. Tente novamente.";
       setErrorMsg(msg);
       console.error("Erro no login do Google:", err);
     } finally {
@@ -110,16 +111,17 @@ function LoginScreen() {
 
   const handleFacebookLogin = async () => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
     setErrorMsg("");
 
     try {
       await loginWithFacebook();
-      
+
       navigate("/profile");
     } catch (err) {
-      const msg = err.message || "Erro ao fazer login com Facebook. Tente novamente.";
+      const msg =
+        err.message || "Erro ao fazer login com Facebook. Tente novamente.";
       setErrorMsg(msg);
       console.error("Erro no login do Facebook:", err);
     } finally {
@@ -173,18 +175,18 @@ function LoginScreen() {
             style={{ marginTop: "5px", width: "100%", height: "58px" }}
           />
 
-          <div className="divider" style={{ margin: "20px 0", textAlign: "center" }}>
+          <div
+            className="divider"
+            style={{ margin: "20px 0", textAlign: "center" }}
+          >
             <span style={{ color: "#666" }}>ou entre com</span>
           </div>
 
           <div className="login-with-socials">
-            <GoogleLoginButton 
-              onClick={handleGoogleLogin}
-              disabled={isLoading}
-            >
+            <GoogleLoginButton onClick={handleGoogleLogin} disabled={isLoading}>
               <span>Fazer login com o Google</span>
             </GoogleLoginButton>
-            <FacebookLoginButton 
+            <FacebookLoginButton
               onClick={handleFacebookLogin}
               disabled={isLoading}
             >
@@ -194,7 +196,8 @@ function LoginScreen() {
         </form>
 
         <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <Link to="/register">Cadastrar</Link> | <Link to="/reset-password">Esqueceu a senha?</Link>
+          <Link to="/register">Cadastrar</Link> |{" "}
+          <Link to="/reset-password">Esqueceu a senha?</Link>
         </div>
 
         {errorMsg && (

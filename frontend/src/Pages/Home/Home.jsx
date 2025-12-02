@@ -8,6 +8,9 @@ import Stories from "react-insta-stories";
 import { db } from "/src/Services/firebaseConfig";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 
+// Components
+import Weather from "../../Components/Wheater/Wheater";
+
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -210,7 +213,9 @@ const Home = () => {
           <h2 className="sub-title">Mais acessado</h2>
           <div className="weather">
             <div className="weather-and-city">
-              <span className="degrees">22°</span>
+              <span className="degrees">
+                <Weather />
+              </span>
               <span className="local">Rio Pomba - Minas Gerais</span>
             </div>
             <div className="icon">
