@@ -30,22 +30,12 @@ const AppRoutes = () => {
   const [siteStatus, setSiteStatus] = useState({
     siteDisabled: false,
     maintenanceMode: false,
-    loading: !isAdminRoute, // Não carrega se for rota admin
+   loading: !isAdminRoute && !isWriterRoute, // Não carrega se for rota admin ou escritor
   });
 
   useEffect(() => {
-    // Se for rota admin, pula a verificação
-    if (isAdminRoute) {
-      setSiteStatus({
-        siteDisabled: false,
-        maintenanceMode: false,
-        loading: false,
-      });
-      return;
-    }
-
-    // Igualmente para a rota writer
-    if (isWriterRoute) {
+    // Se for rota admin ou escritor, pula a verificação
+    if (isAdminRoute || isWriterRoute) {
       setSiteStatus({
         siteDisabled: false,
         maintenanceMode: false,
@@ -108,7 +98,8 @@ const AppRoutes = () => {
   if (siteStatus.siteDisabled) {
     return <MaintenancePage type="disabled" />;
   }
-
+  
+  // Se o site estiver em manutenção
   if (siteStatus.maintenanceMode) {
     return <MaintenancePage type="maintenance" />;
   }
@@ -146,6 +137,7 @@ const AppRoutes = () => {
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
   );
 };

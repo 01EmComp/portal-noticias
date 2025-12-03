@@ -6,7 +6,7 @@ import Stories from "react-insta-stories";
 
 // Firebase
 import { db } from "/src/Services/firebaseConfig";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // Components
 import Weather from "../../Components/Wheater/Wheater";
@@ -29,7 +29,7 @@ import "swiper/css/effect-coverflow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faCloud, faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./Home.css";
@@ -55,18 +55,26 @@ const Home = () => {
   const fetchAllNews = async () => {
     try {
       setLoading(true);
+      
       const newsRef = collection(db, "news");
       const newsQuery = query(
         newsRef,
-        where("status", "==", "published"),
-        orderBy("publishedAt", "desc")
+        where("status", "==", "published")
       );
 
       const querySnapshot = await getDocs(newsQuery);
-      const newsList = querySnapshot.docs.map((doc) => ({
-        docId: doc.id,
+      
+      // Mapear e ordenar (clientSide)
+      let newsList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
         ...doc.data(),
       }));
+
+      newsList.sort((a, b) => {
+        const dateA = a.publishedAt?.toDate() || a.createdAt?.toDate() || new Date(0);
+        const dateB = b.publishedAt?.toDate() || b.createdAt?.toDate() || new Date(0);
+        return dateB - dateA;
+      });
 
       // Stories
       setStoryNews(newsList.slice(0, 18));
@@ -83,26 +91,39 @@ const Home = () => {
       // Descubra
       const shuffled = [...newsList].sort(() => 0.5 - Math.random());
       setDiscoverNews(shuffled.slice(0, 10));
+      
     } catch (error) {
       console.error("Erro ao buscar notícias:", error);
+      console.error("Detalhes do erro:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleStoryClick = (newsId) => {
+    setStoryOpen(false);
+    navigate(`/news/${newsId}`);
+  };
+
   const storyList = storyNews.map((news) => ({
     content: ({ action, story }) => (
-      <div
-        className="story-content"
-        onClick={() => {
-          setStoryOpen(false);
-          navigate(`/news/${news.id}`);
-        }}
-      >
+      <div className="story-content">
         <img src={news.imageURL} alt={news.title} className="story-image" />
         <div className="story-text-overlay">
-          <h3>{news.title}</h3>
-          <p>{news.category}</p>
+          <div className="story-info">
+            <h3>{news.title}</h3>
+            <p className="story-category">{news.category}</p>
+          </div>
+          <button 
+            className="story-read-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleStoryClick(news.id);
+            }}
+          >
+            <span>Ver notícia completa</span>
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+          </button>
         </div>
       </div>
     ),

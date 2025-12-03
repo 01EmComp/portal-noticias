@@ -789,6 +789,79 @@
   opacity: 0.9;
 }
 
+.story-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-text-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 30px 30px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.story-info h3 {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.story-category {
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.story-read-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: white;
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.story-read-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: #f0f0f0;
+}
+
+.story-read-button:active {
+  transform: scale(0.98);
+}
+
+.story-read-button svg {
+  font-size: 16px;
+}
+
 /* Views Count */
 .h-container .h-main-new .bottom .informations .views-count {
   font-size: 12px;

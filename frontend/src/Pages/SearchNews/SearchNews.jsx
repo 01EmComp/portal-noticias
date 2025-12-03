@@ -12,7 +12,7 @@ import {
 
 // Firebase
 import { db } from "/src/Services/firebaseConfig";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // CSS
 import "./SearchNews.css";
@@ -39,46 +39,73 @@ const SearchNews = () => {
     "Entretenimento",
     "Cultura",
     "Ciência",
+    "Eventos",
+    "Região"
   ];
 
   useEffect(() => {
-    const query = searchParams.get("q");
-    if (query) {
-      setSearchQuery(query);
-      performSearch(query);
+    const queryParam = searchParams.get("q");
+    const categoryParam = searchParams.get("category");
+    
+    if (queryParam) {
+      setSearchQuery(queryParam);
+    }
+    
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      performSearch(queryParam || "", categoryParam);
+    } else if (queryParam) {
+      performSearch(queryParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    const queryParam = searchParams.get("q");
+    const categoryParam = searchParams.get("category");
+    
+    if (categoryParam && categoryParam !== selectedCategory) {
+      setSelectedCategory(categoryParam);
+      performSearch(queryParam || "", categoryParam);
+    } else if (queryParam && queryParam !== searchQuery) {
+      setSearchQuery(queryParam);
+      performSearch(queryParam);
     }
   }, [searchParams]);
 
-  const performSearch = async (query) => {
-    if (!query.trim()) return;
-
+  const performSearch = async (searchTerm = "", category = selectedCategory) => {
     setLoading(true);
     setHasSearched(true);
 
     try {
       const newsRef = collection(db, "news");
-      let newsQuery = query(
+      const newsQuery = query(
         newsRef,
         where("status", "==", "published")
       );
 
       const querySnapshot = await getDocs(newsQuery);
       const allNews = querySnapshot.docs.map(doc => ({
-        docId: doc.id,
+        id: doc.id,
         ...doc.data()
       }));
 
-      const searchTerm = query.toLowerCase();
-      let filtered = allNews.filter(news => 
-        news.title?.toLowerCase().includes(searchTerm) ||
-        news.subtitle?.toLowerCase().includes(searchTerm) ||
-        news.category?.toLowerCase().includes(searchTerm) ||
-        news.body?.some(item => item.text?.toLowerCase().includes(searchTerm))
-      );
+      let filtered = allNews;
 
-      if (selectedCategory !== "all") {
+      // Filtrar por termo de busca se existir
+      if (searchTerm.trim()) {
+        const searchTermLower = searchTerm.toLowerCase();
         filtered = filtered.filter(news => 
-          news.category === selectedCategory
+          news.title?.toLowerCase().includes(searchTermLower) ||
+          news.subtitle?.toLowerCase().includes(searchTermLower) ||
+          news.category?.toLowerCase().includes(searchTermLower) ||
+          news.body?.some(item => item.text?.toLowerCase().includes(searchTermLower))
+        );
+      }
+
+      // Filtrar por categoria
+      if (category !== "all" && category !== "Todas") {
+        filtered = filtered.filter(news => 
+          news.category === category
         );
       }
 
@@ -91,11 +118,10 @@ const SearchNews = () => {
         });
       } else if (sortBy === "popular") {
         filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
-      } else if (sortBy === "relevance") {
-        // Ordenar por relevância (quantas vezes o termo aparece)
+      } else if (sortBy === "relevance" && searchTerm.trim()) {
         filtered.sort((a, b) => {
-          const countA = countOccurrences(a, searchTerm);
-          const countB = countOccurrences(b, searchTerm);
+          const countA = countOccurrences(a, searchTerm.toLowerCase());
+          const countB = countOccurrences(b, searchTerm.toLowerCase());
           return countB - countA;
         });
       }
@@ -127,8 +153,12 @@ const SearchNews = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setSearchParams({ q: searchQuery.trim() });
-      performSearch(searchQuery.trim());
+      const params = { q: searchQuery.trim() };
+      if (selectedCategory !== "all" && selectedCategory !== "Todas") {
+        params.category = selectedCategory;
+      }
+      setSearchParams(params);
+      performSearch(searchQuery.trim(), selectedCategory);
     }
   };
 
@@ -136,6 +166,7 @@ const SearchNews = () => {
     setSearchQuery("");
     setSearchResults([]);
     setHasSearched(false);
+    setSelectedCategory("all");
     setSearchParams({});
   };
 
@@ -143,18 +174,26 @@ const SearchNews = () => {
     const categoryValue = category === "Todas" ? "all" : category;
     setSelectedCategory(categoryValue);
     
-    if (hasSearched) {
-      performSearch(searchQuery);
+    const params = {};
+    if (searchQuery.trim()) {
+      params.q = searchQuery.trim();
     }
+    if (categoryValue !== "all") {
+      params.category = categoryValue;
+    }
+    setSearchParams(params);
   };
 
   const handleSortChange = (sort) => {
     setSortBy(sort);
-    
-    if (hasSearched) {
-      performSearch(searchQuery);
-    }
   };
+
+  // Re-executar filtros
+  useEffect(() => {
+    if (hasSearched) {
+      performSearch(searchQuery, selectedCategory);
+    }
+  }, [selectedCategory, sortBy]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "";
@@ -177,7 +216,7 @@ const SearchNews = () => {
   };
 
   const highlightText = (text, query) => {
-    if (!query.trim()) return text;
+    if (!query.trim() || !text) return text;
     
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, index) => 
@@ -260,7 +299,7 @@ const SearchNews = () => {
               onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
-              <option value="relevance">Relevância</option>
+              {searchQuery.trim() && <option value="relevance">Relevância</option>}
               <option value="recent">Mais recentes</option>
               <option value="popular">Mais populares</option>
             </select>
@@ -285,7 +324,13 @@ const SearchNews = () => {
               </h2>
               {searchResults.length > 0 && (
                 <p className="search-term">
-                  Resultados para: <strong>"{searchQuery}"</strong>
+                  {searchQuery.trim() ? (
+                    <>Resultados para: <strong>"{searchQuery}"</strong></>
+                  ) : selectedCategory !== "all" ? (
+                    <>Categoria: <strong>{selectedCategory}</strong></>
+                  ) : (
+                    <>Todas as notícias</>
+                  )}
                 </p>
               )}
             </div>

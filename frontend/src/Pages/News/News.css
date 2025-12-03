@@ -183,6 +183,228 @@
   opacity: 0.9;
 }
 
+.comments-section {
+  width: 100%;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.comments-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 1.5rem;
+}
+
+/* Formulário de Comentário */
+.comment-form-container {
+  margin-bottom: 2rem;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.comment-input-wrapper {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+}
+
+.user-avatar,
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secundary-color), #667eea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.3s ease;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: var(--secundary-color);
+}
+
+.comment-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.comment-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 48px;
+}
+
+.char-count {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.submit-comment-btn {
+  padding: 0.6rem 1.5rem;
+  background-color: var(--secundary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-comment-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.submit-comment-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Login Prompt */
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.login-prompt p {
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 500;
+}
+
+.login-btn {
+  padding: 0.7rem 1.8rem;
+  background-color: var(--secundary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+/* Lista de Comentários */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.loading-comments,
+.no-comments {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
+}
+
+.comment-item {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.comment-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.comment-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 15px;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.comment-text {
+  color: rgba(0, 0, 0, 0.75);
+  line-height: 1.6;
+  font-size: 15px;
+  word-wrap: break-word;
+}
+
+/* Botão Carregar Mais */
+.load-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  background-color: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.load-more-btn svg {
+  font-size: 14px;
+}
+
 @media screen and (min-width: 600px) {
   .news-container {
     padding: 2rem 4rem 3.5rem;
@@ -199,6 +421,10 @@
 
   .news-container .news-text {
     width: 100%;
+    max-width: 90%;
+  }
+
+  .comments-section {
     max-width: 90%;
   }
 }
@@ -265,5 +491,21 @@
 
   .news-container .news-text h3 {
     font-size: 22px;
+  }
+
+  .comments-section {
+    max-width: 70%;
+  }
+
+  .user-avatar,
+  .comment-avatar {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    font-size: 20px;
+  }
+
+  .comment-form-footer {
+    padding-left: 53px;
   }
 }
