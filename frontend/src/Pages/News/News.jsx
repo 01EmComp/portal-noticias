@@ -4,17 +4,23 @@ import { useParams, useNavigate } from "react-router-dom";
 // Font Awesome Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faWhatsapp, faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 // Firebase
-import { db } from "/src/Services/firebaseConfig";
+import { db, auth } from "/src/Services/firebaseConfig";
 import { 
   doc, 
   getDoc, 
   serverTimestamp, 
   updateDoc, 
-  increment 
+  increment,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 // Components
 import ImageFullScreen from "../../Components/ImageFullScreen/ImageFullScreen";
@@ -29,9 +35,60 @@ function News() {
   const [newsData, setNewsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  
+  // Estados dos comentários
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [visibleComments, setVisibleComments] = useState(3);
+  const [loadingComments, setLoadingComments] = useState(true);
+
+  // Verificar autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      
+      if (currentUser) {
+        try {
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+          if (userSnap.exists()) {
+            setUserData(userSnap.data());
+          }
+        } catch (err) {
+          console.error("Erro ao buscar dados do usuário:", err);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Carregar comentários em tempo real
+  useEffect(() => {
+    if (!id) return;
+
+    const commentsRef = collection(db, "news", id, "comments");
+    const q = query(commentsRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const commentsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setComments(commentsData);
+      setLoadingComments(false);
+    }, (error) => {
+      console.error("Erro ao carregar comentários:", error);
+      setLoadingComments(false);
+    });
+
+    return () => unsubscribe();
+  }, [id]);
 
   useEffect(() => {
-
     const fetchNews = async () => {
       try {
         setLoading(true);
@@ -77,17 +134,11 @@ function News() {
     if (id) fetchNews();
   }, [id]);
 
-
   const saveToReadingHistory = async (article) => {
     try {
-      const { auth } = await import("/src/Services/firebaseConfig");
-      const { onAuthStateChanged } = await import("firebase/auth");
-      
       return new Promise((resolve) => {
         onAuthStateChanged(auth, async (user) => {
           if (!user) return resolve();
-
-          const { doc, getDoc, updateDoc } = await import("firebase/firestore");
 
           try {
             const userRef = doc(db, "users", user.uid);
@@ -107,13 +158,10 @@ function News() {
             };
 
             readingHistory = readingHistory.filter(item => item.id !== article.id);
-
-            // Inserir no início
             readingHistory.unshift(readArticle);
             readingHistory = readingHistory.slice(0, 5);
 
             await updateDoc(userRef, { readingHistory });
-
             resolve();
           } catch (error) {
             console.error("Erro ao salvar histórico de leitura:", error);
@@ -121,9 +169,44 @@ function News() {
           }
         });
       });
-
     } catch (error) {
       console.error("Erro ao importar Firebase:", error);
+    }
+  };
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      alert("Você precisa estar logado para comentar!");
+      navigate("/profile");
+      return;
+    }
+
+    if (!commentText.trim()) {
+      alert("Por favor, escreva um comentário!");
+      return;
+    }
+
+    setSubmittingComment(true);
+
+    try {
+      const commentsRef = collection(db, "news", id, "comments");
+      
+      await addDoc(commentsRef, {
+        text: commentText.trim(),
+        userName: userData?.name || user.displayName || "Usuário",
+        userEmail: user.email,
+        userId: user.uid,
+        createdAt: serverTimestamp()
+      });
+
+      setCommentText("");
+    } catch (error) {
+      console.error("Erro ao enviar comentário:", error);
+      alert("Erro ao enviar comentário. Tente novamente!");
+    } finally {
+      setSubmittingComment(false);
     }
   };
 
@@ -137,6 +220,28 @@ function News() {
     if (!timestamp) return "00:00:00";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+  };
+
+  const formatCommentDate = (timestamp) => {
+    if (!timestamp) return "Agora";
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Agora";
+    if (diffMins < 60) return `${diffMins} min atrás`;
+    if (diffHours < 24) return `${diffHours}h atrás`;
+    if (diffDays === 1) return "Ontem";
+    if (diffDays < 7) return `${diffDays}d atrás`;
+    
+    return date.toLocaleDateString("pt-BR", { 
+      day: "2-digit", 
+      month: "short" 
+    });
   };
 
   const renderBodyContent = (body) => {
@@ -171,6 +276,10 @@ function News() {
         alert("Link copiado!");
         break;
     }
+  };
+
+  const loadMoreComments = () => {
+    setVisibleComments(prev => prev + 5);
   };
 
   if (loading) {
@@ -223,6 +332,83 @@ function News() {
 
       <section className="news-text">
         {renderBodyContent(newsData.body)}
+      </section>
+
+      {/* Seção de Comentários */}
+      <section className="comments-section">
+        <h3 className="comments-title">Comentários</h3>
+
+        {/* Formulário de comentário */}
+        <div className="comment-form-container">
+          {user ? (
+            <form onSubmit={handleSubmitComment} className="comment-form">
+              <div className="comment-input-wrapper">
+                <div className="user-avatar">
+                  {(userData?.name || user.displayName || "U")[0].toUpperCase()}
+                </div>
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Deixe seu comentário..."
+                  className="comment-input"
+                  rows="3"
+                  maxLength="500"
+                  disabled={submittingComment}
+                />
+              </div>
+              <div className="comment-form-footer">
+                <span className="char-count">{commentText.length}/500</span>
+                <button 
+                  type="submit" 
+                  className="submit-comment-btn"
+                  disabled={submittingComment || !commentText.trim()}
+                >
+                  {submittingComment ? "Enviando..." : "Comentar"}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="login-prompt">
+              <p>Você precisa estar logado para comentar.</p>
+              <button onClick={() => navigate("/profile")} className="login-btn">
+                Fazer Login
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Lista de comentários */}
+        <div className="comments-list">
+          {loadingComments ? (
+            <p className="loading-comments">Carregando comentários...</p>
+          ) : comments.length === 0 ? (
+            <p className="no-comments">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+          ) : (
+            <>
+              {comments.slice(0, visibleComments).map((comment) => (
+                <div key={comment.id} className="comment-item">
+                  <div className="comment-avatar">
+                    {(comment.userName || "U")[0].toUpperCase()}
+                  </div>
+                  <div className="comment-content">
+                    <div className="comment-header">
+                      <span className="comment-author">{comment.userName}</span>
+                      <span className="comment-date">{formatCommentDate(comment.createdAt)}</span>
+                    </div>
+                    <p className="comment-text">{comment.text}</p>
+                  </div>
+                </div>
+              ))}
+
+              {comments.length > visibleComments && (
+                <button onClick={loadMoreComments} className="load-more-btn">
+                  Mais Comentários
+                  <FontAwesomeIcon icon={faChevronDown} />
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </section>
     </div>
   );
