@@ -12,7 +12,7 @@ import {
 
 // Firebase
 import { db } from "/src/Services/firebaseConfig";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // CSS
 import "./SearchNews.css";
@@ -42,38 +42,38 @@ const SearchNews = () => {
   ];
 
   useEffect(() => {
-    const query = searchParams.get("q");
-    if (query) {
-      setSearchQuery(query);
-      performSearch(query);
+    const queryParam = searchParams.get("q");
+    if (queryParam) {
+      setSearchQuery(queryParam);
+      performSearch(queryParam);
     }
   }, [searchParams]);
 
-  const performSearch = async (query) => {
-    if (!query.trim()) return;
+  const performSearch = async (searchTerm) => {
+    if (!searchTerm.trim()) return;
 
     setLoading(true);
     setHasSearched(true);
 
     try {
       const newsRef = collection(db, "news");
-      let newsQuery = query(
+      const newsQuery = query(
         newsRef,
         where("status", "==", "published")
       );
 
       const querySnapshot = await getDocs(newsQuery);
       const allNews = querySnapshot.docs.map(doc => ({
-        docId: doc.id,
+        id: doc.id,
         ...doc.data()
       }));
 
-      const searchTerm = query.toLowerCase();
+      const searchTermLower = searchTerm.toLowerCase();
       let filtered = allNews.filter(news => 
-        news.title?.toLowerCase().includes(searchTerm) ||
-        news.subtitle?.toLowerCase().includes(searchTerm) ||
-        news.category?.toLowerCase().includes(searchTerm) ||
-        news.body?.some(item => item.text?.toLowerCase().includes(searchTerm))
+        news.title?.toLowerCase().includes(searchTermLower) ||
+        news.subtitle?.toLowerCase().includes(searchTermLower) ||
+        news.category?.toLowerCase().includes(searchTermLower) ||
+        news.body?.some(item => item.text?.toLowerCase().includes(searchTermLower))
       );
 
       if (selectedCategory !== "all") {
@@ -92,10 +92,9 @@ const SearchNews = () => {
       } else if (sortBy === "popular") {
         filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
       } else if (sortBy === "relevance") {
-        // Ordenar por relevância (quantas vezes o termo aparece)
         filtered.sort((a, b) => {
-          const countA = countOccurrences(a, searchTerm);
-          const countB = countOccurrences(b, searchTerm);
+          const countA = countOccurrences(a, searchTermLower);
+          const countB = countOccurrences(b, searchTermLower);
           return countB - countA;
         });
       }
@@ -142,19 +141,18 @@ const SearchNews = () => {
   const handleCategoryChange = (category) => {
     const categoryValue = category === "Todas" ? "all" : category;
     setSelectedCategory(categoryValue);
-    
-    if (hasSearched) {
-      performSearch(searchQuery);
-    }
   };
 
   const handleSortChange = (sort) => {
     setSortBy(sort);
-    
-    if (hasSearched) {
+  };
+
+  // Re-executar quando filtros mudarem
+  useEffect(() => {
+    if (hasSearched && searchQuery.trim()) {
       performSearch(searchQuery);
     }
-  };
+  }, [selectedCategory, sortBy]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "";
@@ -177,7 +175,7 @@ const SearchNews = () => {
   };
 
   const highlightText = (text, query) => {
-    if (!query.trim()) return text;
+    if (!query.trim() || !text) return text;
     
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, index) => 
