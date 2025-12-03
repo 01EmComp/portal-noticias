@@ -39,19 +39,40 @@ const SearchNews = () => {
     "Entretenimento",
     "Cultura",
     "Ciência",
+    "Eventos",
+    "Região"
   ];
 
   useEffect(() => {
     const queryParam = searchParams.get("q");
+    const categoryParam = searchParams.get("category");
+    
     if (queryParam) {
+      setSearchQuery(queryParam);
+    }
+    
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      performSearch(queryParam || "", categoryParam);
+    } else if (queryParam) {
+      performSearch(queryParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    const queryParam = searchParams.get("q");
+    const categoryParam = searchParams.get("category");
+    
+    if (categoryParam && categoryParam !== selectedCategory) {
+      setSelectedCategory(categoryParam);
+      performSearch(queryParam || "", categoryParam);
+    } else if (queryParam && queryParam !== searchQuery) {
       setSearchQuery(queryParam);
       performSearch(queryParam);
     }
   }, [searchParams]);
 
-  const performSearch = async (searchTerm) => {
-    if (!searchTerm.trim()) return;
-
+  const performSearch = async (searchTerm = "", category = selectedCategory) => {
     setLoading(true);
     setHasSearched(true);
 
@@ -68,17 +89,23 @@ const SearchNews = () => {
         ...doc.data()
       }));
 
-      const searchTermLower = searchTerm.toLowerCase();
-      let filtered = allNews.filter(news => 
-        news.title?.toLowerCase().includes(searchTermLower) ||
-        news.subtitle?.toLowerCase().includes(searchTermLower) ||
-        news.category?.toLowerCase().includes(searchTermLower) ||
-        news.body?.some(item => item.text?.toLowerCase().includes(searchTermLower))
-      );
+      let filtered = allNews;
 
-      if (selectedCategory !== "all") {
+      // Filtrar por termo de busca se existir
+      if (searchTerm.trim()) {
+        const searchTermLower = searchTerm.toLowerCase();
         filtered = filtered.filter(news => 
-          news.category === selectedCategory
+          news.title?.toLowerCase().includes(searchTermLower) ||
+          news.subtitle?.toLowerCase().includes(searchTermLower) ||
+          news.category?.toLowerCase().includes(searchTermLower) ||
+          news.body?.some(item => item.text?.toLowerCase().includes(searchTermLower))
+        );
+      }
+
+      // Filtrar por categoria
+      if (category !== "all" && category !== "Todas") {
+        filtered = filtered.filter(news => 
+          news.category === category
         );
       }
 
@@ -91,10 +118,10 @@ const SearchNews = () => {
         });
       } else if (sortBy === "popular") {
         filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
-      } else if (sortBy === "relevance") {
+      } else if (sortBy === "relevance" && searchTerm.trim()) {
         filtered.sort((a, b) => {
-          const countA = countOccurrences(a, searchTermLower);
-          const countB = countOccurrences(b, searchTermLower);
+          const countA = countOccurrences(a, searchTerm.toLowerCase());
+          const countB = countOccurrences(b, searchTerm.toLowerCase());
           return countB - countA;
         });
       }
@@ -126,8 +153,12 @@ const SearchNews = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setSearchParams({ q: searchQuery.trim() });
-      performSearch(searchQuery.trim());
+      const params = { q: searchQuery.trim() };
+      if (selectedCategory !== "all" && selectedCategory !== "Todas") {
+        params.category = selectedCategory;
+      }
+      setSearchParams(params);
+      performSearch(searchQuery.trim(), selectedCategory);
     }
   };
 
@@ -135,22 +166,32 @@ const SearchNews = () => {
     setSearchQuery("");
     setSearchResults([]);
     setHasSearched(false);
+    setSelectedCategory("all");
     setSearchParams({});
   };
 
   const handleCategoryChange = (category) => {
     const categoryValue = category === "Todas" ? "all" : category;
     setSelectedCategory(categoryValue);
+    
+    const params = {};
+    if (searchQuery.trim()) {
+      params.q = searchQuery.trim();
+    }
+    if (categoryValue !== "all") {
+      params.category = categoryValue;
+    }
+    setSearchParams(params);
   };
 
   const handleSortChange = (sort) => {
     setSortBy(sort);
   };
 
-  // Re-executar quando filtros mudarem
+  // Re-executar filtros
   useEffect(() => {
-    if (hasSearched && searchQuery.trim()) {
-      performSearch(searchQuery);
+    if (hasSearched) {
+      performSearch(searchQuery, selectedCategory);
     }
   }, [selectedCategory, sortBy]);
 
@@ -258,7 +299,7 @@ const SearchNews = () => {
               onChange={(e) => handleSortChange(e.target.value)}
               className="sort-select"
             >
-              <option value="relevance">Relevância</option>
+              {searchQuery.trim() && <option value="relevance">Relevância</option>}
               <option value="recent">Mais recentes</option>
               <option value="popular">Mais populares</option>
             </select>
@@ -283,7 +324,13 @@ const SearchNews = () => {
               </h2>
               {searchResults.length > 0 && (
                 <p className="search-term">
-                  Resultados para: <strong>"{searchQuery}"</strong>
+                  {searchQuery.trim() ? (
+                    <>Resultados para: <strong>"{searchQuery}"</strong></>
+                  ) : selectedCategory !== "all" ? (
+                    <>Categoria: <strong>{selectedCategory}</strong></>
+                  ) : (
+                    <>Todas as notícias</>
+                  )}
                 </p>
               )}
             </div>
