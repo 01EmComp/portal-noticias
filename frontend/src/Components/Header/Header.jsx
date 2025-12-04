@@ -129,6 +129,10 @@ const Header = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const handleCategoryClick = (category) => {
+    navigate(`/search?category=${encodeURIComponent(category)}`);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -376,27 +380,42 @@ const Header = () => {
       {location.pathname === "/" && (
         <nav className="categories-bar">
           <ul>
-            <Link>
-              <li className="first">Última hora</li>
-            </Link>
-            <Link>
-              <li>Saúde</li>
-            </Link>
-            <Link>
-              <li>Cultura</li>
-            </Link>
-            <Link>
-              <li>Esportes</li>
-            </Link>
-            <Link>
-              <li>Eventos</li>
-            </Link>
-            <Link>
-              <li>Política</li>
-            </Link>
-            <Link>
-              <li className="last">Região</li>
-            </Link>
+            <li className="first" onClick={() => navigate("/")}>
+              Última hora
+            </li>
+            <li onClick={() => handleCategoryClick("Política")}>
+              Política
+            </li>
+            <li onClick={() => handleCategoryClick("Economia")}>
+              Economia
+            </li>
+            <li onClick={() => handleCategoryClick("Educação")}>
+              Educação
+            </li>
+            <li onClick={() => handleCategoryClick("Tecnologia")}>
+              Tecnologia
+            </li>
+            <li onClick={() => handleCategoryClick("Saúde")}>
+              Saúde
+            </li>
+            <li onClick={() => handleCategoryClick("Esportes")}>
+              Esportes
+            </li>
+            <li onClick={() => handleCategoryClick("Entretenimento")}>
+              Entretenimento
+            </li>
+            <li onClick={() => handleCategoryClick("Cultura")}>
+              Cultura
+            </li>
+            <li onClick={() => handleCategoryClick("Ciência")}>
+              Ciência
+            </li>
+            <li onClick={() => handleCategoryClick("Eventos")}>
+              Eventos
+            </li>
+            <li className="last" onClick={() => handleCategoryClick("Região")}>
+              Região
+            </li>
           </ul>
         </nav>
       )}

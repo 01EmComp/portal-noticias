@@ -6,18 +6,10 @@ import FormData from "form-data";
 import admin from "firebase-admin";
 import fs from "fs";
 
-const serviceAccount = JSON.parse(
-  fs.readFileSync(new URL("./servicesAccountKey.json", import.meta.url))
-);
-
 const app = express();
 app.use(cors());
 const upload = multer();
 app.use(express.json());
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
 
 // Delete user
 app.post("/deleteUser", async (req, res) => {

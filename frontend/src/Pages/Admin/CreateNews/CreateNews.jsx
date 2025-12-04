@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
@@ -213,7 +212,6 @@ const CreateNews = () => {
       const bodyContent = convertEditorToJSON(editorContent);
 
       const newsData = {
-        id: uuidv4(),
         status: "pending",
         title: formData.title,
         subtitle: formData.subtitle,
@@ -271,7 +269,6 @@ const CreateNews = () => {
       const bodyContent = convertEditorToJSON(editorContent);
 
       const newsData = {
-        id: uuidv4(),
         status: "published",
         title: formData.title,
         subtitle: formData.subtitle,
