@@ -6,6 +6,10 @@ import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
+// Components
+import MyNews from "./MyNews/MyNews";
+import EditNews from "./EditNews/EditNews";
+
 // Images
 import createNews from "/src/Assets/Images/createNews.svg";
 import blogs from "/src/Assets/Images/blogs.svg";
@@ -24,6 +28,8 @@ import "./WriterPainel.css";
 const WriterPainel = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState("menu");
+  const [editingNewsId, setEditingNewsId] = useState(null);
 
   const allowedRoles = ["admin", "editor"];
 
@@ -104,6 +110,28 @@ const WriterPainel = () => {
     );
   }
 
+  if (activeSection === "my-news") {
+    return (
+      <MyNews 
+        onBack={() => setActiveSection("menu")} 
+        onEditNews={(newsId) => {
+          setEditingNewsId(newsId);
+          setActiveSection("edit-news");
+        }}
+      />
+    );
+  }
+
+  if (activeSection === "edit-news") {
+    return (
+      <EditNews 
+        newsId={editingNewsId} 
+        onBack={() => setActiveSection("my-news")} 
+      />
+    );
+  }
+
+  // Menu principal do Writer Painel
   return (
     <div className="writer-painel-container">
       <section className="wp-welcome">
@@ -131,12 +159,10 @@ const WriterPainel = () => {
               <img src={createNews} alt="Imagem criar n / b" />
             </li>
           </Link>
-          <Link to="/">
-            <li>
-              <p>Minhas Noticias</p>
-              <img src={news} alt="Imagem minhas notícias" />
-            </li>
-          </Link>
+          <li onClick={() => setActiveSection("my-news")} style={{ cursor: "pointer" }}>
+            <p>Minhas Noticias</p>
+            <img src={news} alt="Imagem minhas notícias" />
+          </li>
           <Link to="/">
             <li>
               <p>Meus Blogs</p>

@@ -1,0 +1,674 @@
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+
+// Auth
+import { auth, db } from "/src/Services/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import "./EditNews.css";
+
+const EditNews = ({ newsId, onBack }) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    subtitle: "",
+    category: "",
+    image: null,
+    text: "",
+  });
+
+  const [imagePreview, setImagePreview] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [editorContent, setEditorContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
+  const [loading, setLoading] = useState(true);
+  const [currentImageURL, setCurrentImageURL] = useState("");
+  const editorRef = useRef(null);
+
+  const allowedRoles = ["admin", "editor"];
+
+  const categories = [
+    "Política",
+    "Economia",
+    "Educação",
+    "Tecnologia",
+    "Saúde",
+    "Esporte",
+    "Entretenimento",
+    "Cultura",
+    "Ciência",
+    "Cidade",
+    "Eventos",
+    "Geral"
+  ];
+
+  // Verificação de autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        } catch (err) {
+          console.error("Erro ao buscar usuário:", err);
+        }
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Carregar dados da notícia
+  useEffect(() => {
+    const loadNewsData = async () => {
+      if (!newsId) return;
+
+      try {
+        setLoading(true);
+        const newsDocRef = doc(db, "news", newsId);
+        const newsSnap = await getDoc(newsDocRef);
+
+        if (newsSnap.exists()) {
+          const data = newsSnap.data();
+          
+          setFormData({
+            title: data.title || "",
+            subtitle: data.subtitle || "",
+            category: data.category || "",
+            image: null,
+            text: "",
+          });
+
+          setCurrentImageURL(data.imageURL || "");
+          setImagePreview(data.imageURL || "");
+
+          if (data.body && Array.isArray(data.body)) {
+            const htmlContent = convertJSONToHTML(data.body);
+            setEditorContent(htmlContent);
+            
+            setTimeout(() => {
+              if (editorRef.current) {
+                editorRef.current.innerHTML = htmlContent;
+              }
+            }, 0);
+          }
+        } else {
+          setSubmitMessage({ type: "error", text: "Notícia não encontrada" });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar notícia:", error);
+        setSubmitMessage({ type: "error", text: "Erro ao carregar notícia" });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNewsData();
+  }, [newsId]);
+
+  const convertJSONToHTML = (bodyArray) => {
+    return bodyArray.map(item => {
+      switch (item.type) {
+        case "heading":
+          return `<h2>${item.text}</h2>`;
+        case "subheading":
+          return `<h3>${item.text}</h3>`;
+        case "list":
+          return item.text;
+        case "paragraph":
+        default:
+          return `<p>${item.text}</p>`;
+      }
+    }).join("");
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (imageFile) => {
+    if (!imageFile) return null;
+
+    try {
+      const formData = new FormData();
+      formData.append("fileToUpload", imageFile);
+
+      const response = await fetch("http://localhost:4000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar imagem via proxy");
+      }
+
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error("Falha no upload da imagem:", error);
+      throw error;
+    }
+  };
+
+  const handleEditorInput = () => {
+    if (editorRef.current) {
+      setEditorContent(editorRef.current.innerHTML);
+    }
+  };
+
+  const convertEditorToJSON = (htmlContent) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent;
+
+    const bodyArray = [];
+    const children = tempDiv.childNodes;
+
+    children.forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const tagName = node.tagName.toLowerCase();
+        const text = node.innerHTML.trim();
+
+        if (text) {
+          let type;
+
+          switch (tagName) {
+            case "h2":
+              type = "heading";
+              break;
+            case "h3":
+              type = "subheading";
+              break;
+            case "ul":
+            case "ol":
+              type = "list";
+              break;
+            default:
+              type = "paragraph";
+          }
+
+          bodyArray.push({
+            type: type,
+            text: text,
+          });
+        }
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent.trim();
+
+        if (text) {
+          bodyArray.push({
+            type: "paragraph",
+            text: text,
+          });
+        }
+      }
+    });
+
+    return bodyArray;
+  };
+
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      setSubmitMessage({ type: "error", text: "O título é obrigatório" });
+      return false;
+    }
+
+    if (!formData.subtitle.trim()) {
+      setSubmitMessage({ type: "error", text: "O subtítulo é obrigatório" });
+      return false;
+    }
+
+    if (!formData.category) {
+      setSubmitMessage({ type: "error", text: "A categoria é obrigatória" });
+      return false;
+    }
+
+    if (!imagePreview) {
+      setSubmitMessage({ type: "error", text: "A imagem é obrigatória" });
+      return false;
+    }
+
+    if (!editorContent.trim() || editorContent === "<br>") {
+      setSubmitMessage({ type: "error", text: "O conteúdo é obrigatório" });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleUpdate = async () => {
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitMessage({ type: "", text: "" });
+
+    try {
+      let imageURL = currentImageURL;
+      
+      if (formData.image) {
+        imageURL = await uploadImage(formData.image);
+      }
+
+      const bodyContent = convertEditorToJSON(editorContent);
+
+      const newsDocRef = doc(db, "news", newsId);
+      const updateData = {
+        title: formData.title,
+        subtitle: formData.subtitle,
+        category: formData.category,
+        imageURL: imageURL,
+        body: bodyContent,
+        updatedAt: serverTimestamp(),
+      };
+
+      await updateDoc(newsDocRef, updateData);
+
+      setSubmitMessage({
+        type: "success",
+        text: "Notícia atualizada com sucesso!",
+      });
+
+      setTimeout(() => {
+        if (onBack) onBack();
+      }, 2000);
+    } catch (error) {
+      console.error("Erro ao atualizar notícia:", error);
+      setSubmitMessage({
+        type: "error",
+        text: "Erro ao atualizar notícia. Tente novamente.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (onBack) onBack();
+  };
+
+  const applyFormat = (command, value = null) => {
+    document.execCommand(command, false, value);
+    editorRef.current?.focus();
+  };
+
+  if (!userData) {
+    return (
+      <div className="not-authenticated">
+        <h1>Acesso negado</h1>
+        <p>Você precisa estar logado para editar notícias.</p>
+        <Link to="/login">
+          <button>Fazer login</button>
+        </Link>
+      </div>
+    );
+  }
+
+  if (!allowedRoles.includes(userData.role)) {
+    return (
+      <div className="not-authorized">
+        <h1>Permissão negada</h1>
+        <p>Você não tem permissão para editar notícias.</p>
+
+        <p className="role-info">
+          Apenas usuários com cargo de <strong>Editor</strong> ou{" "}
+          <strong>Admin</strong> podem editar notícias.
+        </p>
+        <button onClick={handleCancel}>Voltar</button>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="edit-news-container">
+        <div className="loading-message">
+          <p>Carregando notícia...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="edit-news-container">
+      <h1 className="edit-news-title">Editar Notícia</h1>
+
+      <div className="edit-news-form">
+        <div className="form-group">
+          <label htmlFor="title" className="form-label">
+            Título
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            className="form-input"
+            placeholder="Insira o título"
+            value={formData.title}
+            onChange={handleInputChange}
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="subtitle" className="form-label">
+            Subtítulo
+          </label>
+          <input
+            type="text"
+            id="subtitle"
+            name="subtitle"
+            className="form-input"
+            placeholder="Insira o subtítulo"
+            value={formData.subtitle}
+            onChange={handleInputChange}
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="category" className="form-label">
+            Categoria
+          </label>
+          <select
+            id="category"
+            name="category"
+            className="form-select"
+            value={formData.category}
+            onChange={handleInputChange}
+            disabled={isSubmitting}
+          >
+            <option value="">Selecione uma categoria</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="image-upload" className="image-select-button">
+            Alterar Imagem
+          </label>
+          <input
+            type="file"
+            id="image-upload"
+            accept="image/*"
+            className="image-input-hidden"
+            onChange={handleImageSelect}
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Imagem</label>
+          <div className="image-preview-container">
+            {imagePreview ? (
+              <img src={imagePreview} alt="Preview" className="image-preview" />
+            ) : (
+              <div className="image-placeholder">
+                <svg
+                  className="placeholder-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <p className="placeholder-text">Preview</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Texto</label>
+
+          <div className="editor-toolbar">
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("bold")}
+              title="Negrito (Ctrl+B)"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M4 2h4.5a3.5 3.5 0 0 1 2.5 6 3.5 3.5 0 0 1-2.5 6H4V2zm4.5 5a1.5 1.5 0 1 0 0-3H6v3h2.5zM6 9v3h2.5a1.5 1.5 0 1 0 0-3H6z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("italic")}
+              title="Itálico (Ctrl+I)"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M6 2h6v2h-2l-2 8h2v2H4v-2h2l2-8H6V2z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("underline")}
+              title="Sublinhado (Ctrl+U)"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M8 13c2.2 0 4-1.8 4-4V3h-2v6c0 1.1-.9 2-2 2s-2-.9-2-2V3H4v6c0 2.2 1.8 4 4 4zm-6 2h12v1H2v-1z" />
+              </svg>
+            </button>
+
+            <div className="toolbar-separator"></div>
+
+            <select
+              className="editor-select"
+              onChange={(e) => {
+                applyFormat("formatBlock", e.target.value);
+                e.target.value = "";
+              }}
+              defaultValue=""
+              disabled={isSubmitting}
+            >
+              <option value="" disabled>
+                Estilo
+              </option>
+              <option value="p">Normal</option>
+              <option value="h2">Título</option>
+              <option value="h3">Subtítulo</option>
+            </select>
+
+            <div className="toolbar-separator"></div>
+
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("insertUnorderedList")}
+              title="Lista com marcadores"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M2 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3-1h9v1H5V3zm0 5h9v1H5V8zm0 5h9v1H5v-1zM2 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("insertOrderedList")}
+              title="Lista numerada"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M2 2h1v2H2V2zm0 3h1v2H2V5zm0 3h1v2H2V8zm0 3h1v2H2v-2zM5 3h9v1H5V3zm0 5h9v1H5V8zm0 5h9v1H5v-1z" />
+              </svg>
+            </button>
+
+            <div className="toolbar-separator"></div>
+
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("justifyLeft")}
+              title="Alinhar à esquerda"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M2 3h12v1H2V3zm0 3h8v1H2V6zm0 3h12v1H2V9zm0 3h8v1H2v-1z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("justifyCenter")}
+              title="Centralizar"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M2 3h12v1H2V3zm2 3h8v1H4V6zm-2 3h12v1H2V9zm2 3h8v1H4v-1z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("justifyRight")}
+              title="Alinhar à direita"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M2 3h12v1H2V3zm4 3h8v1H6V6zm-4 3h12v1H2V9zm4 3h8v1H6v-1z" />
+              </svg>
+            </button>
+
+            <div className="toolbar-separator"></div>
+
+            <button
+              type="button"
+              className="editor-btn"
+              onClick={() => applyFormat("createLink", prompt("URL do link:"))}
+              title="Inserir link"
+              disabled={isSubmitting}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M6.5 10a3.5 3.5 0 0 0 4.95 0l2-2a3.5 3.5 0 0 0-4.95-4.95l-1.15 1.15a.5.5 0 0 1-.7-.7l1.15-1.15a4.5 4.5 0 0 1 6.36 6.36l-2 2a4.5 4.5 0 0 1-6.36 0 .5.5 0 0 1 .7-.7zm-3-3a3.5 3.5 0 0 0 4.95 0 .5.5 0 0 1 .7.7 4.5 4.5 0 0 1-6.36 0l-2-2a4.5 4.5 0 0 1 6.36-6.36l1.15 1.15a.5.5 0 0 1-.7.7L6.45 2.34A3.5 3.5 0 0 0 1.5 7.29l2 2z" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            ref={editorRef}
+            className="editor-content"
+            contentEditable
+            onInput={handleEditorInput}
+            data-placeholder="Por favor, insira o conteúdo da notícia..."
+            suppressContentEditableWarning
+          />
+        </div>
+
+        <div className="form-actions">
+          <button
+            type="button"
+            className="btn-cancel"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="btn-update"
+            onClick={handleUpdate}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Atualizando..." : "Atualizar"}
+          </button>
+        </div>
+
+        {submitMessage.text && (
+          <div className={`submit-message ${submitMessage.type}`}>
+            {submitMessage.text}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EditNews;
