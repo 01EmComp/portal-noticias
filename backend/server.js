@@ -19,22 +19,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Climate
-const api_key_climate = "dd908c3beddc274bb16013d2f05bca1b";
-const url_climate = "https://";
-
-async function getClimate() {
-  try {
-    const res = await fetch(url_climate);
-    const datas = await res.json();
-    exibirClima(datas);
-  } catch (erro) {
-    console.error("Erro ao buscar o clima:", erro);
-    document.getElementById("temperatura").innerText =
-      "Erro ao carregar o clima.";
-  }
-}
-
 // Delete user
 app.post("/deleteUser", async (req, res) => {
   try {
