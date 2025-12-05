@@ -253,7 +253,7 @@ const CreateNews = () => {
   const handlePost = async () => {
     if (!validateForm()) return;
 
-    if (userData.role !== "Admin") {
+    if (userData.role !== "admin") {
       setSubmitMessage({
         type: "error",
         text: "Apenas administradores podem postar diretamente.",
