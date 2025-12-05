@@ -9,6 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 // Components
 import MyNews from "./MyNews/MyNews";
 import EditNews from "./EditNews/EditNews";
+import CreateNews from "../CreateNews/CreateNews";
 
 // Images
 import createNews from "/src/Assets/Images/createNews.svg";
@@ -110,6 +111,10 @@ const WriterPainel = () => {
     );
   }
 
+  if (activeSection === "create-news") {
+    return <CreateNews onBack={() => setActiveSection("menu")} />;
+  }
+
   if (activeSection === "my-news") {
     return (
       <MyNews 
@@ -153,12 +158,10 @@ const WriterPainel = () => {
       </section>
       <section className="wp-painel">
         <ul>
-          <Link to="/">
-            <li>
-              <p>Criar Notícia / Blog</p>
-              <img src={createNews} alt="Imagem criar n / b" />
-            </li>
-          </Link>
+          <li onClick={() => setActiveSection("create-news")} style={{ cursor: "pointer" }}>
+            <p>Criar Notícia / Blog</p>
+            <img src={createNews} alt="Imagem criar n / b" />
+          </li>
           <li onClick={() => setActiveSection("my-news")} style={{ cursor: "pointer" }}>
             <p>Minhas Noticias</p>
             <img src={news} alt="Imagem minhas notícias" />
