@@ -64,7 +64,7 @@ const Profile = () => {
     return () => unsubscribe();
   }, []);
 
-  // Aplica configurações ao carregar
+  // Configurações do usuário
   useEffect(() => {
     if (userData?.settings) {
       applySettings(userData.settings);
@@ -83,7 +83,7 @@ const Profile = () => {
       </div>
     );
 
-  // Pegar histórico de notícias lidas
+  // histórico de notícias lidas
   const readingHistory = userData.readingHistory || [];
   
   const displayedArticles = showMoreArticles ? readingHistory : readingHistory.slice(0, 3);
@@ -235,7 +235,6 @@ const Profile = () => {
     const handleSave = async () => {
       if (!auth.currentUser) return;
 
-      // Validações
       if (!editData.name.trim()) {
         alert("O nome não pode estar vazio!");
         return;
