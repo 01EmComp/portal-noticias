@@ -22,6 +22,8 @@ import {
   faCalendar,
   faSignInAlt,
   faIdCard,
+  faPencilAlt,
+  faFileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 
@@ -32,6 +34,7 @@ const Profile = () => {
   const [showMoreArticles, setShowMoreArticles] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showDataPopup, setShowDataPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
@@ -43,7 +46,6 @@ const Profile = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
 
@@ -220,10 +222,164 @@ const Profile = () => {
     navigate(`/news/${articleId}`);
   };
 
+  const EditPopup = () => {
+    const [editData, setEditData] = useState({
+      name: userData.name || "",
+      phone: userData.phone || "",
+      description: userData.description || "",
+    });
+    const [saving, setSaving] = useState(false);
+
+    const canEditDescription = userData.role === "editor" || userData.role === "admin";
+
+    const handleSave = async () => {
+      if (!auth.currentUser) return;
+
+      // Validações
+      if (!editData.name.trim()) {
+        alert("O nome não pode estar vazio!");
+        return;
+      }
+
+      if (editData.phone && !/^\d{10,11}$/.test(editData.phone.replace(/\D/g, ""))) {
+        alert("Digite um telefone válido (10 ou 11 dígitos)!");
+        return;
+      }
+
+      setSaving(true);
+      try {
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        const updateData = {
+          name: editData.name.trim(),
+          phone: editData.phone.trim(),
+        };
+
+        if (canEditDescription) {
+          updateData.description = editData.description.trim();
+        }
+
+        await updateDoc(userRef, updateData);
+
+        setUserData((prev) => ({
+          ...prev,
+          ...updateData,
+        }));
+
+        setShowSuccessToast(true);
+        setTimeout(() => setShowSuccessToast(false), 3000);
+        setShowEditPopup(false);
+      } catch (error) {
+        console.error("Erro ao salvar dados:", error);
+        alert("Erro ao salvar dados. Tente novamente.");
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    const handleClose = () => {
+      setShowEditPopup(false);
+    };
+
+    const formatPhoneInput = (value) => {
+      const numbers = value.replace(/\D/g, "");
+      if (numbers.length <= 10) {
+        return numbers.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+      }
+      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    };
+
+    return (
+      <div className="settings-overlay" onClick={handleClose}>
+        <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
+          <div className="settings-header">
+            <h2>Editar Dados</h2>
+            <button className="close-button" onClick={handleClose}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
+
+          <div className="edit-popup-content">
+            <div className="edit-field">
+              <label>
+                <FontAwesomeIcon icon={faUser} className="field-icon" />
+                Nome completo *
+              </label>
+              <input
+                type="text"
+                value={editData.name}
+                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                placeholder="Digite seu nome completo"
+                maxLength={100}
+              />
+            </div>
+
+            <div className="edit-field">
+              <label>
+                <FontAwesomeIcon icon={faPhone} className="field-icon" />
+                Telefone
+              </label>
+              <input
+                type="tel"
+                value={editData.phone}
+                onChange={(e) => {
+                  const formatted = formatPhoneInput(e.target.value);
+                  setEditData({ ...editData, phone: formatted });
+                }}
+                placeholder="(00) 00000-0000"
+                maxLength={15}
+              />
+            </div>
+
+            {canEditDescription && (
+              <div className="edit-field">
+                <label>
+                  <FontAwesomeIcon icon={faFileAlt} className="field-icon" />
+                  Descrição
+                </label>
+                <textarea
+                  value={editData.description}
+                  onChange={(e) =>
+                    setEditData({ ...editData, description: e.target.value })
+                  }
+                  placeholder="Escreva uma breve descrição sobre você..."
+                  rows={4}
+                  maxLength={500}
+                />
+                <span className="char-count">
+                  {editData.description.length}/500
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="settings-footer">
+            <button className="cancel-button" onClick={handleClose}>
+              Cancelar
+            </button>
+            <button
+              className="save-button"
+              onClick={handleSave}
+              disabled={saving}
+            >
+              {saving ? "Salvando..." : "Salvar alterações"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const DataPopup = () => {
     const handleClose = () => {
       setShowDataPopup(false);
     };
+
+    const handleEditField = (field) => {
+      setShowDataPopup(false);
+      setShowEditPopup(true);
+    };
+
+    const canEditDescription = userData.role === "editor" || userData.role === "admin";
 
     return (
       <div className="settings-overlay" onClick={handleClose}>
@@ -236,7 +392,7 @@ const Profile = () => {
           </div>
 
           <div className="data-popup-content">
-            <div className="user-data-item">
+            <div className="user-data-item editable" onClick={() => handleEditField('name')}>
               <div className="data-icon">
                 <FontAwesomeIcon icon={faUser} />
               </div>
@@ -246,6 +402,9 @@ const Profile = () => {
                   {userData.name || "Não fornecido"}
                 </span>
               </div>
+              <button className="field-edit-button" title="Editar nome">
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </button>
             </div>
 
             <div className="user-data-item">
@@ -260,7 +419,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="user-data-item">
+            <div className="user-data-item editable" onClick={() => handleEditField('phone')}>
               <div className="data-icon">
                 <FontAwesomeIcon icon={faPhone} />
               </div>
@@ -270,7 +429,27 @@ const Profile = () => {
                   {userData.phone || "Não fornecido"}
                 </span>
               </div>
+              <button className="field-edit-button" title="Editar telefone">
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </button>
             </div>
+
+            {canEditDescription && (
+              <div className="user-data-item editable" onClick={() => handleEditField('description')}>
+                <div className="data-icon">
+                  <FontAwesomeIcon icon={faFileAlt} />
+                </div>
+                <div className="data-content">
+                  <p className="data-label">Descrição</p>
+                  <span className="data-value">
+                    {userData.description || "Não fornecido"}
+                  </span>
+                </div>
+                <button className="field-edit-button" title="Editar descrição">
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </button>
+              </div>
+            )}
 
             <div className="user-data-item">
               <div className="data-icon">
@@ -559,10 +738,11 @@ const Profile = () => {
     <div className="profile-container">
       {showSettingsPopup && <SettingsPopup />}
       {showDataPopup && <DataPopup />}
+      {showEditPopup && <EditPopup />}
       {showSuccessToast && (
         <div className="success-toast">
           <span className="toast-icon">✓</span>
-          Configurações salvas com sucesso!
+          Dados salvos com sucesso!
         </div>
       )}
 

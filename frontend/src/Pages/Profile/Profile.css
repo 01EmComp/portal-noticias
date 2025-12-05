@@ -1144,6 +1144,134 @@ body.hide-images .profile-avatar::after {
   transform: translateY(0);
 }
 
+/* Botão de editar em cada field */
+.field-edit-button {
+  background: linear-gradient(135deg, #ff4000 0%, #ff7416 100%);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 64, 0, 0.3);
+  margin-left: auto;
+}
+
+.user-data-item.editable {
+  cursor: pointer;
+  position: relative;
+}
+
+.user-data-item.editable:hover {
+  background: #f0f1f3;
+}
+
+.field-edit-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 64, 0, 0.4);
+}
+
+.field-edit-button:active {
+  transform: scale(0.95);
+}
+
+/* Conteúdo do popup de edição */
+.edit-popup-content {
+  padding: 25px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.field-icon {
+  color: #ff4000;
+  font-size: 16px;
+}
+
+.edit-field input,
+.edit-field textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  color: #333;
+  background: white;
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus {
+  outline: none;
+  border-color: #ff4000;
+  box-shadow: 0 0 0 3px rgba(255, 64, 0, 0.1);
+}
+
+.edit-field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.char-count {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+}
+
+/* Tema escuro - Edição */
+[data-theme="dark"] .user-data-item.editable:hover {
+  background: #252525;
+}
+
+[data-theme="dark"] .edit-popup-content {
+  background: #2d2d2d;
+}
+
+[data-theme="dark"] .edit-field label {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .edit-field input,
+[data-theme="dark"] .edit-field textarea {
+  background: #1a1a1a;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .edit-field input:focus,
+[data-theme="dark"] .edit-field textarea:focus {
+  border-color: #ff4000;
+  background: #252525;
+}
+
+[data-theme="dark"] .char-count {
+  color: #666;
+}
+
 /* Tema escuro - Estado vazio */
 [data-theme="dark"] .no-articles {
   background: #2d2d2d;
@@ -1190,5 +1318,17 @@ body.hide-images .profile-avatar::after {
 
   .articles-section > h3 {
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-popup-content {
+    padding: 20px;
+  }
+
+  .edit-field input,
+  .edit-field textarea {
+    padding: 10px 14px;
+    font-size: 13px;
   }
 }
