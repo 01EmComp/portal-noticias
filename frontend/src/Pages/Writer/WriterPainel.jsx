@@ -10,6 +10,7 @@ import { doc, getDoc } from "firebase/firestore";
 import MyNews from "./MyNews/MyNews";
 import EditNews from "./EditNews/EditNews";
 import CreateNews from "../CreateNews/CreateNews";
+import Statistics from "./Statistics/Statistics";
 
 // Images
 import createNews from "/src/Assets/Images/createNews.svg";
@@ -135,6 +136,10 @@ const WriterPainel = () => {
       />
     );
   }
+  
+  if (activeSection === "statistics") {
+    return <Statistics onBack={() => setActiveSection("menu")} />;
+  }
 
   // Menu principal do Writer Painel
   return (
@@ -178,12 +183,10 @@ const WriterPainel = () => {
               <img src={notifications} alt="Imagem notificações" />
             </li>
           </Link>
-          <Link to="/">
-            <li>
-              <p>Estatísticas</p>
-              <img src={statistics} alt="Imagem estatísticas" />
-            </li>
-          </Link>
+          <li onClick={() => setActiveSection("statistics")} style={{ cursor: "pointer" }}>
+            <p>Estatísticas</p>
+            <img src={statistics} alt="Imagem estatísticas" />
+          </li>
           <Link to="/">
             <li>
               <p>Configurações</p>
