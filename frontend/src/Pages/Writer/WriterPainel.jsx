@@ -6,6 +6,12 @@ import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
+// Components
+import MyNews from "./MyNews/MyNews";
+import EditNews from "./EditNews/EditNews";
+import CreateNews from "../CreateNews/CreateNews";
+import Statistics from "./Statistics/Statistics";
+
 // Images
 import createNews from "/src/Assets/Images/createNews.svg";
 import blogs from "/src/Assets/Images/blogs.svg";
@@ -24,6 +30,8 @@ import "./WriterPainel.css";
 const WriterPainel = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState("menu");
+  const [editingNewsId, setEditingNewsId] = useState(null);
 
   const allowedRoles = ["admin", "editor"];
 
@@ -104,6 +112,36 @@ const WriterPainel = () => {
     );
   }
 
+  if (activeSection === "create-news") {
+    return <CreateNews onBack={() => setActiveSection("menu")} />;
+  }
+
+  if (activeSection === "my-news") {
+    return (
+      <MyNews 
+        onBack={() => setActiveSection("menu")} 
+        onEditNews={(newsId) => {
+          setEditingNewsId(newsId);
+          setActiveSection("edit-news");
+        }}
+      />
+    );
+  }
+
+  if (activeSection === "edit-news") {
+    return (
+      <EditNews 
+        newsId={editingNewsId} 
+        onBack={() => setActiveSection("my-news")} 
+      />
+    );
+  }
+  
+  if (activeSection === "statistics") {
+    return <Statistics onBack={() => setActiveSection("menu")} />;
+  }
+
+  // Menu principal do Writer Painel
   return (
     <div className="writer-painel-container">
       <section className="wp-welcome">
@@ -125,18 +163,14 @@ const WriterPainel = () => {
       </section>
       <section className="wp-painel">
         <ul>
-          <Link to="/">
-            <li>
-              <p>Criar Notícia / Blog</p>
-              <img src={createNews} alt="Imagem criar n / b" />
-            </li>
-          </Link>
-          <Link to="/">
-            <li>
-              <p>Minhas Noticias</p>
-              <img src={news} alt="Imagem minhas notícias" />
-            </li>
-          </Link>
+          <li onClick={() => setActiveSection("create-news")} style={{ cursor: "pointer" }}>
+            <p>Criar Notícia / Blog</p>
+            <img src={createNews} alt="Imagem criar n / b" />
+          </li>
+          <li onClick={() => setActiveSection("my-news")} style={{ cursor: "pointer" }}>
+            <p>Minhas Noticias</p>
+            <img src={news} alt="Imagem minhas notícias" />
+          </li>
           <Link to="/">
             <li>
               <p>Meus Blogs</p>
@@ -149,12 +183,10 @@ const WriterPainel = () => {
               <img src={notifications} alt="Imagem notificações" />
             </li>
           </Link>
-          <Link to="/">
-            <li>
-              <p>Estatísticas</p>
-              <img src={statistics} alt="Imagem estatísticas" />
-            </li>
-          </Link>
+          <li onClick={() => setActiveSection("statistics")} style={{ cursor: "pointer" }}>
+            <p>Estatísticas</p>
+            <img src={statistics} alt="Imagem estatísticas" />
+          </li>
           <Link to="/">
             <li>
               <p>Configurações</p>

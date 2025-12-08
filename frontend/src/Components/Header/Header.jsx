@@ -24,6 +24,7 @@ const Header = () => {
   const [userData, setUserData] = useState(null);
   const menuRef = useRef();
   const searchRef = useRef();
+  const dropdownRef = useRef();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,11 +51,15 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleDropdownLinkClick = () => {
+    setDropdownOpen(false);
+  };
+
   const dropDownFunction = () => {
     if (!userData) {
       return (
         <ul className="dropdown-itens">
-          <Link to="/profile">
+          <Link to="/profile" onClick={handleDropdownLinkClick}>
             <li>Meu perfil</li>
           </Link>
         </ul>
@@ -64,13 +69,13 @@ const Header = () => {
     if (userData?.role === "admin") {
       return (
         <ul className="dropdown-itens">
-          <Link to="/profile">
+          <Link to="/profile" onClick={handleDropdownLinkClick}>
             <li>Meu perfil</li>
           </Link>
-          <Link to="/writer-painel">
+          <Link to="/writer-painel" onClick={handleDropdownLinkClick}>
             <li>Painel do escritor</li>
           </Link>
-          <Link to="/admin-painel">
+          <Link to="/admin-painel" onClick={handleDropdownLinkClick}>
             <li>Painel do administrador</li>
           </Link>
         </ul>
@@ -78,10 +83,10 @@ const Header = () => {
     } else if (userData?.role === "editor") {
       return (
         <ul className="dropdown-itens">
-          <Link to="/profile">
+          <Link to="/profile" onClick={handleDropdownLinkClick}>
             <li>Meu perfil</li>
           </Link>
-          <Link to="/writer-painel">
+          <Link to="/writer-painel" onClick={handleDropdownLinkClick}>
             <li>Painel do escritor</li>
           </Link>
         </ul>
@@ -89,7 +94,7 @@ const Header = () => {
     } else {
       return (
         <ul className="dropdown-itens">
-          <Link to="/profile">
+          <Link to="/profile" onClick={handleDropdownLinkClick}>
             <li>Meu perfil</li>
           </Link>
         </ul>
@@ -137,6 +142,9 @@ const Header = () => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -328,7 +336,7 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="profile-button">
+          <div className="profile-button" ref={dropdownRef}>
             <Link to="/profile">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

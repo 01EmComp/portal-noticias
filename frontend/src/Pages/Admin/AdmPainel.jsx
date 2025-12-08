@@ -25,7 +25,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./AdmPainel.css";
-import CreateNews from "./CreateNews/CreateNews";
+import CreateNews from "../CreateNews/CreateNews";
 
 const AdmPainel = () => {
   const [open, setOpen] = useState(false);

@@ -124,7 +124,7 @@ const AppRoutes = () => {
       <Route path="/blog" element={<Blog />} />
 
       {/* About Us */}
-      <Route path="/about-us" element={<About />} />
+      <Route path="/about" element={<About />} />
 
       {/* News */}
      <Route path="/news/:id" element={<News />} />

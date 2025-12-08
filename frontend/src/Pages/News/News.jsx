@@ -17,7 +17,6 @@ import {
   collection,
   addDoc,
   query,
-  orderBy,
   onSnapshot
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -66,18 +65,30 @@ function News() {
     return () => unsubscribe();
   }, []);
 
-  // Carregar comentários em tempo real
+  // Carregar comentários
   useEffect(() => {
-    if (!id) return;
+    if (!id || !newsData) return;
+
+    if (newsData.allowComments === false) {
+      setLoadingComments(false);
+      return;
+    }
 
     const commentsRef = collection(db, "news", id, "comments");
-    const q = query(commentsRef, orderBy("createdAt", "desc"));
+    const q = query(commentsRef);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const commentsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const commentsData = snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .sort((a, b) => {
+          const dateA = a.createdAt?.toDate?.() || new Date(0);
+          const dateB = b.createdAt?.toDate?.() || new Date(0);
+          return dateB - dateA;
+        });
+      
       setComments(commentsData);
       setLoadingComments(false);
     }, (error) => {
@@ -86,7 +97,7 @@ function News() {
     });
 
     return () => unsubscribe();
-  }, [id]);
+  }, [id, newsData]);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -105,6 +116,23 @@ function News() {
 
         if (data.status !== "published") {
           setError("Notícia não encontrada");
+          return;
+        }
+
+        const visibility = data.visibility || "public";
+        
+        if (visibility === "private") {
+
+          /*
+          const currentUser = auth.currentUser;
+          
+          if (!currentUser || currentUser.uid !== data.author?.uid) {
+            setError("Notícia não encontrada");
+            return;
+          }
+          */
+
+           setError("Notícia não encontrada");
           return;
         }
 
@@ -180,6 +208,11 @@ function News() {
     if (!user) {
       alert("Você precisa estar logado para comentar!");
       navigate("/profile");
+      return;
+    }
+
+    if (newsData.allowComments === false) {
+      alert("Comentários estão desativados para esta notícia.");
       return;
     }
 
@@ -262,6 +295,12 @@ function News() {
   };
 
   const handleShare = (platform) => {
+
+    if (newsData.allowSharing === false) {
+      alert("Compartilhamento está desativado para esta notícia.");
+      return;
+    }
+
     const url = window.location.href;
     const text = newsData?.title || "";
 
@@ -303,6 +342,9 @@ function News() {
     );
   }
 
+  const sharingAllowed = newsData.allowSharing !== false;
+  const commentsAllowed = newsData.allowComments !== false;
+
   return (
     <div className="news-container">
       <section className="header">
@@ -317,12 +359,14 @@ function News() {
             </div>
           </div>
 
-          <div className="social-links">
-            <div onClick={() => handleShare("facebook")}><FontAwesomeIcon icon={faFacebook} /></div>
-            <div onClick={() => handleShare("whatsapp")}><FontAwesomeIcon icon={faWhatsapp} /></div>
-            <div onClick={() => handleShare("instagram")}><FontAwesomeIcon icon={faInstagram} /></div>
-            <div onClick={() => handleShare("link")}><FontAwesomeIcon icon={faLink} /></div>
-          </div>
+          {sharingAllowed && (
+            <div className="social-links">
+              <div onClick={() => handleShare("facebook")}><FontAwesomeIcon icon={faFacebook} /></div>
+              <div onClick={() => handleShare("whatsapp")}><FontAwesomeIcon icon={faWhatsapp} /></div>
+              <div onClick={() => handleShare("instagram")}><FontAwesomeIcon icon={faInstagram} /></div>
+              <div onClick={() => handleShare("link")}><FontAwesomeIcon icon={faLink} /></div>
+            </div>
+          )}
         </div>
 
         <div className="image">
@@ -335,81 +379,83 @@ function News() {
       </section>
 
       {/* Seção de Comentários */}
-      <section className="comments-section">
-        <h3 className="comments-title">Comentários</h3>
+      {commentsAllowed && (
+        <section className="comments-section">
+          <h3 className="comments-title">Comentários</h3>
 
-        {/* Formulário de comentário */}
-        <div className="comment-form-container">
-          {user ? (
-            <form onSubmit={handleSubmitComment} className="comment-form">
-              <div className="comment-input-wrapper">
-                <div className="user-avatar">
-                  {(userData?.name || user.displayName || "U")[0].toUpperCase()}
+          {/* Formulário de comentário */}
+          <div className="comment-form-container">
+            {user ? (
+              <form onSubmit={handleSubmitComment} className="comment-form">
+                <div className="comment-input-wrapper">
+                  <div className="user-avatar">
+                    {(userData?.name || user.displayName || "U")[0].toUpperCase()}
+                  </div>
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Deixe seu comentário..."
+                    className="comment-input"
+                    rows="3"
+                    maxLength="500"
+                    disabled={submittingComment}
+                  />
                 </div>
-                <textarea
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Deixe seu comentário..."
-                  className="comment-input"
-                  rows="3"
-                  maxLength="500"
-                  disabled={submittingComment}
-                />
-              </div>
-              <div className="comment-form-footer">
-                <span className="char-count">{commentText.length}/500</span>
-                <button 
-                  type="submit" 
-                  className="submit-comment-btn"
-                  disabled={submittingComment || !commentText.trim()}
-                >
-                  {submittingComment ? "Enviando..." : "Comentar"}
+                <div className="comment-form-footer">
+                  <span className="char-count">{commentText.length}/500</span>
+                  <button 
+                    type="submit" 
+                    className="submit-comment-btn"
+                    disabled={submittingComment || !commentText.trim()}
+                  >
+                    {submittingComment ? "Enviando..." : "Comentar"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="login-prompt">
+                <p>Você precisa estar logado para comentar.</p>
+                <button onClick={() => navigate("/profile")} className="login-btn">
+                  Fazer Login
                 </button>
               </div>
-            </form>
-          ) : (
-            <div className="login-prompt">
-              <p>Você precisa estar logado para comentar.</p>
-              <button onClick={() => navigate("/profile")} className="login-btn">
-                Fazer Login
-              </button>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Lista de comentários */}
-        <div className="comments-list">
-          {loadingComments ? (
-            <p className="loading-comments">Carregando comentários...</p>
-          ) : comments.length === 0 ? (
-            <p className="no-comments">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
-          ) : (
-            <>
-              {comments.slice(0, visibleComments).map((comment) => (
-                <div key={comment.id} className="comment-item">
-                  <div className="comment-avatar">
-                    {(comment.userName || "U")[0].toUpperCase()}
-                  </div>
-                  <div className="comment-content">
-                    <div className="comment-header">
-                      <span className="comment-author">{comment.userName}</span>
-                      <span className="comment-date">{formatCommentDate(comment.createdAt)}</span>
+          {/* Lista de comentários */}
+          <div className="comments-list">
+            {loadingComments ? (
+              <p className="loading-comments">Carregando comentários...</p>
+            ) : comments.length === 0 ? (
+              <p className="no-comments">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+            ) : (
+              <>
+                {comments.slice(0, visibleComments).map((comment) => (
+                  <div key={comment.id} className="comment-item">
+                    <div className="comment-avatar">
+                      {(comment.userName || "U")[0].toUpperCase()}
                     </div>
-                    <p className="comment-text">{comment.text}</p>
+                    <div className="comment-content">
+                      <div className="comment-header">
+                        <span className="comment-author">{comment.userName}</span>
+                        <span className="comment-date">{formatCommentDate(comment.createdAt)}</span>
+                      </div>
+                      <p className="comment-text">{comment.text}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {comments.length > visibleComments && (
-                <button onClick={loadMoreComments} className="load-more-btn">
-                  Mais Comentários
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+                {comments.length > visibleComments && (
+                  <button onClick={loadMoreComments} className="load-more-btn">
+                    Mais Comentários
+                    <FontAwesomeIcon icon={faChevronDown} />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
