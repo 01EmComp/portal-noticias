@@ -4,12 +4,7 @@ import { Link } from "react-router-dom";
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 import "./EditNews.css";
 
@@ -45,7 +40,7 @@ const EditNews = ({ newsId, onBack }) => {
     "Ciência",
     "Cidade",
     "Eventos",
-    "Geral"
+    "Geral",
   ];
 
   // Verificação de autenticação
@@ -82,7 +77,7 @@ const EditNews = ({ newsId, onBack }) => {
 
         if (newsSnap.exists()) {
           const data = newsSnap.data();
-          
+
           setFormData({
             title: data.title || "",
             subtitle: data.subtitle || "",
@@ -97,7 +92,7 @@ const EditNews = ({ newsId, onBack }) => {
           if (data.body && Array.isArray(data.body)) {
             const htmlContent = convertJSONToHTML(data.body);
             setEditorContent(htmlContent);
-            
+
             setTimeout(() => {
               if (editorRef.current) {
                 editorRef.current.innerHTML = htmlContent;
@@ -119,19 +114,21 @@ const EditNews = ({ newsId, onBack }) => {
   }, [newsId]);
 
   const convertJSONToHTML = (bodyArray) => {
-    return bodyArray.map(item => {
-      switch (item.type) {
-        case "heading":
-          return `<h2>${item.text}</h2>`;
-        case "subheading":
-          return `<h3>${item.text}</h3>`;
-        case "list":
-          return item.text;
-        case "paragraph":
-        default:
-          return `<p>${item.text}</p>`;
-      }
-    }).join("");
+    return bodyArray
+      .map((item) => {
+        switch (item.type) {
+          case "heading":
+            return `<h2>${item.text}</h2>`;
+          case "subheading":
+            return `<h3>${item.text}</h3>`;
+          case "list":
+            return item.text;
+          case "paragraph":
+          default:
+            return `<p>${item.text}</p>`;
+        }
+      })
+      .join("");
   };
 
   const handleInputChange = (e) => {
@@ -275,7 +272,7 @@ const EditNews = ({ newsId, onBack }) => {
 
     try {
       let imageURL = currentImageURL;
-      
+
       if (formData.image) {
         imageURL = await uploadImage(formData.image);
       }

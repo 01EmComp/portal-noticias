@@ -1,0 +1,196 @@
+.writer-configs {
+  position: relative;
+  padding: 1.5rem;
+  background-color: #fff;
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.writer-configs .header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 850px;
+  width: 100%;
+}
+
+.writer-configs .header .back-button {
+  width: 6rem;
+}
+
+.writer-configs .main-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  padding: 1.5rem 1.7rem;
+  max-width: 850px;
+  width: 100%;
+}
+
+.writer-configs .main-box .accessibility {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.writer-configs .main-box .accessibility div a,
+.writer-configs .main-box .profile div a {
+  font-size: 16px;
+  text-decoration: underline;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.writer-configs .main-box section > p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: 18px;
+}
+
+.writer-configs .main-box section > p::after {
+  content: "";
+  height: 2px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.7rem;
+}
+
+.writer-configs .main-box .preferences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.writer-configs .main-box .preferences .preferences-items .left p {
+  text-align: justify;
+}
+
+.writer-configs .main-box .preferences ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.writer-configs .main-box .preferences ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+}
+
+.writer-configs .main-box .preferences ul li .left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.writer-configs .main-box .preferences .info-button {
+  max-height: 22px;
+  height: 100%;
+  width: auto;
+}
+
+.writer-configs .main-box .appearance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.writer-configs .main-box .appearance .option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.writer-configs .main-box .appearance .option button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: none;
+  border: none;
+  cursor: pointer;
+}
+
+.writer-configs .main-box .appearance .add-button {
+  height: 27px;
+  opacity: 0.8;
+  width: auto;
+  background-color: #fff;
+}
+
+.writer-configs .social-bar-links {
+  position: absolute;
+  top: 84%;
+  right: 26%;
+}
+
+.writer-configs .social-bar-links ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  list-style: none;
+  height: 5rem;
+  width: 15rem;
+  border-radius: 50px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+  background-color: #fdfdfd;
+}
+
+.writer-configs .social-bar-links ul li {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.writer-configs .social-bar-links ul li .icon {
+  height: 22px;
+  width: auto;
+}
+
+@media screen and (min-width: 550px) {
+  .writer-configs {
+    padding: 2.5rem;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .writer-configs {
+    padding: 4rem 8rem;
+  }
+
+  .writer-configs {
+    gap: 2rem;
+  }
+
+  .writer-configs .social-bar-links {
+    position: absolute;
+    top: 82%;
+    right: 38%;
+  }
+
+  .writer-configs .social-bar-links ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    list-style: none;
+    height: 5rem;
+    width: 20rem;
+    border-radius: 50px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+    background-color: #fdfdfd;
+  }
+}
