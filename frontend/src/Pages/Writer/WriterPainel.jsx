@@ -11,6 +11,9 @@ import MyNews from "./MyNews/MyNews";
 import EditNews from "./EditNews/EditNews";
 import CreateNews from "../CreateNews/CreateNews";
 import Statistics from "./Statistics/Statistics";
+import WriterConfigs from "./WriterConfigs/WriterConfigs";
+import Notifications from "./Notifications/Notifications";
+import MyBlogs from "./MyBlogs/MyBlogs";
 
 // Images
 import createNews from "/src/Assets/Images/createNews.svg";
@@ -118,8 +121,8 @@ const WriterPainel = () => {
 
   if (activeSection === "my-news") {
     return (
-      <MyNews 
-        onBack={() => setActiveSection("menu")} 
+      <MyNews
+        onBack={() => setActiveSection("menu")}
         onEditNews={(newsId) => {
           setEditingNewsId(newsId);
           setActiveSection("edit-news");
@@ -130,15 +133,27 @@ const WriterPainel = () => {
 
   if (activeSection === "edit-news") {
     return (
-      <EditNews 
-        newsId={editingNewsId} 
-        onBack={() => setActiveSection("my-news")} 
+      <EditNews
+        newsId={editingNewsId}
+        onBack={() => setActiveSection("my-news")}
       />
     );
   }
-  
+
   if (activeSection === "statistics") {
     return <Statistics onBack={() => setActiveSection("menu")} />;
+  }
+
+  if (activeSection === "writer-configs") {
+    return <WriterConfigs onBack={() => setActiveSection("menu")} />;
+  }
+
+  if (activeSection === "notifications") {
+    return <Notifications onBack={() => setActiveSection("menu")} />;
+  }
+
+  if (activeSection === "my-blogs") {
+    return <MyBlogs onBack={() => setActiveSection("menu")} />;
   }
 
   // Menu principal do Writer Painel
@@ -163,36 +178,48 @@ const WriterPainel = () => {
       </section>
       <section className="wp-painel">
         <ul>
-          <li onClick={() => setActiveSection("create-news")} style={{ cursor: "pointer" }}>
+          <li
+            onClick={() => setActiveSection("create-news")}
+            style={{ cursor: "pointer" }}
+          >
             <p>Criar Notícia / Blog</p>
             <img src={createNews} alt="Imagem criar n / b" />
           </li>
-          <li onClick={() => setActiveSection("my-news")} style={{ cursor: "pointer" }}>
+          <li
+            onClick={() => setActiveSection("my-news")}
+            style={{ cursor: "pointer" }}
+          >
             <p>Minhas Noticias</p>
             <img src={news} alt="Imagem minhas notícias" />
           </li>
-          <Link to="/">
-            <li>
-              <p>Meus Blogs</p>
-              <img src={blogs} alt="Imagem meus blogs" />
-            </li>
-          </Link>
-          <Link to="/">
-            <li>
-              <p>Notificações</p>
-              <img src={notifications} alt="Imagem notificações" />
-            </li>
-          </Link>
-          <li onClick={() => setActiveSection("statistics")} style={{ cursor: "pointer" }}>
+          <li
+            onClick={() => setActiveSection("my-blogs")}
+            style={{ cursor: "pointer" }}
+          >
+            <p>Meus Blogs</p>
+            <img src={blogs} alt="Imagem meus blogs" />
+          </li>
+          <li
+            onClick={() => setActiveSection("notifications")}
+            style={{ cursor: "pointer" }}
+          >
+            <p>Notificações</p>
+            <img src={notifications} alt="Imagem notificações" />
+          </li>
+          <li
+            onClick={() => setActiveSection("statistics")}
+            style={{ cursor: "pointer" }}
+          >
             <p>Estatísticas</p>
             <img src={statistics} alt="Imagem estatísticas" />
           </li>
-          <Link to="/">
-            <li>
-              <p>Configurações</p>
-              <img src={settings} alt="Imagem configurações" />
-            </li>
-          </Link>
+          <li
+            onClick={() => setActiveSection("writer-configs")}
+            style={{ cursor: "pointer" }}
+          >
+            <p>Configurações</p>
+            <img src={settings} alt="Imagem configurações" />
+          </li>
         </ul>
       </section>
     </div>

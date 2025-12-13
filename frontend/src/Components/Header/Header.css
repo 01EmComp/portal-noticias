@@ -21,7 +21,7 @@ header .header-container .logo {
   font-family: "Jacques Francois", sans-serif;
   font-weight: 400;
   font-size: 20px;
-  margin-left: 2.5rem;
+  margin-left: 1.1rem;
 }
 
 /* Search Bar */
@@ -332,6 +332,8 @@ header .hamburger-menu div .about-icon {
     border: 1px solid #fff;
     background-color: var(--secundary-background-color);
     transition: 0.2s ease;
+    user-select: none;
+    cursor: pointer;
   }
 
   header .categories-bar ul li:hover {

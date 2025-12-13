@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
+// Font Awesome Icon's
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
@@ -14,7 +18,7 @@ import {
 
 import "./CreateNews.css";
 
-const CreateNews = () => {
+const CreateNews = ({ onBack }) => {
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -360,7 +364,14 @@ const CreateNews = () => {
 
   return (
     <div className="create-news-container">
-      <h1 className="create-news-title">Criar Notícia</h1>
+      <div className="header">
+        <button className="back-button" onClick={onBack}>
+          <FontAwesomeIcon icon={faChevronLeft} />
+          Voltar
+        </button>
+
+        <h1 className="create-news-title">Criar Notícia</h1>
+      </div>
 
       <div className="create-news-form">
         <div className="form-group">
