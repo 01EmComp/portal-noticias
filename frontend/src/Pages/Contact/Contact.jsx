@@ -61,7 +61,6 @@ function Contact() {
       return;
     }
 
-    // Monte a mensagem do WhatsApp
     const mensagem = `Olá! Meu nome é ${formData.nome}${
       formData.sobrenome ? " " + formData.sobrenome : ""
     }.
@@ -71,8 +70,7 @@ ${formData.telefone ? `Telefone: ${formData.telefone}` : ""}
 
 Assunto: ${formData.assunto}`;
 
-    // Número do WhatsApp com DDD 32 (formato: 5532999999999)
-    const numeroWhatsApp = "5532999999999"; // ALTERE PARA SEU NÚMERO
+    const numeroWhatsApp = "5532999999999";
     
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
       mensagem
