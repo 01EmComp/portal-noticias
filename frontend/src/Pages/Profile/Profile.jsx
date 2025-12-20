@@ -473,7 +473,6 @@ const Profile = () => {
                         
                         const newValue = e.target.checked;
                         
-                        // Atualiza o estado local imediatamente
                         setUserData((prev) => ({
                           ...prev,
                           profileVisible: newValue,
@@ -487,7 +486,7 @@ const Profile = () => {
                         } catch (error) {
                           console.error("Erro ao atualizar visibilidade:", error);
                           alert("Erro ao atualizar configuração. Tente novamente.");
-                          // Reverte em caso de erro
+                          
                           setUserData((prev) => ({
                             ...prev,
                             profileVisible: !newValue,
