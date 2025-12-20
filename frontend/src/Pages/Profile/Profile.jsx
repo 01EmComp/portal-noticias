@@ -456,6 +456,51 @@ const Profile = () => {
               </div>
             )}
 
+            {canEditDescription && (
+              <div className="user-data-item" onClick={(e) => e.stopPropagation()}>
+                <div className="data-icon">
+                  <FontAwesomeIcon icon={faUser} />
+                </div>
+                <div className="data-content">
+                  <p className="data-label">Perfil público</p>
+                  <p className="data-sublabel">Permite que outros usuários vejam seu perfil</p>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={userData.profileVisible !== false}
+                      onChange={async (e) => {
+                        if (!auth.currentUser) return;
+                        
+                        const newValue = e.target.checked;
+                        
+                        // Atualiza o estado local imediatamente
+                        setUserData((prev) => ({
+                          ...prev,
+                          profileVisible: newValue,
+                        }));
+                        
+                        try {
+                          const userRef = doc(db, "users", auth.currentUser.uid);
+                          await updateDoc(userRef, {
+                            profileVisible: newValue,
+                          });
+                        } catch (error) {
+                          console.error("Erro ao atualizar visibilidade:", error);
+                          alert("Erro ao atualizar configuração. Tente novamente.");
+                          // Reverte em caso de erro
+                          setUserData((prev) => ({
+                            ...prev,
+                            profileVisible: !newValue,
+                          }));
+                        }
+                      }}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            )}
+
             <div className="user-data-item">
               <div className="data-icon">
                 <FontAwesomeIcon icon={faUserTag} />
