@@ -52,6 +52,35 @@ function Contact() {
     resetCaptcha();
   };
 
+  const handleWhatsApp = () => {
+    if (!formData.nome || !formData.assunto) {
+      setFeedback({
+        type: "error",
+        message: "Preencha pelo menos o nome e o assunto!",
+      });
+      return;
+    }
+
+    // Monte a mensagem do WhatsApp
+    const mensagem = `Olá! Meu nome é ${formData.nome}${
+      formData.sobrenome ? " " + formData.sobrenome : ""
+    }.
+    
+${formData.email ? `Email: ${formData.email}` : ""}
+${formData.telefone ? `Telefone: ${formData.telefone}` : ""}
+
+Assunto: ${formData.assunto}`;
+
+    // Número do WhatsApp com DDD 32 (formato: 5532999999999)
+    const numeroWhatsApp = "5532999999999"; // ALTERE PARA SEU NÚMERO
+    
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
+      mensagem
+    )}`;
+
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="contact-screen">
       <div className="contact-container">
@@ -107,11 +136,24 @@ function Contact() {
             <CaptchaWidget />
           </div>
 
-          <Button
-            text="Enviar"
-            type="submit"
-            style={{ marginTop: "15px", width: "100%", height: "58px" }}
-          />
+          <div className="button-group">
+            <Button
+              text="Enviar Chamado"
+              type="submit"
+              style={{ width: "100%", height: "58px" }}
+            />
+            <Button
+              text="Enviar pelo WhatsApp"
+              type="button"
+              onClick={handleWhatsApp}
+              style={{
+                width: "100%",
+                height: "58px",
+                backgroundColor: "#25D366",
+                borderColor: "#25D366",
+              }}
+            />
+          </div>
         </form>
 
         {feedback && (
