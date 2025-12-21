@@ -84,6 +84,21 @@
   justify-content: center;
 }
 
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+@media screen and (min-width: 768px) {
+  .button-group {
+    flex-direction: row;
+    gap: 15px;
+  }
+}
+
 @media screen and (min-width: 1024px) {
   .contact-screen {
     padding: 3rem 0 5rem;
