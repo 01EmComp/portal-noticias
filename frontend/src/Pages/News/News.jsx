@@ -3,21 +3,25 @@ import { useParams, useNavigate } from "react-router-dom";
 
 // Font Awesome Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faWhatsapp, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import {
+  faFacebook,
+  faWhatsapp,
+  faInstagram,
+} from "@fortawesome/free-brands-svg-icons";
 import { faLink, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 // Firebase
 import { db, auth } from "/src/Services/firebaseConfig";
-import { 
-  doc, 
-  getDoc, 
-  serverTimestamp, 
-  updateDoc, 
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
   increment,
   collection,
   addDoc,
   query,
-  onSnapshot
+  onSnapshot,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -30,13 +34,13 @@ import "./News.css";
 function News() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [newsData, setNewsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
-  
+
   // Estados dos comentários
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
@@ -48,7 +52,7 @@ function News() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      
+
       if (currentUser) {
         try {
           const userDocRef = doc(db, "users", currentUser.uid);
@@ -77,24 +81,28 @@ function News() {
     const commentsRef = collection(db, "news", id, "comments");
     const q = query(commentsRef);
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const commentsData = snapshot.docs
-        .map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-        .sort((a, b) => {
-          const dateA = a.createdAt?.toDate?.() || new Date(0);
-          const dateB = b.createdAt?.toDate?.() || new Date(0);
-          return dateB - dateA;
-        });
-      
-      setComments(commentsData);
-      setLoadingComments(false);
-    }, (error) => {
-      console.error("Erro ao carregar comentários:", error);
-      setLoadingComments(false);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const commentsData = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .sort((a, b) => {
+            const dateA = a.createdAt?.toDate?.() || new Date(0);
+            const dateB = b.createdAt?.toDate?.() || new Date(0);
+            return dateB - dateA;
+          });
+
+        setComments(commentsData);
+        setLoadingComments(false);
+      },
+      (error) => {
+        console.error("Erro ao carregar comentários:", error);
+        setLoadingComments(false);
+      }
+    );
 
     return () => unsubscribe();
   }, [id, newsData]);
@@ -120,9 +128,8 @@ function News() {
         }
 
         const visibility = data.visibility || "public";
-        
-        if (visibility === "private") {
 
+        if (visibility === "private") {
           /*
           const currentUser = auth.currentUser;
           
@@ -132,25 +139,24 @@ function News() {
           }
           */
 
-           setError("Notícia não encontrada");
+          setError("Notícia não encontrada");
           return;
         }
 
         // Incrementar visualizações
         await updateDoc(newsDocRef, {
-          views: increment(1)
+          views: increment(1),
         });
 
         setNewsData({
           ...data,
-          id: newsSnap.id
+          id: newsSnap.id,
         });
 
         await saveToReadingHistory({
           ...data,
           id: newsSnap.id,
         });
-
       } catch (err) {
         console.error("Erro ao buscar notícia:", err);
         setError("Erro ao carregar notícia");
@@ -171,7 +177,7 @@ function News() {
           try {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
-            
+
             if (!userSnap.exists()) return resolve();
 
             const userData = userSnap.data();
@@ -185,7 +191,9 @@ function News() {
               readAt: serverTimestamp(),
             };
 
-            readingHistory = readingHistory.filter(item => item.id !== article.id);
+            readingHistory = readingHistory.filter(
+              (item) => item.id !== article.id
+            );
             readingHistory.unshift(readArticle);
             readingHistory = readingHistory.slice(0, 5);
 
@@ -225,14 +233,32 @@ function News() {
 
     try {
       const commentsRef = collection(db, "news", id, "comments");
-      
+
+      // Criar comentário
       await addDoc(commentsRef, {
         text: commentText.trim(),
         userName: userData?.name || user.displayName || "Usuário",
         userEmail: user.email,
         userId: user.uid,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
+
+      // Não notificar se o autor comentou a própria notícia
+      if (newsData.author?.uid && newsData.author.uid !== user.uid) {
+        await addDoc(collection(db, "notifications"), {
+          userId: newsData.author.uid, // escritor
+          type: "COMMENT",
+          postId: id,
+          postType: "news",
+          title: newsData.title,
+          fromUser: {
+            uid: user.uid,
+            name: userData?.name || user.displayName || "Usuário",
+          },
+          read: false,
+          createdAt: serverTimestamp(),
+        });
+      }
 
       setCommentText("");
     } catch (error) {
@@ -246,18 +272,22 @@ function News() {
   const formatDate = (timestamp) => {
     if (!timestamp) return "00/00/00";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getFullYear()).slice(-2)}`;
+    return `${String(date.getDate()).padStart(2, "0")}/${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
   };
 
   const formatTime = (timestamp) => {
     if (!timestamp) return "00:00:00";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
   };
 
   const formatCommentDate = (timestamp) => {
     if (!timestamp) return "Agora";
-    
+
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     const now = new Date();
     const diffMs = now - date;
@@ -270,10 +300,10 @@ function News() {
     if (diffHours < 24) return `${diffHours}h atrás`;
     if (diffDays === 1) return "Ontem";
     if (diffDays < 7) return `${diffDays}d atrás`;
-    
-    return date.toLocaleDateString("pt-BR", { 
-      day: "2-digit", 
-      month: "short" 
+
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
     });
   };
 
@@ -283,19 +313,26 @@ function News() {
     return body.map((item, index) => {
       switch (item.type) {
         case "heading":
-          return <h2 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+          return (
+            <h2 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
         case "subheading":
-          return <h3 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+          return (
+            <h3 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
         case "list":
-          return <div key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+          return (
+            <div key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
         default:
-          return <p key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+          return (
+            <p key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
       }
     });
   };
 
   const handleShare = (platform) => {
-
     if (newsData.allowSharing === false) {
       alert("Compartilhamento está desativado para esta notícia.");
       return;
@@ -306,9 +343,15 @@ function News() {
 
     switch (platform) {
       case "facebook":
-        return window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+        return window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+            url
+          )}`
+        );
       case "whatsapp":
-        return window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+        return window.open(
+          `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`
+        );
       case "instagram":
       case "link":
         navigator.clipboard.writeText(url);
@@ -318,7 +361,7 @@ function News() {
   };
 
   const loadMoreComments = () => {
-    setVisibleComments(prev => prev + 5);
+    setVisibleComments((prev) => prev + 5);
   };
 
   if (loading) {
@@ -351,20 +394,35 @@ function News() {
         <div className="about">
           <div className="title-and-author">
             <h2>{newsData.title}</h2>
-            {newsData.subtitle && <h3 className="subtitle">{newsData.subtitle}</h3>}
+            {newsData.subtitle && (
+              <h3 className="subtitle">{newsData.subtitle}</h3>
+            )}
 
             <div className="author-and-time">
-              <p>Autor: <span>{newsData.author?.name || "Desconhecido"}</span></p>
-              <p>{formatDate(newsData.publishedAt || newsData.createdAt)} às {formatTime(newsData.publishedAt || newsData.createdAt)}</p>
+              <p>
+                Autor: <span>{newsData.author?.name || "Desconhecido"}</span>
+              </p>
+              <p>
+                {formatDate(newsData.publishedAt || newsData.createdAt)} às{" "}
+                {formatTime(newsData.publishedAt || newsData.createdAt)}
+              </p>
             </div>
           </div>
 
           {sharingAllowed && (
             <div className="social-links">
-              <div onClick={() => handleShare("facebook")}><FontAwesomeIcon icon={faFacebook} /></div>
-              <div onClick={() => handleShare("whatsapp")}><FontAwesomeIcon icon={faWhatsapp} /></div>
-              <div onClick={() => handleShare("instagram")}><FontAwesomeIcon icon={faInstagram} /></div>
-              <div onClick={() => handleShare("link")}><FontAwesomeIcon icon={faLink} /></div>
+              <div onClick={() => handleShare("facebook")}>
+                <FontAwesomeIcon icon={faFacebook} />
+              </div>
+              <div onClick={() => handleShare("whatsapp")}>
+                <FontAwesomeIcon icon={faWhatsapp} />
+              </div>
+              <div onClick={() => handleShare("instagram")}>
+                <FontAwesomeIcon icon={faInstagram} />
+              </div>
+              <div onClick={() => handleShare("link")}>
+                <FontAwesomeIcon icon={faLink} />
+              </div>
             </div>
           )}
         </div>
@@ -389,7 +447,9 @@ function News() {
               <form onSubmit={handleSubmitComment} className="comment-form">
                 <div className="comment-input-wrapper">
                   <div className="user-avatar">
-                    {(userData?.name || user.displayName || "U")[0].toUpperCase()}
+                    {(userData?.name ||
+                      user.displayName ||
+                      "U")[0].toUpperCase()}
                   </div>
                   <textarea
                     value={commentText}
@@ -403,8 +463,8 @@ function News() {
                 </div>
                 <div className="comment-form-footer">
                   <span className="char-count">{commentText.length}/500</span>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="submit-comment-btn"
                     disabled={submittingComment || !commentText.trim()}
                   >
@@ -415,7 +475,10 @@ function News() {
             ) : (
               <div className="login-prompt">
                 <p>Você precisa estar logado para comentar.</p>
-                <button onClick={() => navigate("/profile")} className="login-btn">
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="login-btn"
+                >
                   Fazer Login
                 </button>
               </div>
@@ -427,7 +490,9 @@ function News() {
             {loadingComments ? (
               <p className="loading-comments">Carregando comentários...</p>
             ) : comments.length === 0 ? (
-              <p className="no-comments">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+              <p className="no-comments">
+                Nenhum comentário ainda. Seja o primeiro a comentar!
+              </p>
             ) : (
               <>
                 {comments.slice(0, visibleComments).map((comment) => (
@@ -437,8 +502,12 @@ function News() {
                     </div>
                     <div className="comment-content">
                       <div className="comment-header">
-                        <span className="comment-author">{comment.userName}</span>
-                        <span className="comment-date">{formatCommentDate(comment.createdAt)}</span>
+                        <span className="comment-author">
+                          {comment.userName}
+                        </span>
+                        <span className="comment-date">
+                          {formatCommentDate(comment.createdAt)}
+                        </span>
                       </div>
                       <p className="comment-text">{comment.text}</p>
                     </div>

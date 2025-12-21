@@ -106,6 +106,7 @@ export async function login(email, password) {
   }
 }
 
+// Login with Google function
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({

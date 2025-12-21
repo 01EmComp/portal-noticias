@@ -290,7 +290,18 @@ const CreateNews = ({ onBack }) => {
         publishedAt: serverTimestamp(),
       };
 
-      await addDoc(collection(db, "news"), newsData);
+      const newsRef = await addDoc(collection(db, "news"), newsData);
+
+      await addDoc(collection(db, "notifications"), {
+        userId: auth.currentUser.uid,
+        type: "POST_STATUS",
+        postId: newsRef.id,
+        postType: "news",
+        title: formData.title,
+        status: "pending",
+        read: false,
+        createdAt: serverTimestamp(),
+      });
 
       setSubmitMessage({
         type: "success",

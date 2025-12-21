@@ -1,26 +1,38 @@
 import { useState, useEffect } from "react";
 
-
 import { db } from "/src/Services/firebaseConfig";
-import { doc, updateDoc, serverTimestamp, getDoc } from "firebase/firestore";
+
+// Firestore
+import {
+  doc,
+  updateDoc,
+  serverTimestamp,
+  getDoc,
+  collection,
+  addDoc,
+} from "firebase/firestore";
+
 import { Link } from "react-router-dom";
 
 // Css
 import "./NewsItem.css";
 
-const NewsItem = ({ 
+const NewsItem = ({
   id,
-  title, 
-  author, 
-  date, 
-  status, 
+  title,
+  author,
+  date,
+  status,
   statusRaw,
   isHeader = false,
-  userData 
+  userData,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState({ type: "", text: "" });
+  const [feedbackMessage, setFeedbackMessage] = useState({
+    type: "",
+    text: "",
+  });
   const [newsData, setNewsData] = useState(null);
   const [loadingNews, setLoadingNews] = useState(false);
 
@@ -37,7 +49,7 @@ const NewsItem = ({
         try {
           const newsRef = doc(db, "news", id);
           const newsSnap = await getDoc(newsRef);
-          
+
           if (newsSnap.exists()) {
             setNewsData({ id: newsSnap.id, ...newsSnap.data() });
           }
@@ -57,37 +69,65 @@ const NewsItem = ({
 
     return bodyArray.map((item, index) => {
       switch (item.type) {
-        case 'heading':
-          return <h2 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
-        case 'subheading':
-          return <h3 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
-        case 'list':
-          return <div key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
-        case 'paragraph':
+        case "heading":
+          return (
+            <h2 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
+        case "subheading":
+          return (
+            <h3 key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
+        case "list":
+          return (
+            <div key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
+        case "paragraph":
         default:
-          return <p key={index} dangerouslySetInnerHTML={{ __html: item.text }} />;
+          return (
+            <p key={index} dangerouslySetInnerHTML={{ __html: item.text }} />
+          );
       }
     });
   };
 
+  const createStatusNotification = async (newStatus) => {
+    if (!newsData?.author?.uid) return;
+
+    try {
+      await addDoc(collection(db, "notifications"), {
+        userId: newsData.author.uid,
+        type: "NEWS_STATUS",
+        postId: id,
+        postTitle: title,
+        status: newStatus,
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error("Erro ao criar notificação:", error);
+    }
+  };
+
   const handleApprove = async () => {
     if (!id || isHeader) return;
-    
+
     setIsUpdating(true);
     setFeedbackMessage({ type: "", text: "" });
-    
+
     try {
       const newsRef = doc(db, "news", id);
       await updateDoc(newsRef, {
         status: "published",
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        views: 0
+        views: 0,
       });
-      
+
+      await createStatusNotification("published");
+
       setFeedbackMessage({
         type: "success",
-        text: "Notícia aprovada com sucesso!"
+        text: "Notícia aprovada com sucesso!",
       });
 
       setTimeout(() => {
@@ -98,7 +138,7 @@ const NewsItem = ({
       console.error("Erro ao aprovar notícia:", error);
       setFeedbackMessage({
         type: "error",
-        text: "Erro ao aprovar notícia. Tente novamente."
+        text: "Erro ao aprovar notícia. Tente novamente.",
       });
     } finally {
       setIsUpdating(false);
@@ -110,18 +150,20 @@ const NewsItem = ({
 
     setIsUpdating(true);
     setFeedbackMessage({ type: "", text: "" });
-    
+
     try {
       const newsRef = doc(db, "news", id);
       await updateDoc(newsRef, {
         status: "rejected",
         rejectedAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
-      
+
+      await createStatusNotification("rejected");
+
       setFeedbackMessage({
         type: "success",
-        text: "Notícia reprovada."
+        text: "Notícia reprovada.",
       });
 
       setTimeout(() => {
@@ -132,7 +174,7 @@ const NewsItem = ({
       console.error("Erro ao reprovar notícia:", error);
       setFeedbackMessage({
         type: "error",
-        text: "Erro ao reprovar notícia. Tente novamente."
+        text: "Erro ao reprovar notícia. Tente novamente.",
       });
     } finally {
       setIsUpdating(false);
@@ -169,19 +211,25 @@ const NewsItem = ({
 
       {/* Modal de Avaliação */}
       {showModal && !isHeader && (
-        <div className="modal-overlay" onClick={() => !isUpdating && setShowModal(false)}>
-          <div className="modal-content modal-content-large" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => !isUpdating && setShowModal(false)}
+        >
+          <div
+            className="modal-content modal-content-large"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
               <h3>Avaliar Notícia</h3>
-              <button 
-                className="close-btn" 
+              <button
+                className="close-btn"
                 onClick={() => setShowModal(false)}
                 disabled={isUpdating}
               >
                 ×
               </button>
             </div>
-            
+
             <div className="modal-body">
               {loadingNews ? (
                 <div className="loading-news">
@@ -191,26 +239,37 @@ const NewsItem = ({
                 <>
                   <div className="news-info-detailed">
                     <h4>{title}</h4>
-                    <p><strong>Autor:</strong> {author}</p>
-                    <p><strong>Data:</strong> {date}</p>
-                    <p><strong>Status:</strong> <span style={{ color: statusColor() }}>{status}</span></p>
-                    
+                    <p>
+                      <strong>Autor:</strong> {author}
+                    </p>
+                    <p>
+                      <strong>Data:</strong> {date}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span style={{ color: statusColor() }}>{status}</span>
+                    </p>
+
                     {newsData && (
                       <>
                         {newsData.subtitle && (
-                          <p><strong>Subtítulo:</strong> {newsData.subtitle}</p>
+                          <p>
+                            <strong>Subtítulo:</strong> {newsData.subtitle}
+                          </p>
                         )}
-                        
+
                         {newsData.category && (
-                          <p><strong>Categoria:</strong> {newsData.category}</p>
+                          <p>
+                            <strong>Categoria:</strong> {newsData.category}
+                          </p>
                         )}
-                        
+
                         {newsData.imageURL && (
                           <div className="news-image-preview">
                             <img src={newsData.imageURL} alt={title} />
                           </div>
                         )}
-                        
+
                         {newsData.body && Array.isArray(newsData.body) && (
                           <div className="news-content-preview">
                             <h5>Conteúdo:</h5>
@@ -236,22 +295,22 @@ const NewsItem = ({
 
                   {statusRaw === "pending" && (
                     <div className="modal-actions">
-                      <button 
-                        className="btn-approve" 
+                      <button
+                        className="btn-approve"
                         onClick={handleApprove}
                         disabled={isUpdating}
                       >
                         {isUpdating ? "Aprovando..." : "Aprovar"}
                       </button>
-                      <button 
-                        className="btn-reject" 
+                      <button
+                        className="btn-reject"
                         onClick={handleReject}
                         disabled={isUpdating}
                       >
                         {isUpdating ? "Reprovando..." : "Reprovar"}
                       </button>
-                      <button 
-                        className="btn-cancel" 
+                      <button
+                        className="btn-cancel"
                         onClick={() => setShowModal(false)}
                         disabled={isUpdating}
                       >
@@ -262,8 +321,8 @@ const NewsItem = ({
 
                   {statusRaw !== "pending" && (
                     <div className="modal-actions">
-                      <button 
-                        className="btn-cancel" 
+                      <button
+                        className="btn-cancel"
                         onClick={() => setShowModal(false)}
                       >
                         Fechar
