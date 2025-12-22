@@ -86,6 +86,21 @@
   text-align: justify;
 }
 
+/* Loading e Empty States */
+.loading-team,
+.no-team-members {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.loading-team p,
+.no-team-members p {
+  margin: 0;
+}
+
+/* Team Members */
 .team-members {
   display: flex;
   flex-direction: column;
@@ -117,9 +132,12 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #d3d3d3;
+  background-color: #f0f0f0;
   flex-shrink: 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .member-avatar img {
@@ -128,18 +146,58 @@
   object-fit: cover;
 }
 
+.avatar-placeholder {
+  font-size: 2.5rem;
+  color: #999;
+}
+
+.member-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+  width: 100%;
+}
+
 .member-name-wrapper {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-grow: 1;
+  justify-content: space-between;
 }
 
-.member-name-wrapper h3 {
+.member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.member-info h3 {
   font-size: 1.2rem;
   font-weight: 600;
   color: #333;
   margin: 0;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.role-badge.admin {
+  background-color: #ff4000;
+  color: white;
+}
+
+.role-badge.editor {
+  background-color: #4a90e2;
+  color: white;
 }
 
 .expand-button {
@@ -150,7 +208,7 @@
   font-size: 1.2rem;
   padding: 0.5rem;
   transition: transform 0.3s ease;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .expand-button:hover {
@@ -159,8 +217,7 @@
 
 .member-bio {
   width: 100%;
-  padding: 1rem 0 0 0;
-  animation: slideDown 0.3s ease;
+  padding: 0;
 }
 
 .member-bio p {
@@ -169,6 +226,7 @@
   color: #555;
   margin: 0;
   text-align: justify;
+  transition: all 0.3s ease;
 }
 
 @keyframes slideDown {
@@ -182,6 +240,7 @@
   }
 }
 
+/* Location Section */
 .location-image {
   width: 100%;
   height: 200px;
@@ -251,13 +310,27 @@
     text-align: center;
   }
 
+  .member-info-section {
+    align-items: center;
+    text-align: center;
+  }
+
   .member-name-wrapper {
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .member-info {
     align-items: center;
   }
 
   .expand-button {
-    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .member-bio {
+    text-align: center;
   }
 }
 
@@ -272,7 +345,16 @@
     height: 80px;
   }
 
-  .member-name-wrapper h3 {
+  .avatar-placeholder {
+    font-size: 2rem;
+  }
+
+  .member-info h3 {
     font-size: 1rem;
+  }
+
+  .role-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
   }
 }
