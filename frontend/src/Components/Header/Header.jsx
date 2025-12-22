@@ -9,9 +9,10 @@ import { doc, getDoc } from "firebase/firestore";
 
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faHouse } from "@fortawesome/free-regular-svg-icons";
 
 // Css
 import "./Header.css";
@@ -198,6 +199,29 @@ const Header = () => {
                   </g>
                 </svg>
                 <li>Meu perfil</li>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <svg
+                  data-prefix="far"
+                  data-icon="house"
+                  className="svg-inline--fa fa-house"
+                  role="img"
+                  viewBox="0 0 512 512"
+                  aria-hidden="true"
+                  style={{
+                    color: " rgb(255, 255, 255)",
+                    fontSize: "26px",
+                    width: "auto",
+                  }}
+                >
+                  <path
+                    fill="currentColor"
+                    d="M240 6.1c9.1-8.2 22.9-8.2 32 0l232 208c9.9 8.8 10.7 24 1.8 33.9s-24 10.7-33.9 1.8l-8-7.2 0 205.3c0 35.3-28.7 64-64 64l-288 0c-35.3 0-64-28.7-64-64l0-205.3-8 7.2c-9.9 8.8-25 8-33.9-1.8s-8-25 1.8-33.9L240 6.1zm16 50.1L96 199.7 96 448c0 8.8 7.2 16 16 16l48 0 0-104c0-39.8 32.2-72 72-72l48 0c39.8 0 72 32.2 72 72l0 104 48 0c8.8 0 16-7.2 16-16l0-248.3-160-143.4zM208 464l96 0 0-104c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24l0 104z"
+                  ></path>
+                </svg>
+                <li>Home</li>
               </div>
             </Link>
             <Link to="/contact">
@@ -391,36 +415,20 @@ const Header = () => {
             <li className="first" onClick={() => navigate("/")}>
               Última hora
             </li>
-            <li onClick={() => handleCategoryClick("Política")}>
-              Política
-            </li>
-            <li onClick={() => handleCategoryClick("Economia")}>
-              Economia
-            </li>
-            <li onClick={() => handleCategoryClick("Educação")}>
-              Educação
-            </li>
+            <li onClick={() => handleCategoryClick("Política")}>Política</li>
+            <li onClick={() => handleCategoryClick("Economia")}>Economia</li>
+            <li onClick={() => handleCategoryClick("Educação")}>Educação</li>
             <li onClick={() => handleCategoryClick("Tecnologia")}>
               Tecnologia
             </li>
-            <li onClick={() => handleCategoryClick("Saúde")}>
-              Saúde
-            </li>
-            <li onClick={() => handleCategoryClick("Esportes")}>
-              Esportes
-            </li>
+            <li onClick={() => handleCategoryClick("Saúde")}>Saúde</li>
+            <li onClick={() => handleCategoryClick("Esportes")}>Esportes</li>
             <li onClick={() => handleCategoryClick("Entretenimento")}>
               Entretenimento
             </li>
-            <li onClick={() => handleCategoryClick("Cultura")}>
-              Cultura
-            </li>
-            <li onClick={() => handleCategoryClick("Ciência")}>
-              Ciência
-            </li>
-            <li onClick={() => handleCategoryClick("Eventos")}>
-              Eventos
-            </li>
+            <li onClick={() => handleCategoryClick("Cultura")}>Cultura</li>
+            <li onClick={() => handleCategoryClick("Ciência")}>Ciência</li>
+            <li onClick={() => handleCategoryClick("Eventos")}>Eventos</li>
             <li className="last" onClick={() => handleCategoryClick("Região")}>
               Região
             </li>

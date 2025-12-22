@@ -8,7 +8,6 @@ import { doc, getDoc } from "firebase/firestore";
 
 // Components
 import News from "./News/News";
-import Categories from "./Categories/Categories";
 import Users from "./Users/Users";
 import Statistics from "./Statistics/Statistics";
 import Settings from "./Settings/Settings";
@@ -17,7 +16,6 @@ import Settings from "./Settings/Settings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
@@ -153,15 +151,7 @@ const AdmPainel = () => {
             </div>
             <div className="hidden-links">Criar Notícia</div>
           </li>
-          <li
-            className={openTab == "categories" ? "active" : ""}
-            onClick={() => setOpenTab("categories")}
-          >
-            <div className="icon">
-              <FontAwesomeIcon icon={faBook} />
-            </div>
-            <div className="hidden-links">Categorias</div>
-          </li>
+
           <li
             className={openTab == "users" ? "active" : ""}
             onClick={() => setOpenTab("users")}

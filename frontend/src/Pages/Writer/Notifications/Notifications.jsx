@@ -1,64 +1,161 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Firebase
-import { getDocs, query, where, collection, orderBy } from "firebase/firestore";
-import { db } from "/src/Services/firebaseConfig.js";
+import { db, auth } from "/src/Services/firebaseConfig.js";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  updateDoc,
+  getDocs,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 // Font Awesome Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
 
-// Components
-import NotificationItem from "./NotificationItem/NotificationItem";
-
 // Css
 import "./Notifications.css";
 
 const Notifications = ({ onBack }) => {
+  const [user, setUser] = useState(null);
+  const [myNews, setMyNews] = useState([]);
+  const [realTimeNotifs, setRealTimeNotifs] = useState([]); // Novo estado
+  const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("recent");
-  const [notifications, setNotifications] = useState([]);
-  const userId = "UID_DO_USUARIO"; // depois você liga com auth
 
-  // Fetch notifications
+  const updateMessages = {
+    published: "Notícia aprovada",
+    rejected: "Notícia rejeitada",
+    pending: "Em análise",
+  };
+
+  const statusTranslations = {
+    published: "Aprovado",
+    pending: "Pendente",
+    rejected: "Reprovado",
+    draft: "Rascunho",
+  };
+
+  const navigate = useNavigate();
+
+  // 1. Efeito de Autenticação
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const q = query(
-          collection(db, "notifications"),
-          where("userId", "in", [userId, "ALL"])
-        );
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (!currentUser) navigate("/profile");
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
-        const querySnapshot = await getDocs(q);
+  // 2. Carregar Notificações (Status Update)
+  useEffect(() => {
+    if (!user) return;
+    const notifRef = collection(db, "notifications");
+    const q = query(notifRef, where("userId", "==", user.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setRealTimeNotifs(list);
+    });
+    return () => unsubscribe();
+  }, [user]);
 
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+  // 3. Carregar Notícias com contagem de subcoleção (Comments)
+  useEffect(() => {
+    if (!user) return;
+    const q = query(
+      collection(db, "news"),
+      where("author.uid", "==", user.uid)
+    );
 
-        setNotifications(data);
-      } catch (error) {
-        console.error("Erro ao buscar notificações:", error);
-      }
-    };
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const newsData = await Promise.all(
+        snapshot.docs.map(async (docSnapshot) => {
+          const data = docSnapshot.data();
+          const newsId = docSnapshot.id;
 
-    fetchNotifications();
-  }, []);
+          // Busca a subcoleção de comentários
+          const commentsRef = collection(db, "news", newsId, "comments");
+          const commentsSnapshot = await getDocs(query(commentsRef));
 
-  const sortedNotifications = [...notifications].sort((a, b) => {
-    if (sortBy === "recent") {
-      return b.createdAt?.seconds - a.createdAt?.seconds;
-    }
+          return {
+            id: newsId,
+            ...data,
+            commentCount: commentsSnapshot.size, // Define o tamanho dinamicamente
+          };
+        })
+      );
+      setMyNews(newsData);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [user]);
 
-    if (sortBy === "oldest") {
-      return a.createdAt?.seconds - b.createdAt?.seconds;
-    }
+  // --- LÓGICA DE ORDENAÇÃO E FILTRO (ORDEM IMPORTANTE) ---
 
-    if (sortBy === "name") {
-      return a.title.localeCompare(b.title);
-    }
-
-    return 0;
+  // Primeiro: Ordenamos a lista de notícias base
+  const sortedNews = [...myNews].sort((a, b) => {
+    const timeA = a.createdAt?.seconds || 0;
+    const timeB = b.createdAt?.seconds || 0;
+    return sortBy === "recent" ? timeB - timeA : timeA - timeB;
   });
+
+  // Segundo: Filtramos os comentários a partir da lista já definida acima
+  const newsWithComments = sortedNews.filter((news) => news.commentCount > 0);
+
+  // Terceiro: Ordenamos as notificações de atualização
+  const sortedNotifications = [...realTimeNotifs].sort((a, b) => {
+    const timeA = a.createdAt?.seconds || 0;
+    const timeB = b.createdAt?.seconds || 0;
+    return sortBy === "recent" ? timeB - timeA : timeA - timeB;
+  });
+  // Verificar autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (!currentUser) {
+        navigate("/profile");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  // Define a cor do status
+  const getStatusStyle = (status) => {
+    switch (status?.toLowerCase()) {
+      case "published":
+      case "aprovado":
+        return { background: "green", color: "white" };
+      case "pending":
+      case "pendente":
+        return { background: "orange", color: "white" };
+      case "rejected":
+      case "reprovado":
+        return { background: "red", color: "white" };
+      default:
+        return { background: "grey", color: "white" };
+    }
+  };
+
+  // Marcar como lido
+  const markAllAsRead = async () => {
+    try {
+      const unreadNotifs = realTimeNotifs.filter((n) => !n.read);
+
+      const promises = unreadNotifs.map((n) =>
+        updateDoc(doc(db, "notifications", n.id), { read: true })
+      );
+
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("Erro ao marcar como lido:", error);
+    }
+  };
 
   return (
     <div className="notifications-container">
@@ -87,16 +184,10 @@ const Notifications = ({ onBack }) => {
                 >
                   Mais antigos
                 </button>
-                <button
-                  className={sortBy === "name" ? "active" : ""}
-                  onClick={() => setSortBy("name")}
-                >
-                  Nome (A-Z)
-                </button>
               </div>
             </div>
           </div>
-          <button className="mark-read">
+          <button className="mark-read" onClick={markAllAsRead}>
             Marcar tudo como lido{" "}
             <FontAwesomeIcon className="mark-read-icon" icon={faCheck} />
           </button>
@@ -112,24 +203,30 @@ const Notifications = ({ onBack }) => {
             </div>
             <div className="bottom">
               <ul>
-                <li>
-                  <div className="left">Como se preparar para o ENEM 2025?</div>
-                  <div className="rigth">Aprovado</div>
-                </li>
-                <li>
-                  <div className="left">Como se preparar para o ENEM 2024?</div>
-                  <div className="rigth">Reprovado</div>
-                </li>
-                <li>
-                  <div className="left">Como se preparar para o ENEM 2023?</div>
-                  <div className="rigth">Pendente</div>
-                </li>
-
-                {/* {sortedNotifications
-    .filter(n => n.type === "POST_STATUS")
-    .map(item => (
-      <NotificationItem key={item.id} data={item} />
-    ))} */}
+                {loading ? (
+                  <p>Carregando notícias...</p>
+                ) : sortedNews.length === 0 ? (
+                  <div className="empty-state" style={{ marginTop: "10px" }}>
+                    <h2>Você ainda não possui nenhuma notícia</h2>
+                    <p>
+                      Quando você postar novas notícias, elas aparecerão aqui.
+                    </p>
+                  </div>
+                ) : (
+                  sortedNews.map((news) => (
+                    <li key={news.id}>
+                      <div className="left">{news.title}</div>
+                      <div
+                        className="rigth"
+                        style={getStatusStyle(news.status)}
+                      >
+                        {statusTranslations[news.status?.toLowerCase()] ||
+                          news.status ||
+                          "Pendente"}
+                      </div>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </section>
@@ -142,66 +239,78 @@ const Notifications = ({ onBack }) => {
             </div>
             <div className="bottom">
               <ul>
-                <li>
-                  <div className="left">Viagem para New York</div>
-                  <div className="rigth">Aprovado</div>
-                </li>
-                <li>
-                  <div className="left">Viagem para San Francisco</div>
-                  <div className="rigth">Reprovado</div>
-                </li>
-                <li>
-                  <div className="left">Viagem para Miami</div>
-                  <div className="rigth">Pendente</div>
-                </li>
+                {myNews.length === 0 ? (
+                  <div className="empty-state" style={{ marginTop: "10px" }}>
+                    <h2>Você ainda não possui nenhum blog</h2>
+                    <p>Quando você postar novos blogs, elas aparecerão aqui.</p>
+                  </div>
+                ) : (
+                  <div style={{ color: "rgba(0, 0, 0, 0.7)", fontWeight: 700 }}>
+                    Disponível em Breve
+                  </div>
+                )}
               </ul>
             </div>
           </section>
           <section className="reactions-and-comments">
-            <div className="top">Reações e Comentários</div>
+            <div className="top">
+              <div className="left">Comentários</div>
+            </div>
             <div className="bottom">
               <ul>
-                <li>
-                  <div className="left">
-                    12 novos comentários em “Viagem para New Y...”
+                {newsWithComments.length === 0 ? (
+                  <div className="empty-state" style={{ marginTop: "10px" }}>
+                    <p>Nenhum comentário novo.</p>
                   </div>
-                </li>
-                <li>
-                  <div className="left">
-                    5 novas reações em “Viagem para New York”
-                  </div>
-                </li>
-
-                {/* <ul>
-  {sortedNotifications
-    .filter(n =>
-      n.type === "REACTION" || n.type === "COMMENT"
-    )
-    .map(item => (
-      <NotificationItem key={item.id} data={item} />
-    ))}
-</ul>
- */}
+                ) : (
+                  newsWithComments.map((news) => (
+                    <li key={`comment-${news.id}`}>
+                      <div className="left">
+                        <strong>{news.commentCount}</strong>comentários em “
+                        {news.title}”
+                      </div>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </section>
           <section className="updates">
-            <div className="top">Atualizações</div>
+            <div className="top">
+              <div className="left">Resumo de Atualizações</div>
+            </div>
             <div className="bottom">
               <ul>
-                <li>
-                  <div className="left">Nossos termos de uso atualizaram</div>
-                </li>
-
-                {/*
-  {sortedNotifications
-    .filter(n => n.type === "SYSTEM_UPDATE")
-    .map(item => (
-      <li key={item.id}>
-        <div className="left">{item.title}</div>
-      </li>
-    ))}
- */}
+                {sortedNotifications.length === 0 ? (
+                  <div className="empty-state" style={{ marginTop: "10px" }}>
+                    <p>Nenhuma atualização recente.</p>
+                  </div>
+                ) : (
+                  sortedNotifications.map((notif) => (
+                    <li
+                      key={notif.id}
+                      className={notif.read ? "read" : "unread"}
+                    >
+                      <div className="left">
+                        <div>
+                          <strong
+                            style={{
+                              color: getStatusStyle(notif.status).background,
+                              marginRight: "5px",
+                            }}
+                          >
+                            {updateMessages[notif.status?.toLowerCase()] ||
+                              "Atualização"}
+                            :
+                          </strong>
+                          {notif.title ||
+                            (notif.message && notif.message.split(": ")[1]) ||
+                            "Título indisponível"}
+                        </div>
+                      </div>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </section>

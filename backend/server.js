@@ -11,6 +11,49 @@ app.use(cors());
 const upload = multer();
 app.use(express.json());
 
+// Notifications
+// Listener para mudanças nas notícias
+const dbAdmin = admin.firestore();
+
+dbAdmin.collection("news").onSnapshot((snapshot) => {
+  snapshot.docChanges().forEach(async (change) => {
+    if (change.type === "modified") {
+      const newsData = change.doc.data();
+      const newsId = change.doc.id;
+
+      console.log(
+        "Detectada mudança na notícia:",
+        newsId,
+        "Título:",
+        newsData.title
+      );
+
+      // Verificamos se o status existe
+      if (newsData.status) {
+        const userId = newsData.author?.uid;
+
+        if (userId) {
+          // GARANTIA: Se o title for undefined, usamos um fallback
+          const finalTitle = newsData.title || "Notícia sem título";
+
+          await dbAdmin.collection("notifications").add({
+            userId: userId,
+            newsId: newsId,
+            title: finalTitle, // Salvando com garantia
+            message: `${
+              statusFrases[newsData.status] || "Status atualizado"
+            }: ${finalTitle}`,
+            status: newsData.status,
+            type: "status_update",
+            read: false,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+      }
+    }
+  });
+});
+
 // Delete user
 app.post("/deleteUser", async (req, res) => {
   try {

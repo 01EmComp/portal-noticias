@@ -6,8 +6,12 @@ import { FacebookLoginButton } from "react-social-login-buttons";
 import { GoogleLoginButton } from "react-social-login-buttons";
 
 // Auth
-import { login } from "/src/Services/auth";
-import { loginWithGoogle, loginWithFacebook } from "/src/Services/auth";
+import {
+  loginWithGoogle,
+  loginWithFacebook,
+  login,
+  resetPassword,
+} from "/src/Services/auth";
 
 // Components
 import InputText from "/src/Components/InputText/index.jsx";
@@ -129,6 +133,17 @@ function LoginScreen() {
     }
   };
 
+  const handleRecovery = async () => {
+    try {
+      formData.email = prompt("Informe o email que deseja ser recuperado:");
+      console.log(formData.email);
+      await resetPassword(formData.email);
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="login-screen">
       <div className="login-container">
@@ -179,7 +194,7 @@ function LoginScreen() {
             className="divider"
             style={{ margin: "20px 0", textAlign: "center" }}
           >
-            <span style={{ color: "#666" }}>ou entre com</span>
+            <span style={{ color: "#665" }}>ou entre com</span>
           </div>
 
           <div className="login-with-socials">
@@ -197,7 +212,7 @@ function LoginScreen() {
 
         <div style={{ marginTop: "20px", textAlign: "center" }}>
           <Link to="/register">Cadastrar</Link> |{" "}
-          <Link to="/reset-password">Esqueceu a senha?</Link>
+          <p onClick={handleRecovery}>Esqueceu a senha?</p>
         </div>
 
         {errorMsg && (

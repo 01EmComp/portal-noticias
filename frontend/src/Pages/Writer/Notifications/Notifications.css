@@ -32,6 +32,18 @@
   width: 100%;
 }
 
+.notifications-container .main-box .header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.notifications-container .main-box .header .filter-section {
+  margin: 0;
+}
+
 .notifications-container .main-box .mark-read {
   display: flex;
   align-items: center;
@@ -136,7 +148,6 @@
 }
 
 .notifications-container .main-box .sections section .bottom ul li .rigth {
-  background-color: #000;
   color: #fff;
   font-size: 14px;
   height: 1.8rem;
@@ -144,6 +155,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
+}
+
+.updates li.unread {
+  background-color: #f0f7ff; /* Um azul bem clarinho */
+  border-left: 3px solid #007bff; /* Barra lateral azul */
+  padding: 5px 0 5px 5px;
+  font-weight: 500;
   border-radius: 5px;
 }
 
