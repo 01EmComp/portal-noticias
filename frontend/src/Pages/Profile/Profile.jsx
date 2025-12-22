@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Auth
 import { auth, db } from "/src/Services/firebaseConfig";
@@ -30,6 +30,7 @@ import {
   faTextHeight,
   faImage,
   faAdjust,
+  faCamera,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 
@@ -46,6 +47,8 @@ const Profile = () => {
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -226,6 +229,75 @@ const Profile = () => {
 
   const handleArticleClick = (articleId) => {
     navigate(`/news/${articleId}`);
+  };
+
+  const handlePhotoClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const uploadImage = async (imageFile) => {
+    if (!imageFile) return null;
+
+    try {
+      const formData = new FormData();
+      formData.append("fileToUpload", imageFile);
+
+      const response = await fetch("http://localhost:4000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar imagem via proxy");
+      }
+
+      const data = await response.json();
+      return data.url; // URL da imagem
+    } catch (error) {
+      console.error("Falha no upload da imagem:", error);
+      throw error;
+    }
+  };
+
+  const handlePhotoChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !auth.currentUser) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione apenas arquivos de imagem.');
+      return;
+    }
+
+    // Validar tamanho (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('A imagem deve ter no máximo 5MB.');
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      // Upload via API local
+      const photoURL = await uploadImage(file);
+      
+      // Atualizar Firestore
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(userRef, { photoURL });
+      
+      // Atualizar estado local
+      setUserData((prev) => ({
+        ...prev,
+        photoURL,
+      }));
+
+      setShowSuccessToast(true);
+      setTimeout(() => setShowSuccessToast(false), 3000);
+    } catch (error) {
+      console.error("Erro ao fazer upload da foto:", error);
+      alert("Erro ao atualizar foto de perfil. Tente novamente.");
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const EditPopup = () => {
@@ -453,6 +525,51 @@ const Profile = () => {
                 <button className="field-edit-button" title="Editar descrição">
                   <FontAwesomeIcon icon={faPencilAlt} />
                 </button>
+              </div>
+            )}
+
+            {canEditDescription && (
+              <div className="user-data-item" onClick={(e) => e.stopPropagation()}>
+                <div className="data-icon">
+                  <FontAwesomeIcon icon={faUser} />
+                </div>
+                <div className="data-content">
+                  <p className="data-label">Perfil público</p>
+                  <p className="data-sublabel">Permite que outros usuários vejam seu perfil</p>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={userData.profileVisible !== false}
+                      onChange={async (e) => {
+                        if (!auth.currentUser) return;
+                        
+                        const newValue = e.target.checked;
+                        
+                        // Atualiza o estado local imediatamente
+                        setUserData((prev) => ({
+                          ...prev,
+                          profileVisible: newValue,
+                        }));
+                        
+                        try {
+                          const userRef = doc(db, "users", auth.currentUser.uid);
+                          await updateDoc(userRef, {
+                            profileVisible: newValue,
+                          });
+                        } catch (error) {
+                          console.error("Erro ao atualizar visibilidade:", error);
+                          alert("Erro ao atualizar configuração. Tente novamente.");
+                          // Reverte em caso de erro
+                          setUserData((prev) => ({
+                            ...prev,
+                            profileVisible: !newValue,
+                          }));
+                        }
+                      }}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
               </div>
             )}
 
@@ -748,22 +865,39 @@ const Profile = () => {
       {showSuccessToast && (
         <div className="success-toast">
           <span className="toast-icon">✓</span>
-          Dados salvos com sucesso!
+          {uploadingPhoto ? "Atualizando foto..." : "Dados salvos com sucesso!"}
         </div>
       )}
 
       <div className="profile-frame">
         <div className="profile-card">
-          <div className="profile-avatar">
-            {userData.photoURL ? (
-              <img
-                src={userData.photoURL}
-                alt="Foto de perfil"
-                className="profile-image"
-              />
-            ) : (
-              <FontAwesomeIcon icon={faUser} />
-            )}
+          <div className={`profile-avatar-wrapper ${uploadingPhoto ? 'uploading' : ''}`}>
+            <div className="profile-avatar">
+              {userData.photoURL ? (
+                <img
+                  src={userData.photoURL}
+                  alt="Foto de perfil"
+                  className="profile-image"
+                />
+              ) : (
+                <FontAwesomeIcon icon={faUser} />
+              )}
+            </div>
+            <button 
+              className="change-photo-button" 
+              onClick={handlePhotoClick}
+              disabled={uploadingPhoto}
+              title="Alterar foto de perfil"
+            >
+              <FontAwesomeIcon icon={faCamera} />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              style={{ display: 'none' }}
+            />
           </div>
           <div className="profile-text">
             <h1>Bem-vindo!</h1>

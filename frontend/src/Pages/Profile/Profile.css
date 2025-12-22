@@ -1361,3 +1361,95 @@ body.hide-images .profile-avatar::after {
     font-size: 1rem;
   }
 }
+
+/* Wrapper para avatar com botão de câmera */
+.profile-avatar-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.change-photo-button {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4000 0%, #ff7416 100%);
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 64, 0, 0.4);
+  z-index: 2;
+}
+
+.change-photo-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 64, 0, 0.5);
+}
+
+.change-photo-button:active {
+  transform: scale(0.95);
+}
+
+.change-photo-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.change-photo-button:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(255, 64, 0, 0.4);
+}
+
+.profile-avatar-wrapper.uploading .profile-avatar {
+  opacity: 0.5;
+  position: relative;
+}
+
+.profile-avatar-wrapper.uploading .profile-avatar::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .profile-avatar-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .change-photo-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border-width: 2px;
+    bottom: -3px;
+    right: -3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .change-photo-button {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+}
