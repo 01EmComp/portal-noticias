@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+// Firebase
+import { db } from "/src/Services/firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp, faUser } from "@fortawesome/free-solid-svg-icons";
 
 // Images
 import cityImage from "/src/Assets/Images/city.png";
-import memberPhoto1 from "/src/Assets/Images/member-1.png";
-import memberPhoto2 from "/src/Assets/Images/member-2.png";
 
 // CSS
 import "./About.css";
@@ -15,30 +17,13 @@ import "./About.css";
 const About = () => {
   const [activeTab, setActiveTab] = useState("objetivos");
   const [expandedMembers, setExpandedMembers] = useState({});
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loadingTeam, setLoadingTeam] = useState(true);
 
   const tabs = [
     { id: "objetivos", label: "Objetivos" },
     { id: "equipe", label: "Equipe" },
     { id: "onde-somos", label: "De onde somos" },
-  ];
-
-  const teamMembers = [
-    {
-      id: 1,
-      name: "José Nogueira Dias",
-      photo: memberPhoto1,
-      summary:
-        "Nam mollis tellus ac magna dictum, a finibus mauris iaculis. Aenean nec pulvinar lectus. Suspendisse potenti. Sed commodo aliquam lacus, vitae pharetra ligula placerat in.",
-      bio: "Nam mollis tellus ac magna dictum, a finibus mauris iaculis. Aenean nec pulvinar lectus. Suspendisse potenti. Sed commodo aliquam lacus, vitae pharetra ligula placerat in. Aliquam accumsan sapien noque, sit amet pellentesque mi porta non. Cras vitae dolor sed enim aliquet, pellentesque. Nunc ac metus nec risus porta laoreet et eu tellus. Nam venenatis odio non quam congue cursus. Curabitur porttitor lacus cursus est dignissim tempus. Integer commodo mi id tellus vulputate gravida ut vitae. Curabitur porta erat sit vel venenatis euismod. Vivamus at libero vel arcu varius interdum et eu metus. Praesent imperdiet ullamcorper dolor non interdum. Donec facilisis nunc vel sapien fermentum, ac ultricies magna venenatis. Sed euismod lectus quis orci dignissim.",
-    },
-    {
-      id: 2,
-      name: "Felipe Franco Ferreira",
-      photo: memberPhoto2,
-      summary:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et ornet magna, nec pretium purus. Praesent euismod rhoncus arcu.",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et ornet magna, nec pretium purus. Praesent euismod rhoncus arcu. Pellentesque vestibulum a lacinia ullamcorper. Aliquam pharetra magna quis sem, non pellentesque tellus felis. Duis semper mattis lobortis vehicula. Maecenas ut turpis vel nunc ultricies aliquet urna eleifend ligula. Sed facilisis odio, eget pretium massa. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.",
-    },
   ];
 
   const objectives = [
@@ -53,11 +38,76 @@ const About = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      setLoadingTeam(true);
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(
+          usersRef,
+          where("role", "in", ["admin", "editor"]),
+          where("profileVisible", "==", true)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const members = [];
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          members.push({
+            id: doc.id,
+            name: data.name || "Sem nome",
+            photo: data.photoURL || null,
+            role: data.role,
+            bio: data.description || "Este membro ainda não adicionou uma descrição.",
+          });
+        });
+
+        // Ordena por cargo e por nome
+        members.sort((a, b) => {
+          if (a.role === "admin" && b.role !== "admin") return -1;
+          if (a.role !== "admin" && b.role === "admin") return 1;
+          return a.name.localeCompare(b.name);
+        });
+
+        setTeamMembers(members);
+      } catch (error) {
+        console.error("Erro ao buscar membros da equipe:", error);
+      } finally {
+        setLoadingTeam(false);
+      }
+    };
+
+    if (activeTab === "equipe") {
+      fetchTeamMembers();
+    }
+  }, [activeTab]);
+
   const toggleMember = (memberId) => {
     setExpandedMembers((prev) => ({
       ...prev,
       [memberId]: !prev[memberId],
     }));
+  };
+
+  const getRoleBadge = (role) => {
+    if (role === "admin") {
+      return <span className="role-badge admin">Administrador</span>;
+    }
+    if (role === "editor") {
+      return <span className="role-badge editor">Editor</span>;
+    }
+    return null;
+  };
+
+  const getBioPreview = (bio, maxChars = 150) => {
+    if (!bio) return "Este membro ainda não adicionou uma descrição.";
+    if (bio.length <= maxChars) return bio;
+    return bio.substring(0, maxChars) + "...";
+  };
+
+  const shouldShowExpandButton = (bio, maxChars = 150) => {
+    return bio && bio.length > maxChars;
   };
 
   const renderContent = () => {
@@ -78,39 +128,67 @@ const About = () => {
         return (
           <div className="about-content">
             <h2>Equipe</h2>
-            <div className="team-members">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="team-member">
-                  <div className="member-header">
-                    <div className="member-avatar">
-                      {member.photo && (
-                        <img src={member.photo} alt={member.name} />
-                      )}
-                    </div>
-                    <div className="member-name-wrapper">
-                      <h3>{member.name}</h3>
-                      <button
-                        className="expand-button"
-                        onClick={() => toggleMember(member.id)}
-                      >
-                        <FontAwesomeIcon
-                          icon={
-                            expandedMembers[member.id]
-                              ? faChevronUp
-                              : faChevronDown
-                          }
-                        />
-                      </button>
+            {loadingTeam ? (
+              <div className="loading-team">
+                <p>Carregando membros da equipe...</p>
+              </div>
+            ) : teamMembers.length === 0 ? (
+              <div className="no-team-members">
+                <p>Nenhum membro da equipe disponível no momento.</p>
+              </div>
+            ) : (
+              <div className="team-members">
+                {teamMembers.map((member) => (
+                  <div key={member.id} className="team-member">
+                    <div className="member-header">
+                      <div className="member-avatar">
+                        {member.photo ? (
+                          <img src={member.photo} alt={member.name} />
+                        ) : (
+                          <div className="avatar-placeholder">
+                            <FontAwesomeIcon icon={faUser} />
+                          </div>
+                        )}
+                      </div>
+                      <div className="member-info-section">
+                        <div className="member-name-wrapper">
+                          <div className="member-info">
+                            <h3>{member.name}</h3>
+                            {getRoleBadge(member.role)}
+                          </div>
+                          {shouldShowExpandButton(member.bio) && (
+                            <button
+                              className="expand-button"
+                              onClick={() => toggleMember(member.id)}
+                              aria-label={
+                                expandedMembers[member.id]
+                                  ? "Mostrar menos"
+                                  : "Mostrar mais"
+                              }
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  expandedMembers[member.id]
+                                    ? faChevronUp
+                                    : faChevronDown
+                                }
+                              />
+                            </button>
+                          )}
+                        </div>
+                        <div className="member-bio">
+                          <p>
+                            {expandedMembers[member.id]
+                              ? member.bio
+                              : getBioPreview(member.bio)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="member-bio">
-                    <p>
-                      {expandedMembers[member.id] ? member.bio : member.summary}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         );
 

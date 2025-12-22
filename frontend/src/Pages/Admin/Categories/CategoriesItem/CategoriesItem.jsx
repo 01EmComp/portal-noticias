@@ -1,22 +1,32 @@
 // Font Awesome Icon's
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 // Css
 import "./CategoriesItem.css";
 
-const CategoriesItem = ({ category, quant, acess }) => {
+const CategoriesItem = ({ category, quant, action, isHeader, onViewNews, hasNews }) => {
   return (
     <div className="categories-item-container">
       <ul>
         <li>{category}</li>
         <li>{quant}</li>
         <div>
-          <p>{acess}</p>
-          <div className="icon">
-            <p>Arquivo</p>
-            <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: "16px" }} />
-          </div>
+          {isHeader ? (
+            <p className="action-header">{action}</p>
+          ) : (
+            <div className="icon">
+              <button
+                onClick={() => onViewNews(category)}
+                disabled={!hasNews}
+                className={`view-button ${!hasNews ? 'disabled' : ''}`}
+                title={hasNews ? `Ver notícias de ${category}` : 'Nenhuma notícia disponível'}
+              >
+                <p>Visualizar</p>
+                <FontAwesomeIcon icon={faEye} style={{ fontSize: "16px" }} />
+              </button>
+            </div>
+          )}
         </div>
       </ul>
     </div>
