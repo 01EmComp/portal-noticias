@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 
 // Auth
 import { db, auth } from "/src/Services/firebaseConfig";
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
   orderBy,
-  onSnapshot 
+  onSnapshot,
 } from "firebase/firestore";
 
 // Components
@@ -38,17 +38,14 @@ const News = () => {
         let q;
 
         if (filter === "all") {
-          q = query(
-            collection(db, "news"),
-            orderBy("createdAt", "desc")
-          );
+          q = query(collection(db, "news"), orderBy("createdAt", "desc"));
         } else {
           const statusMap = {
             pending: "pending",
             published: "published",
-            rejected: "rejected"
+            rejected: "rejected",
           };
-          
+
           q = query(
             collection(db, "news"),
             where("status", "==", statusMap[filter])
@@ -60,10 +57,10 @@ const News = () => {
           querySnapshot.forEach((doc) => {
             newsData.push({
               id: doc.id,
-              ...doc.data()
+              ...doc.data(),
             });
           });
-          
+
           if (filter !== "all") {
             newsData.sort((a, b) => {
               if (!a.createdAt || !b.createdAt) return 0;
@@ -72,7 +69,6 @@ const News = () => {
               return dateOrder === "desc" ? timeB - timeA : timeA - timeB;
             });
           } else {
-        
             newsData.sort((a, b) => {
               if (!a.createdAt || !b.createdAt) return 0;
               const timeA = a.createdAt.toMillis();
@@ -80,7 +76,7 @@ const News = () => {
               return dateOrder === "desc" ? timeB - timeA : timeA - timeB;
             });
           }
-          
+
           setNewsList(newsData);
           setLoading(false);
         });
@@ -97,17 +93,17 @@ const News = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "Data não disponível";
-    
+
     try {
       const date = timestamp.toDate();
       const dateStr = date.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "2-digit",
-        year: "numeric"
+        year: "numeric",
       });
       const timeStr = date.toLocaleTimeString("pt-BR", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
       return `${dateStr} às ${timeStr}`;
     } catch (error) {
@@ -119,7 +115,7 @@ const News = () => {
     const statusMap = {
       pending: "Em Análise",
       published: "Aprovado",
-      rejected: "Reprovado"
+      rejected: "Reprovado",
     };
     return statusMap[status] || status;
   };
@@ -128,25 +124,25 @@ const News = () => {
     <div className="news-list-container">
       <div className="news-controls">
         <div className="news-filters">
-          <button 
+          <button
             className={filter === "all" ? "active" : ""}
             onClick={() => setFilter("all")}
           >
             Todas
           </button>
-          <button 
+          <button
             className={filter === "pending" ? "active" : ""}
             onClick={() => setFilter("pending")}
           >
             Aguardando Avaliação
           </button>
-          <button 
+          <button
             className={filter === "published" ? "active" : ""}
             onClick={() => setFilter("published")}
           >
             Aprovadas
           </button>
-          <button 
+          <button
             className={filter === "rejected" ? "active" : ""}
             onClick={() => setFilter("rejected")}
           >
@@ -155,23 +151,23 @@ const News = () => {
         </div>
 
         <div className="date-sort">
-          <button 
+          <button
             className={dateOrder === "desc" ? "active" : ""}
             onClick={() => setDateOrder("desc")}
             title="Mais recentes primeiro"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 12L3 7h10l-5 5z"/>
+              <path d="M8 12L3 7h10l-5 5z" />
             </svg>
             Mais recentes
           </button>
-          <button 
+          <button
             className={dateOrder === "asc" ? "active" : ""}
             onClick={() => setDateOrder("asc")}
             title="Mais antigas primeiro"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 4l5 5H3l5-5z"/>
+              <path d="M8 4l5 5H3l5-5z" />
             </svg>
             Mais antigas
           </button>

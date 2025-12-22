@@ -69,7 +69,7 @@ header .header-container .logo {
 }
 
 .search-icon {
-  z-index: 10;
+  z-index: 1;
   position: relative;
   font-size: 22px;
   color: #fff;
@@ -112,10 +112,16 @@ header .header-container .logo {
 }
 
 .hamburger-menu.show {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 900;
   height: 100%;
+  min-height: 100vh;
   opacity: 1;
   visibility: visible;
   width: 14rem;
+  height: 100vw;
   display: flex;
   transition: width 0.3s ease;
 }
@@ -135,18 +141,30 @@ header .header-container .logo {
   border-radius: 10px;
 }
 
-.hamburger-menu ul .close {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  border-radius: 0;
-  padding: 0.8rem 0 1.8rem;
-  margin-left: 0.5rem;
+.hamburger-menu ul a {
+  border-radius: 10px;
+  transition: 0.3s ease;
+  width: 100%;
+}
+
+.hamburger-menu ul .close-box {
   width: 95%;
+  padding: 0.8rem 0 1.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.hamburger-menu ul button {
+  display: flex;
+  justify-content: flex-start;
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
   font-size: 22px;
 }
 
-.hamburger-menu ul .close:hover {
-  background-color: transparent;
+.hamburger-menu ul a:hover {
+  background-color: rgba(33, 44, 68, 0.7);
 }
 
 .hamburger-menu .hamburger-btn {
@@ -168,10 +186,6 @@ header .header-container .logo {
   text-decoration: none;
   font-weight: 500;
   transition: background 0.3s;
-}
-
-.hamburger-menu ul li a:hover {
-  background-color: #555;
 }
 
 header .buttons-right {
@@ -253,7 +267,7 @@ header .hamburger-menu div {
   display: flex;
   align-items: center;
   margin-left: 0.8rem;
-  padding-top: 0.5rem;
+  padding: 0.5rem 0;
 }
 
 header .hamburger-menu .profile .user-icon {
@@ -423,9 +437,5 @@ header .hamburger-menu div .about-icon {
 
   .hamburger-menu ul {
     padding: 0.8rem 0.5rem;
-  }
-
-  .hamburger-menu ul li:hover {
-    background-color: rgba(33, 44, 68, 0.7);
   }
 }
