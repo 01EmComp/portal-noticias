@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { faHouse } from "@fortawesome/free-regular-svg-icons";
 
 // Css
 import "./Header.css";
@@ -24,6 +23,7 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const menuRef = useRef();
+  const sideMenuRef = useRef(null);
   const searchRef = useRef();
   const dropdownRef = useRef();
 
@@ -141,13 +141,15 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (sideMenuRef.current && !sideMenuRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -165,11 +167,17 @@ const Header = () => {
         </div>
 
         {/* Menu */}
-        <div className={`hamburger-menu ${menuOpen ? "show" : ""}`}>
+        <div
+          ref={sideMenuRef}
+          className={`hamburger-menu ${menuOpen ? "show" : ""}`}
+        >
           <ul>
-            <li className="close">
-              <FontAwesomeIcon icon={faXmark} onClick={toggleMenu} />
-            </li>
+            <div className="close-box">
+              <button className="close" onClick={toggleMenu}>
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </div>
+
             <Link to="/profile">
               <div className="profile">
                 <svg
@@ -416,18 +424,9 @@ const Header = () => {
               Última hora
             </li>
             <li onClick={() => handleCategoryClick("Política")}>Política</li>
-            <li onClick={() => handleCategoryClick("Economia")}>Economia</li>
             <li onClick={() => handleCategoryClick("Educação")}>Educação</li>
-            <li onClick={() => handleCategoryClick("Tecnologia")}>
-              Tecnologia
-            </li>
             <li onClick={() => handleCategoryClick("Saúde")}>Saúde</li>
             <li onClick={() => handleCategoryClick("Esportes")}>Esportes</li>
-            <li onClick={() => handleCategoryClick("Entretenimento")}>
-              Entretenimento
-            </li>
-            <li onClick={() => handleCategoryClick("Cultura")}>Cultura</li>
-            <li onClick={() => handleCategoryClick("Ciência")}>Ciência</li>
             <li onClick={() => handleCategoryClick("Eventos")}>Eventos</li>
             <li className="last" onClick={() => handleCategoryClick("Região")}>
               Região
