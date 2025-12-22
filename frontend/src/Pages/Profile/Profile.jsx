@@ -24,6 +24,12 @@ import {
   faIdCard,
   faPencilAlt,
   faFileAlt,
+  faPalette,
+  faLanguage,
+  faBell,
+  faTextHeight,
+  faImage,
+  faAdjust,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 
@@ -551,22 +557,6 @@ const Profile = () => {
       setShowSettingsPopup(false);
     };
 
-    // Sair da conta
-    const handleLogout = async () => {
-      setLoading(true);
-      try {
-        const optionInput = confirm("Realmente deseja sair da conta?");
-        if (optionInput) {
-          logout();
-          navigate("/");
-        }
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     return (
       <div className="settings-overlay" onClick={handleCancel}>
         <div className="settings-popup" onClick={(e) => e.stopPropagation()}>
@@ -577,142 +567,159 @@ const Profile = () => {
             </button>
           </div>
 
-          <div className="settings-content">
+          <div className="settings-popup-content">
             {/* Tema */}
-            <div className="setting-item">
-              <label>Tema</label>
-              <div className="theme-selector">
-                <button
-                  className={`theme-option ${
-                    tempSettings.theme === "light" ? "active" : ""
-                  }`}
-                  onClick={() =>
-                    setTempSettings({ ...tempSettings, theme: "light" })
-                  }
-                >
-                  Claro
-                </button>
-                <button
-                  className={`theme-option ${
-                    tempSettings.theme === "dark" ? "active" : ""
-                  }`}
-                  onClick={() =>
-                    setTempSettings({ ...tempSettings, theme: "dark" })
-                  }
-                >
-                  Escuro
-                </button>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faPalette} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Tema</p>
+                <div className="theme-selector">
+                  <button
+                    className={`theme-option ${
+                      tempSettings.theme === "light" ? "active" : ""
+                    }`}
+                    onClick={() =>
+                      setTempSettings({ ...tempSettings, theme: "light" })
+                    }
+                  >
+                    Claro
+                  </button>
+                  <button
+                    className={`theme-option ${
+                      tempSettings.theme === "dark" ? "active" : ""
+                    }`}
+                    onClick={() =>
+                      setTempSettings({ ...tempSettings, theme: "dark" })
+                    }
+                  >
+                    Escuro
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* Idioma */}
-            <div className="setting-item">
-              <label>Idioma</label>
-              <select
-                value={tempSettings.language}
-                onChange={(e) =>
-                  setTempSettings({ ...tempSettings, language: e.target.value })
-                }
-                className="language-select"
-              >
-                <option value="pt">Português</option>
-                <option value="en">English</option>
-              </select>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faLanguage} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Idioma</p>
+                <select
+                  value={tempSettings.language}
+                  onChange={(e) =>
+                    setTempSettings({ ...tempSettings, language: e.target.value })
+                  }
+                  className="language-select"
+                >
+                  <option value="pt">Português</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
             </div>
 
             {/* Notificações por Email */}
-            <div className="setting-item">
-              <label>Notificações por e-mail</label>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={tempSettings.emailNotifications}
-                  onChange={(e) =>
-                    setTempSettings({
-                      ...tempSettings,
-                      emailNotifications: e.target.checked,
-                    })
-                  }
-                />
-                <span className="slider"></span>
-              </label>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faBell} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Notificações por e-mail</p>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={tempSettings.emailNotifications}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        emailNotifications: e.target.checked,
+                      })
+                    }
+                  />
+                  <span className="slider"></span>
+                </label>
+              </div>
             </div>
 
             {/* Tamanho da Fonte */}
-            <div className="setting-item">
-              <label>Tamanho da fonte</label>
-              <div className="font-size-control">
-                <span className="font-size-label">A</span>
-                <input
-                  type="range"
-                  min="10"
-                  max="28"
-                  value={tempSettings.fontSize}
-                  onChange={(e) =>
-                    setTempSettings({
-                      ...tempSettings,
-                      fontSize: parseInt(e.target.value),
-                    })
-                  }
-                  className="font-size-slider"
-                />
-                <span className="font-size-label large">A</span>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faTextHeight} />
               </div>
-              <p
-                className="font-preview"
-                style={{ fontSize: `${tempSettings.fontSize}px` }}
-              >
-                Exemplo de texto com o tamanho selecionado
-              </p>
+              <div className="data-content">
+                <p className="data-label">Tamanho da fonte</p>
+                <div className="font-size-control">
+                  <span className="font-size-label">A</span>
+                  <input
+                    type="range"
+                    min="10"
+                    max="28"
+                    value={tempSettings.fontSize}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        fontSize: parseInt(e.target.value),
+                      })
+                    }
+                    className="font-size-slider"
+                  />
+                  <span className="font-size-label large">A</span>
+                </div>
+                <p
+                  className="font-preview"
+                  style={{ fontSize: `${tempSettings.fontSize}px` }}
+                >
+                  Exemplo de texto com o tamanho selecionado
+                </p>
+              </div>
             </div>
 
             {/* Ocultar Imagens */}
-            <div className="setting-item">
-              <label>Ocultar imagens (economizar dados)</label>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={tempSettings.hideImages}
-                  onChange={(e) =>
-                    setTempSettings({
-                      ...tempSettings,
-                      hideImages: e.target.checked,
-                    })
-                  }
-                />
-                <span className="slider"></span>
-              </label>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faImage} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Ocultar imagens (economizar dados)</p>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={tempSettings.hideImages}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        hideImages: e.target.checked,
+                      })
+                    }
+                  />
+                  <span className="slider"></span>
+                </label>
+              </div>
             </div>
 
             {/* Contraste Alto */}
-            <div className="setting-item">
-              <label>Modo de alto contraste</label>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={tempSettings.highContrast}
-                  onChange={(e) =>
-                    setTempSettings({
-                      ...tempSettings,
-                      highContrast: e.target.checked,
-                    })
-                  }
-                />
-                <span className="slider"></span>
-              </label>
-            </div>
-
-            {/* Fazer logout */}
-            <div className="setting-item" onClick={() => handleLogout()}>
-              <button className="Btn">
-                <div className="sign">
-                  <svg viewBox="0 0 512 512">
-                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
-                  </svg>
-                </div>
-
-                <div className="text">Sair da conta</div>
-              </button>
+            <div className="settings-item">
+              <div className="data-icon">
+                <FontAwesomeIcon icon={faAdjust} />
+              </div>
+              <div className="data-content">
+                <p className="data-label">Modo de alto contraste</p>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={tempSettings.highContrast}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        highContrast: e.target.checked,
+                      })
+                    }
+                  />
+                  <span className="slider"></span>
+                </label>
+              </div>
             </div>
           </div>
 
