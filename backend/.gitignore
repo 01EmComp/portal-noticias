@@ -1,7 +1,8 @@
 # Dependências
 /node_modules/
 
-/servicesAccountKey.json/
+servicesAccountKey.json
+backend/serviceAccountKey.json
 
 # Build
 /dist/
