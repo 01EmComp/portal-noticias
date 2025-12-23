@@ -5,6 +5,8 @@ import multer from "multer";
 import FormData from "form-data";
 import admin from "firebase-admin";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
@@ -12,6 +14,17 @@ const upload = multer();
 app.use(express.json());
 
 // Notifications
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(
+    JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"))
+  ),
+});
+
 // Listener para mudanças nas notícias
 const dbAdmin = admin.firestore();
 
@@ -27,6 +40,12 @@ dbAdmin.collection("news").onSnapshot((snapshot) => {
         "Título:",
         newsData.title
       );
+
+      const statusFrases = {
+        approved: "Sua notícia foi aprovada",
+        rejected: "Sua notícia foi rejeitada",
+        pending: "Sua notícia está em análise",
+      };
 
       // Verificamos se o status existe
       if (newsData.status) {
