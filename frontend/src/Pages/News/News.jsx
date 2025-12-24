@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 // Font Awesome Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -399,9 +399,18 @@ function News() {
             )}
 
             <div className="author-and-time">
-              <p>
-                Autor: <span>{newsData.author?.name || "Desconhecido"}</span>
-              </p>
+              {newsData.author?.uid ? (
+                <Link to={`/author-page/${newsData.author.uid}`}>
+                  <p>
+                    Autor:{" "}
+                    <span>{newsData.author?.name || "Desconhecido"}</span>
+                  </p>
+                </Link>
+              ) : (
+                <p>
+                  Autor: <span>{newsData.author?.name || "Desconhecido"}</span>
+                </p>
+              )}
               <p>
                 {formatDate(newsData.publishedAt || newsData.createdAt)} às{" "}
                 {formatTime(newsData.publishedAt || newsData.createdAt)}

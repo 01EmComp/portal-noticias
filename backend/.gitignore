@@ -1,7 +1,8 @@
 # Dependências
 /node_modules/
 
-servicesAccountKey.json
+serviceAccountKey.json
+/backend/serviceAccountKey
 
 # Build
 /dist/
@@ -29,8 +30,4 @@ coverage/
 
 # Ferramentas de build
 /.gradle/
-<<<<<<< HEAD
 /.gradle-cache/
-=======
-/.gradle-cache/
->>>>>>> origin/develop

@@ -30,7 +30,7 @@ const AppRoutes = () => {
   const [siteStatus, setSiteStatus] = useState({
     siteDisabled: false,
     maintenanceMode: false,
-   loading: !isAdminRoute && !isWriterRoute, // Não carrega se for rota admin ou escritor
+    loading: !isAdminRoute && !isWriterRoute, // Não carrega se for rota admin ou escritor
   });
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const AppRoutes = () => {
   if (siteStatus.siteDisabled) {
     return <MaintenancePage type="disabled" />;
   }
-  
+
   // Se o site estiver em manutenção
   if (siteStatus.maintenanceMode) {
     return <MaintenancePage type="maintenance" />;
@@ -118,7 +118,7 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
 
       {/* Author */}
-      <Route path="/author-page" element={<Author />} />
+      <Route path="/author-page/:uid" element={<Author />} />
 
       {/* Blog */}
       <Route path="/blog" element={<Blog />} />
@@ -127,17 +127,16 @@ const AppRoutes = () => {
       <Route path="/about" element={<About />} />
 
       {/* News */}
-     <Route path="/news/:id" element={<News />} />
+      <Route path="/news/:id" element={<News />} />
 
       {/* SearchNews */}
-        <Route path="/search" element={<SearchNews />} />
+      <Route path="/search" element={<SearchNews />} />
 
       {/* Terms and Services */}
       <Route path="/terms-and-services" element={<TermsAndServices />} />
 
       {/* Rota fallback para páginas inexistentes */}
       <Route path="*" element={<NotFound />} />
-      
     </Routes>
   );
 };
