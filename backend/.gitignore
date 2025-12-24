@@ -2,7 +2,7 @@
 /node_modules/
 
 serviceAccountKey.json
-/backend/serviceAccountKey.json
+/backend/serviceAccountKey
 
 # Build
 /dist/
