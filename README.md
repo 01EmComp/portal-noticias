@@ -250,7 +250,7 @@ workspace/portal
 │   ├── assets/              # Fontes, imagens e recursos estáticos  
 │   ├── components/          # Componentes reutilizáveis React  
 │   ├── pages/               # Páginas da aplicação  
-│   ├── services/            # APIs, Firebase, etc.  
+│   ├── services/            # Firebases, API, etc.  
 │   ├── styles/              # Estilos  
 │   ├── utils/               # Funções utilitárias  
 │   ├── App.jsx              # Componente principal  
